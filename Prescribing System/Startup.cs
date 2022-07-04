@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Prescribing_System.Models;
 
 namespace Prescribing_System
 {
@@ -22,6 +23,9 @@ namespace Prescribing_System
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+            services.AddSession();
+            services.AddHttpContextAccessor();
             services.AddControllersWithViews();
         }
 
@@ -42,8 +46,26 @@ namespace Prescribing_System
 
             app.UseAuthorization();
 
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    name: "patient",
+                    areaName: "Patient",
+                    pattern: "Patient/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    name: "doctor",
+                    areaName: "Doctor",
+                    pattern: "Doctor/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    name: "pharmacist",
+                    areaName: "Pharmacist",
+                    pattern: "Pharmacist/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
