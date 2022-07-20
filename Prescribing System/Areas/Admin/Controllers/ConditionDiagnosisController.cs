@@ -9,12 +9,8 @@ using Prescribing_System.Areas.Admin.Models;
 namespace Prescribing_System.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HomeController : Controller
+    public class ConditionDiagnosisController : Controller
     {
-        public HomeController()
-        {
-
-        }
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);
@@ -26,7 +22,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            IndexViewModel model = new IndexViewModel 
+            IndexViewModel model = new IndexViewModel
             { LoggedUser = UserSingleton.GetLoggedUser() };
             if (UserIsVerified("Admin"))
                 return View(model);

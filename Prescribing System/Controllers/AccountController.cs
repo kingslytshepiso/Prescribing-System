@@ -56,6 +56,52 @@ namespace Prescribing_System.Controllers
             ModelState.AddModelError("", "Invalid username/password.");
             return View(model);
         }
+        [HttpGet]
+        public IActionResult RegisterView(RegisterViewModel model)
+        {
+            var session = new MySession(HttpContext.Session);
+            if (UserIsVerified(session.GetRole()))
+                return RedirectToAction("Index", "Home",
+                            new { area = session.GetRole() });
+            else
+            {
+                ViewBag.Provinces = model.Provinces;
+                ViewBag.Suburbs = model.Suburbs;
+                if (model.UserPatient == null)
+                    return View("Register");
+                return View("Register", model);
+            }
+        }
+        [HttpPost]
+        public IActionResult Register(RegisterViewModel model)
+        {
+            //CODE TO REGISTER A USER TO THE USER TABLE AND THE PATIENT TABLE
+            //AND LOGS THE USER IN
+            if (Data.CheckEmail(model.UserPatient.EmailAddress))
+                ModelState.AddModelError("UserPatient.EmailAddress", "Email already in use.");
+            if (Data.CheckID(model.UserPatient.IdNumber))
+                ModelState.AddModelError("UserPatient.IdNumber", "ID number registered");
+            if (ModelState.IsValid)
+            {
+                
+                bool isAdded = Data.AddUser(model);
+                if (isAdded)
+                {
+                    LoginViewModel loginModel = new LoginViewModel()
+                    {
+                        Username = model.UserPatient.EmailAddress,
+                        Password = model.UserDetails.Password
+                    };
+                    ViewBag.Message = "Account successfully created. You may proceed to login";
+                    ViewBag.Area = "";
+                    ViewBag.Ctrl = "Account";
+                    ViewBag.Action = "Login";
+                    return View("Acknowledgement");
+                }
+            }
+            ModelState.AddModelError("", "Invalid information");
+            return RegisterView(model);
+        }
         [HttpPost]
         public IActionResult Logout()
         {

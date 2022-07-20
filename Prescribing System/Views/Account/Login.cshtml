@@ -1,45 +1,55 @@
 ﻿@model LoginViewModel
-@{ 
+@{
     ViewBag.Title = "Login";
 }
-<h1>Login</h1>
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<form method="post" asp-action="Login"
-      asp-route-returnUrl="@Model.ReturnUrl">
-    <div class="form-group row">
-        <div class="col-sm-2"><label>Username:</label></div>
-        <div class="col-sm-4">
-            <input asp-for="Username" class="form-control" />
-        </div>
-        <div class="col">
-            <span asp-validation-for="Username" class="text-danger"></span>
-        </div>
+<div class="b_h_centered">
+    <div class="b_boxed">
+        <h2 class="text-center">
+            Login
+        </h2>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form method="post" asp-action="Login"
+              asp-route-returnUrl="@Model.ReturnUrl">
+                <div class="form-group row">
+                    <div class="col-md-4 col-sm-12"><label>Username/ID:</label></div>
+                    <div class="col-md-8 col-sm-12">
+                        <input asp-for="Username" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4 col-sm-8"><label>Password:</label></div>
+                    <div class="col-md-8 col-sm-12">
+                        <input type="password" asp-for="Password"
+                               class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+            <div class="form-group row">
+                <div class="offset-md-0 col-sm-8">
+                    <input type="checkbox" title="Remember Me" asp-for="RememberMe"
+                           class="form-check" />
+                    <label asp-for="RememberMe">Remember Me:</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col p-0">
+                    <div class="col-md-12 col-sm-12">
+                        Not registered?
+                        <a asp-area="" asp-controller="Account" asp-action="RegisterView">Register as a new user</a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="col-6  offset-8 offset-sm-6" >
+                        <button type="submit" class="btn btn-primary">Log In</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
     </div>
-    <div class="form-group row">
-        <div class="col-sm-2"><label>Password:</label></div>
-        <div class="col-sm-4">
-            <input type="password" asp-for="Password"
-                   class="form-control" />
-        </div>
-        <div class="col">
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <div class="offset-sm-2 col-sm-4">
-            <input type="checkbox" title="Remember Me" asp-for="RememberMe"
-                   class="form-check" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="offset-2 col-sm-4">
-            <button type="submit" class="btn btn-primary">Log In</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="offset-2 col-sm-4">
-            Not registered?
-            <a asp-action="Register">Register as a new user</a>
-        </div>
-    </div>
-</form>
+</div>

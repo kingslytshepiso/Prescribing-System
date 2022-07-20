@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - E-P</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/Custom.css"/>
@@ -12,40 +12,41 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">E-P</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img width="55" height="40" src="~/images/logo.png.svg" />
+                </a>
                 <nav class="navbar-nav navbar-expand">
                     <div class="navbar-nav navbar-right mb-sm-1 pt-2">
                         <div class="dropdown ">
                             <button type="button" class="btn btn-primary s_top-right_drop-btn"
                                     id="navDropdown" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                <span class="">User</span>
+                                <span class="">Menu</span>
                             </button>
                             <span class="badge">Doctor</span>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">
-                                    Privacy
-                                </a>
-                                <form method="post" asp-action="Logout" asp-controller="Account"
-                                      asp-area="">
-                                    <input type="submit" value="Log Out"
-                                           class="dropdown-item" />
-                                </form>
-                            </div>
+                            <a class="dropdown-item"
+                               asp-area="" asp-controller="Home"
+                               asp-action="About">
+                                About
+                            </a>
+                            <form method="post" asp-action="Logout"
+                                  asp-controller="Account"
+                                  asp-area="">
+                                <input type="submit" value="Log Out"
+                                       class="dropdown-item btn-logout" />
+                            </form>
                         </div>
                     </div>
                 </nav>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div class="container m-sm-0 m-md-auto">
+            <div class="b_boxed">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
     </div>
 
     <footer class="border-top footer text-muted">

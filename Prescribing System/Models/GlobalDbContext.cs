@@ -59,5 +59,152 @@ namespace Prescribing_System.Models
             else
                 return new User();
         }
+        public List<Suburb> GetAllSuburbs()
+        {
+            List<Suburb> Suburbs = new List<Suburb>();
+            connection();
+            dbCmd = new SqlCommand("GetAllSuburbs", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Suburbs.Add(
+                        new Suburb()
+                        {
+                            SuburbID = Convert.ToInt32(current["SuburbID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
+                            CityID = Convert.ToInt32(current["CityID"].ToString())
+                        });
+                }
+                return Suburbs;
+            }
+            else
+            {
+                return Suburbs;
+            }
+        }
+        public List<City> GetAllCities()
+        {
+            List<City> Cities = new List<City>();
+            connection();
+            dbCmd = new SqlCommand("GetAllCities", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Cities.Add(
+                        new City()
+                        {
+                            CityID = Convert.ToInt32(current["CityID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
+                            ProvID = Convert.ToInt32(current["ProvID"].ToString())
+                        });
+                }
+                return Cities;
+            }
+            else
+            {
+                return Cities;
+            }
+        }
+        public List<Province> GetAllProvinces()
+        {
+            List<Province> Provinces = new List<Province>();
+            connection();
+            dbCmd = new SqlCommand("GetAllProvinces", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Provinces.Add(
+                        new Province()
+                        {
+                            ProvID = Convert.ToInt32(current["ProvID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            Abbreviation = Convert.ToString(current["Abbreviation"].ToString()),
+                        });
+                }
+                return Provinces;
+            }
+            else
+            {
+                return Provinces;
+            }
+        }
+        public bool CheckID(string id)
+        {
+            connection();
+            dbCmd = new SqlCommand("CheckID", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+                return true;
+            else
+                return false;
+        }
+        public bool CheckEmail(string email)
+        {
+            connection();
+            dbCmd = new SqlCommand("CheckEmail", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@email", email);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+                return true;
+            else
+                return false;
+        }
+        public bool AddUser(RegisterViewModel model)
+        {
+            connection();
+            dbCmd = new SqlCommand("RegisterPatient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            //Patient table columns
+            dbCmd.Parameters.AddWithValue("@FirstName", model.UserPatient.FirstName);
+            dbCmd.Parameters.AddWithValue("@LastName", model.UserPatient.LastName);
+            dbCmd.Parameters.AddWithValue("@IdNumber", model.UserPatient.IdNumber);
+            dbCmd.Parameters.AddWithValue("@EmailAddress", model.UserPatient.EmailAddress);
+            dbCmd.Parameters.AddWithValue("@ContactNo", model.UserPatient.ContactNumber);
+            dbCmd.Parameters.AddWithValue("@AddressLine1", model.UserPatient.AddressLine1);
+            dbCmd.Parameters.AddWithValue("@AddressLine2", model.UserPatient.AddressLine2);
+            dbCmd.Parameters.AddWithValue("@SuburbID", model.UserPatient.SuburbID);
+            //User table columns
+            dbCmd.Parameters.AddWithValue("@Username", model.UserPatient.EmailAddress);
+            dbCmd.Parameters.AddWithValue("@Password", model.UserDetails.Password);
+            dbCmd.Parameters.AddWithValue("@Role", model.UserDetails.Role);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

@@ -9,31 +9,66 @@
     <link rel="stylesheet" href="~/css/Custom.css"/>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">E-P</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <nav class="navbar-nav navbar-expand">
-                    <div class="navbar-nav navbar-right mb-sm-1 pt-2">
-                        <div class="dropdown ">
+    <header class="illustration-admin">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
+            <div class="container m-sm-0 m-md-auto">
+                <a class="navbar-brand" asp-area="" asp-controller="Home"
+                   asp-action="Index">
+                    <img width="55" height="40" src="~/images/logo.png.svg" />
+                </a>
+                <nav class="navbar-nav navbar-expand mr-sm-5 mr-md-0">
+                    <div class="navbar-nav navbar-right mb-sm-1 pt-2 mw-100">
+                        <div class="dropdown">
                             <button type="button" class="btn btn-primary s_top-right_drop-btn"
                                     id="navDropdown" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                <span class="">User</span>
+                                <span class="">Menu</span>
                             </button>
                             <span class="badge">Admin</span>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">
-                                    Privacy
+                                <div class="dropdown-header">
+                                    <h3>Admin</h3>
+                                </div>
+                                <a class="dropdown-item"
+                                   asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="dropdown-item"
+                                   asp-controller="MedicalPractice"
+                                   asp-action="Index">Medical Practices</a>
+                                <a class="dropdown-item"
+                                   asp-controller="Doctor"
+                                   asp-action="Index">Doctors</a>
+                                <a class="dropdown-item"
+                                   asp-controller="Pharmacy"
+                                   asp-action="Index">Pharmacies</a>
+                                <a class="dropdown-item"
+                                   asp-controller="Pharmacist"
+                                   asp-action="Index">Pharmacists</a>
+                                <a class="dropdown-item"
+                                   asp-controller="ConditionDiagnosis"
+                                   asp-action="Index">Condition Diagnosis(ICD-10)</a>
+                                <a class="dropdown-item"
+                                   asp-controller="ActiveIngredient"
+                                   asp-action="Index">Active-Ingredients</a>
+                                <a class="dropdown-item"
+                                   asp-controller="Medication"
+                                   asp-action="Index">Medication</a>
+                                <a class="dropdown-item"
+                                   asp-controller="ContraIndication"
+                                   asp-action="Index">Contra-Indications</a>
+                                <a class="dropdown-item"
+                                   asp-controller="MedicationInteraction"
+                                   asp-action="Index">Medication Interactions</a>
+                                <a class="dropdown-item"
+                                   asp-area="" asp-controller="Home"
+                                   asp-action="About">
+                                    About
                                 </a>
-                                <form method="post" asp-action="Logout" asp-controller="Account"
+                                <form 
+                                      method="post" asp-action="Logout" 
+                                      asp-controller="Account"
                                       asp-area="">
                                     <input type="submit" value="Log Out"
-                                           class="dropdown-item" />
+                                           class="dropdown-item logout-item" />
                                 </form>
                             </div>
                         </div>
@@ -42,12 +77,15 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div class="container container-after-nav">
+        <div class="adm_layout col">
+            <div class="adm_main col b_boxed">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2022 - E-P - <a asp-area="" asp-controller="Home" asp-action="About">About</a>

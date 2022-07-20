@@ -12,5 +12,6 @@ namespace Prescribing_System.Controllers
         {
             return RedirectToAction("Login", "Account");
         }
+        public ViewResult About() => View();
     }
 }

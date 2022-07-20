@@ -9,12 +9,8 @@ using Prescribing_System.Areas.Admin.Models;
 namespace Prescribing_System.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HomeController : Controller
+    public class PharmacyController : Controller
     {
-        public HomeController()
-        {
-
-        }
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);

@@ -1,8 +1,49 @@
 ﻿@model IndexViewModel
-@{ 
+@{
     ViewData["Title"] = "Home";
 
 }
 <h1>WELCOME</h1>
-<h4>@Model.LoggedUser.Username</h4>
-<h4>@Model.LoggedUser.Role</h4>
+<div class="section-block">
+    <div class="illustration illustration-drugs">
+
+    </div>
+    <div class="section-title">
+        <a asp-controller="Medication" asp-action="Index">
+            <h2>Medication</h2>
+        </a>
+    </div>
+    <br />
+</div>
+<hr />
+<div class="section-block">
+    <div class="illustration illustration-practice">
+
+    </div>
+    <div class="section-title">
+        <a asp-controller="MedicalPractice" asp-action="Index">
+            <h2>Medical Practice</h2>
+        </a>
+    </div>
+</div>
+<div class="section-block">
+    <div class="illustration illustration-doctors">
+
+    </div>
+    <div class="section-title">
+        <a asp-controller="Doctors" asp-action="Index">
+            <h2>Doctors</h2>
+        </a>
+    </div>
+</div>
+<div class="section-block">
+    <div class="illustration illustration-pharmacy">
+
+    </div>
+    <div class="section-title">
+        <a asp-controller="Pharmacy" asp-action="Index">
+            <h2>Pharmacy</h2>
+        </a>
+    </div>
+</div>
+

@@ -1,5 +1,153 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RegisterViewModel
 @{
+    ViewData["Title"] = "Register";
 }
+@section scripts {
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}  
+<div class="b_h_centered">
+    <div class="b_boxed">
+        <h2 class="text-center">Register</h2>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form method="post" asp-action="Register">
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>ID Number:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserPatient.IdNumber" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.IdNumber"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>First Name:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserPatient.FirstName" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.FirstName"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div class="col-8"><label>Last Name:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserPatient.LastName" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.LastName"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>Email Address:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserPatient.EmailAddress" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.EmailAddress"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div class="col-8"><label>Contact Number:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserPatient.ContactNumber" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.ContactNumber"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>Address Line 1:</label></div>
+                    <div class="col-12">
+                        <textarea asp-for="UserPatient.AddressLine1" class="form-control"></textarea>
+                        <span class="text-secondary">Street address, P.O box, Company name, c/o</span>
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.AddressLine1"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div class="col-8"><label>Address Line 2:</label></div>
+                    <div class="col-12">
+                        <textarea asp-for="UserPatient.AddressLine2" class="form-control"></textarea>
+                        <span class="text-secondary">Apartment, suite, unit, building, floor, etc</span>
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.AddressLine2"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>City/Suburb:</label></div>
+                    <div class="col-12">
+                        <select asp-for="UserPatient.SuburbID"
+                                asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
+                                        "Name"))"
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div class="col-8"><label>Province:</label></div>
+                    <div class="col-12">
+                        <select asp-for="UserPatient.ProvinceID"
+                                asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
+                                        "Name"))"
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>Password:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserDetails.Password" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserDetails.Password"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div class="col-8"><label>Confirm Password:</label></div>
+                    <div class="col-12">
+                        <input asp-for="UserDetails.ConfPassword" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserDetails.ConfPassword"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" asp-for="UserDetails.Role" value="Patient" />
+            <div class="form-group row">
+                <div class="col">
+                    <div class="col-8">
+                        Already registered? <a asp-action="Login">Log In</a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
