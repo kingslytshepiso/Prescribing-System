@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/Custom.css"/>
 </head>
 <body>
-    <header class="illustration-admin">
+    <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
             <div class="container m-sm-0 m-md-auto">
                 <a class="navbar-brand" asp-area="" asp-controller="Home"
@@ -32,11 +32,31 @@
                                 <a class="dropdown-item"
                                    asp-controller="Home" asp-action="Index">Home</a>
                                 <a class="dropdown-item"
-                                   asp-controller="MedicalPractice"
-                                   asp-action="Index">Medical Practices</a>
+                                   asp-controller="User"
+                                   asp-action="Index">
+                                    Users
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="ActiveIngredient"
+                                   asp-action="Index">Active-Ingredients</a>
+                                <a class="dropdown-item"
+                                   asp-controller="ConditionDiagnosis"
+                                   asp-action="Index">Condition Diagnosis(ICD-10)</a>
+                                <a class="dropdown-item"
+                                   asp-controller="ContraIndication"
+                                   asp-action="Index">Contra-Indications</a>
                                 <a class="dropdown-item"
                                    asp-controller="Doctor"
                                    asp-action="Index">Doctors</a>
+                                <a class="dropdown-item"
+                                   asp-controller="MedicalPractice"
+                                   asp-action="Index">Medical Practices</a>
+                                <a class="dropdown-item"
+                                   asp-controller="Medication"
+                                   asp-action="Index">Medication</a>
+                                <a class="dropdown-item"
+                                   asp-controller="MedicationInteraction"
+                                   asp-action="Index">Medication Interactions</a>
                                 <a class="dropdown-item"
                                    asp-controller="Pharmacy"
                                    asp-action="Index">Pharmacies</a>
@@ -44,27 +64,11 @@
                                    asp-controller="Pharmacist"
                                    asp-action="Index">Pharmacists</a>
                                 <a class="dropdown-item"
-                                   asp-controller="ConditionDiagnosis"
-                                   asp-action="Index">Condition Diagnosis(ICD-10)</a>
-                                <a class="dropdown-item"
-                                   asp-controller="ActiveIngredient"
-                                   asp-action="Index">Active-Ingredients</a>
-                                <a class="dropdown-item"
-                                   asp-controller="Medication"
-                                   asp-action="Index">Medication</a>
-                                <a class="dropdown-item"
-                                   asp-controller="ContraIndication"
-                                   asp-action="Index">Contra-Indications</a>
-                                <a class="dropdown-item"
-                                   asp-controller="MedicationInteraction"
-                                   asp-action="Index">Medication Interactions</a>
-                                <a class="dropdown-item"
                                    asp-area="" asp-controller="Home"
                                    asp-action="About">
                                     About
                                 </a>
-                                <form 
-                                      method="post" asp-action="Logout" 
+                                <form method="post" asp-action="Logout"
                                       asp-controller="Account"
                                       asp-area="">
                                     <input type="submit" value="Log Out"
@@ -77,10 +81,10 @@
             </div>
         </nav>
     </header>
-    <div class="container container-after-nav">
+    <div class="container container-after-nav bg-transparent">
         <div class="adm_layout col">
-            <div class="adm_main col b_boxed">
-                <main role="main" class="pb-3">
+            <div class="adm_main col b_boxed bg-light">
+                <main role="main" class="pb-3 bg-transparent">
                     @RenderBody()
                 </main>
             </div>

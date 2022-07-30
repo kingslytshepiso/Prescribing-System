@@ -50,6 +50,11 @@ namespace Prescribing_System
 
             app.UseEndpoints(endpoints =>
             {
+                //Admin routes
+                endpoints.MapAreaControllerRoute(
+                    name: "paging",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller}/{action}/Page/{pageNumber}");
                 endpoints.MapAreaControllerRoute(
                     name: "admin",
                     areaName: "Admin",

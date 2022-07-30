@@ -1,0 +1,54 @@
+﻿@model UserListContext
+@{ 
+    ViewData["Title"] = "Users";
+}
+<div>
+    <div>
+        <h2>Users</h2>
+        <div class="pagination">
+            <a class="btn btn-primary" asp-controller="User"
+               asp-action="Add">Add</a>
+        </div>
+    </div>
+    <div class="tbl">
+        <div class="tbl-head">
+            <div class="tbl-row">
+                <div>User ID</div>
+                <div>Username</div>
+                <div>Role</div>
+            </div>
+        </div>
+        <div class="tbl-body">
+            @foreach (var user in Model.DataList)
+            {
+                <a class="tbl-row" asp-controller="User" asp-action="Edit"
+                   asp-route-id="@user.UserId">
+                    <div>@user.UserId</div>
+                    <div>@user.Username</div>
+                    <div>@user.Role</div>
+                </a>
+            }
+        </div>
+    </div>
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
+                    <a class="page-link" asp-controller="User" asp-action="Index"
+                       asp-route-pageNumber="@(Model.CurrentPage - 1)">Previous</a>
+                </li>
+                @for (int i = 1; i < Model.OverallCount; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i?"active": "")">
+                        <a class="page-link" asp-controller="User" asp-action="Index"
+                           asp-route-pageNumber="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.CurrentPage == Model.OverallCount - 1? "disabled": "")">
+                    <a class="page-link" asp-controller="User" asp-action="Index"
+                       asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -4,46 +4,70 @@
 
 }
 <h1>WELCOME</h1>
-<div class="section-block">
-    <div class="illustration illustration-drugs">
+<div  class="illus-group-row">
+    <a asp-controller="Medication" asp-action="Index" class="block-link">
+        <div class="illustration-block illustration-drugs illus-large">
 
-    </div>
-    <div class="section-title">
-        <a asp-controller="Medication" asp-action="Index">
-            <h2>Medication</h2>
+        </div>
+        <div class="illus-title">
+            <div>
+                <h4>Medication</h4>
+            </div>
+        </div>
+    </a>
+</div>
+
+<hr />
+<div class="illus-group-col">
+    <div  class="illus-group-row">
+        <a asp-controller="Doctor" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-doctor illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Doctor</h4>
+                </div>
+            </div>
         </a>
     </div>
-    <br />
+    <div class="illus-group-row">
+        <a asp-controller="Pharmacy" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-pharmacy illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Pharmacies</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="Medication" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-pharmacist illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Pharmacists</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="ConditionDiagnosis" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-icd illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>ICD</h4>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
 <hr />
-<div class="section-block">
-    <div class="illustration illustration-practice">
 
-    </div>
-    <div class="section-title">
-        <a asp-controller="MedicalPractice" asp-action="Index">
-            <h2>Medical Practice</h2>
-        </a>
-    </div>
-</div>
-<div class="section-block">
-    <div class="illustration illustration-doctors">
-
-    </div>
-    <div class="section-title">
-        <a asp-controller="Doctors" asp-action="Index">
-            <h2>Doctors</h2>
-        </a>
-    </div>
-</div>
-<div class="section-block">
-    <div class="illustration illustration-pharmacy">
-
-    </div>
-    <div class="section-title">
-        <a asp-controller="Pharmacy" asp-action="Index">
-            <h2>Pharmacy</h2>
-        </a>
-    </div>
-</div>
 
