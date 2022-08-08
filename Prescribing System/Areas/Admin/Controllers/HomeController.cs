@@ -11,6 +11,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
     [Area("Admin")]
     public class HomeController : Controller
     {
+        public AdminDbContext Data = new AdminDbContext();
         public HomeController()
         {
 
@@ -32,6 +33,20 @@ namespace Prescribing_System.Areas.Admin.Controllers
                 return View(model);
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
+        }
+        [HttpGet]
+        public IActionResult Search(string keyword)
+        {
+            var model = Data.SearchAll(keyword);
+            var found = false;
+            foreach (SearchIndexModel s in model)
+            {
+                if (s.Objects.Count > 0)
+                    found = true;
+            }
+            ViewBag.Found = found;
+            ViewBag.Keyword = keyword;
+            return View(model);
         }
     }
 }

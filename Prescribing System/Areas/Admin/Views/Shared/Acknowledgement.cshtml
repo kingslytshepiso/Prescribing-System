@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Acknowledgement";
+}
+
+<p class="text-success">
+    @{
+        if (ViewBag.Message == null || ViewBag.Message == "")
+        {<b>Nothing to show here</b>}
+        else
+        {
+            <b>@ViewBag.Message</b>
+        }
+    }
+</p>
+<a class="btn btn-primary" asp-area="@ViewBag.Area" asp-controller="@ViewBag.Ctrl" asp-action="@ViewBag.Action">
+    Continue
+</a>
+

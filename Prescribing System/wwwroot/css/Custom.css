@@ -21,6 +21,19 @@ body {
     border: 1px solid grey;
     box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.16);
 }
+.box-columned{
+    display:flex;
+    flex-direction: row;
+    margin: .25rem;
+}
+.box-rowed {
+    display: flex;
+    flex-direction: column;
+    margin: .25rem;
+}
+.box-centered {
+    justify-content: center;
+}
 .b_brand{
     background-image: url('../images/logo.png');
 }
@@ -71,6 +84,9 @@ body {
     background: var(--secondary_background);
     margin: .5rem;
 }
+    .illustration-block:hover {
+        animation: block-hovering 2s infinite;
+    }
 .illus-group-row {
     display: flex;
     flex-direction: column;
@@ -95,6 +111,11 @@ body {
 .illus-large{
     width: 100%;
     height: 15rem;
+    transition: none;
+    background-size: auto;
+}
+.illus-large:hover{
+    animation: none;
 }
 .illus-title-small{
     width: 15rem;
@@ -105,12 +126,21 @@ body {
 .illus-title-large{
     width: 100%;
 }
-.illustration-block:hover{
-    animation: block-hovering 2s infinite;
-}
+
 .illustration-drugs{
-    background-image: var(--drugs_background);
-    
+    background-image: url('../images/james-yarema-kdgiNc0sDeI-unsplash.jpg');
+    background-size: contain;
+}
+.illustration-doctor{
+    background-image: url('../images/cdc-zGzZvLO5Brs-unsplash.jpg');
+    background-size: cover;
+}
+.illustration-pharmacy{
+    background-image: url('../images/melany-tuinfosalud-com-F6clvre8fGg-unsplash.jpg');
+    background-size: cover;
+}
+.illustration-icd{
+    background-image: url('../images/freestocks-nss2eRzQwgw-unsplash.jpg');
 }
 .illustration-default{
     background-image: url("../images/anirudh-DhEQCtxSHXI-unsplash.jpg") !important;
@@ -164,7 +194,7 @@ main{
     border-bottom: 1px solid silver;
 }
 .tbl-body .tbl-row {
-    background-image: linear-gradient(45deg, white, white, var(--primary_background));
+    background: white;
 }
 .tbl-body .tbl-row:hover{
     color: black;

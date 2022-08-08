@@ -1,0 +1,36 @@
+﻿@model AddUserViewModel
+@{
+    ViewData["Title"] = "Add " + ViewBag.UserType;
+
+}
+<vc:patient-user-section userModel="@Model"></vc:patient-user-section>
+@if (ViewBag.UserType == "Patient")
+{
+    <vc:patient-user-section userModel="@Model"></vc:patient-user-section>
+    @await Component.InvokeAsync("PatientUserSection",
+        new
+            {
+            userModel = Model
+        }
+    )
+}
+@if (ViewBag.UserType == "Doctor")
+{
+    <vc:doctor-user-section userModel="@Model"></vc:doctor-user-section>
+    @await Component.InvokeAsync("DoctorUserSection",
+        new
+            {
+            userModel = Model
+        }
+    )
+}
+@if (ViewBag.UserType == "Pharmacist")
+{
+    <vc:pharmacist-user-section userModel="@Model"></vc:pharmacist-user-section>
+    @await Component.InvokeAsync("PharmacistUserSection",
+        new
+            {
+            userModel = Model
+        }
+    )
+}

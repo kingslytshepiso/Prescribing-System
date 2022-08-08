@@ -4,23 +4,25 @@
 }
 <div>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <form asp-controller="User" asp-action="Edit" method="post">
+    <form class="form-critical" asp-controller="User" asp-action="Edit" method="post">
         <div class="form-group row">
             <div class="form-group col">
                 <div class="col-8"><label>User ID:</label></div>
                 <div class="col-12">
-                    <input asp-for="UserId" value="@Model.UserId" class="form-control"  disabled />
+                    <input asp-for="UserId" value="@Model.UserId" class="form-control" disabled />
                 </div>
             </div>
+            <input asp-for="UserId" type="hidden" value="@Model.UserId" />
             <div class="form-group col">
                 <div class="col-8"><label>Username:</label></div>
                 <div class="col-12">
-                    <input asp-for="Username" value="@Model.Username" class="form-control" />
+                    <input asp-for="Username" value="@Model.Username" class="form-control" disabled />
                 </div>
                 <div class="col">
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
             </div>
+            <input asp-for="Username" type="hidden" value="@Model.Username" />
         </div>
         <div class="form-group row">
             <div class="form-group col">
@@ -52,6 +54,9 @@
                         <option value="Pharmacist">Pharmacist</option>
                     </select>
                 </div>
+            </div>
+            <div class="col">
+                <a asp-controller="User" asp-action="Delete" asp-route-id="@Model.UserId"></a>
             </div>
             <div class="form-group col">
                 <div class="col">

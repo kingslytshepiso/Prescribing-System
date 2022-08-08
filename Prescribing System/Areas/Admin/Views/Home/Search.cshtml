@@ -1,0 +1,34 @@
+﻿@model List<SearchIndexModel>
+@{
+    ViewData["Title"] = "Searched for " + ViewBag.Keyword;
+}
+@if (ViewBag.Found)
+{
+    <h3>Search results for '<span class="text-info">@ViewBag.Keyword</span>'</h3>
+    @foreach (SearchIndexModel c in Model)
+    {
+        <div class="tbl">
+            @if (c.Objects.Count > 0)
+            {
+                <h5 class="tbl-head">@(c.Type):</h5>
+                <div class="tbl-body">
+                    <div class="tbl-body">
+                        @foreach (SearchObject o in c.Objects)
+                        {
+                            <a class="tbl-row" asp-controller="@c.Type"
+                               asp-action="Edit" asp-route-id="@o.Id">
+                                @o.Name
+                            </a>
+                        }
+                    </div>
+                </div>
+                <hr />
+            }
+        </div>
+    }
+}
+else
+{
+    <h3>Nothing found for '<span class="text-info">@ViewBag.Keyword</span>'</h3>
+    }
+

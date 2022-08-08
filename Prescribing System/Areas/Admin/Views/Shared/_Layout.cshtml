@@ -16,8 +16,18 @@
                    asp-action="Index">
                     <img width="55" height="40" src="~/images/logo.png.svg" />
                 </a>
-                <nav class="navbar-nav navbar-expand mr-sm-5 mr-md-0">
-                    <div class="navbar-nav navbar-right mb-sm-1 pt-2 mw-100">
+                <div class="navbar-nav navbar-expand mr-sm-5 ml-4">
+                    <form asp-controller="Home" asp-action="Search" method="get" class="box-columned pl-4 ml-4">
+                        <div class="box-columned box-centered">
+                            <input type="text" min="3" maxlength="20" name="keyword" placeholder="Search" />
+                        </div>
+                        <div class="box-columned box-centered">
+                            <button type="submit" class="btn btn-outline-secondary"><img width="20" height="20" src="~/icons/search-icon.png" /></button>
+                        </div>
+                    </form>
+                </div>
+                <nav class="navbar-nav navbar-expand mr-sm-5 mr-md-0 ">
+                    <div class="navbar-nav navbar-right mb-sm-1 pt-1 mw-100">
                         <div class="dropdown">
                             <button type="button" class="btn btn-primary s_top-right_drop-btn"
                                     id="navDropdown" data-toggle="dropdown"
@@ -38,31 +48,49 @@
                                 </a>
                                 <a class="dropdown-item"
                                    asp-controller="ActiveIngredient"
-                                   asp-action="Index">Active-Ingredients</a>
+                                   asp-action="Index">
+                                    Active-Ingredients
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="ConditionDiagnosis"
-                                   asp-action="Index">Condition Diagnosis(ICD-10)</a>
+                                   asp-action="Index">
+                                    Condition Diagnosis(ICD-10)
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="ContraIndication"
-                                   asp-action="Index">Contra-Indications</a>
+                                   asp-action="Index">
+                                    Contra-Indications
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="Doctor"
-                                   asp-action="Index">Doctors</a>
+                                   asp-action="Index">
+                                    Doctors
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="MedicalPractice"
-                                   asp-action="Index">Medical Practices</a>
+                                   asp-action="Index">
+                                    Medical Practices
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="Medication"
-                                   asp-action="Index">Medication</a>
+                                   asp-action="Index">
+                                    Medication
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="MedicationInteraction"
-                                   asp-action="Index">Medication Interactions</a>
+                                   asp-action="Index">
+                                    Medication Interactions
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="Pharmacy"
-                                   asp-action="Index">Pharmacies</a>
+                                   asp-action="Index">
+                                    Pharmacies
+                                </a>
                                 <a class="dropdown-item"
                                    asp-controller="Pharmacist"
-                                   asp-action="Index">Pharmacists</a>
+                                   asp-action="Index">
+                                    Pharmacists
+                                </a>
                                 <a class="dropdown-item"
                                    asp-area="" asp-controller="Home"
                                    asp-action="About">

@@ -5,9 +5,27 @@
 <div>
     <div>
         <h2>Users</h2>
-        <div class="pagination">
-            <a class="btn btn-primary" asp-controller="User"
-               asp-action="Add">Add</a>
+        <div class="pagination dropdown">
+            <button type="button" class="btn btn-primary dropdown-toggle"
+                    id="userDropdownBtn" data-toggle="dropdown"
+                    aria-expanded="false">Add</button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdownBtn">
+                <li class="dropdown-item">
+                    <a asp-controller="User" asp-action="Add" asp-route-type="Doctor">
+                        Doctor
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a asp-controller="User" asp-action="Add" asp-route-type="Pharmacist">
+                        Pharmacist
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a asp-controller="User" asp-action="Add" asp-route-type="Patient">
+                        Patient
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="tbl">
@@ -21,12 +39,15 @@
         <div class="tbl-body">
             @foreach (var user in Model.DataList)
             {
-                <a class="tbl-row" asp-controller="User" asp-action="Edit"
-                   asp-route-id="@user.UserId">
-                    <div>@user.UserId</div>
-                    <div>@user.Username</div>
-                    <div>@user.Role</div>
-                </a>
+                <div class="tbl-row">
+                    <input type="checkbox" value="@user.UserId" name="selected-Users" />
+                    <a class="tbl-row" asp-controller="User" asp-action="Edit"
+                       asp-route-id="@user.UserId">
+                        <div>@user.UserId</div>
+                        <div>@user.Username</div>
+                        <div>@user.Role</div>
+                    </a>
+                </div>
             }
         </div>
     </div>

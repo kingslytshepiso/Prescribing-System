@@ -14,7 +14,7 @@ namespace Prescribing_System.Controllers
         {
             return View();
         }
-        public JsonResult CheckID(string IdNumber)
+        public JsonResult CheckID([FromQuery(Name = "UserPatient.IdNumber")] string IdNumber)
         {
             bool IdTaken = Data.CheckID(IdNumber);
             if (IdTaken)
@@ -24,7 +24,7 @@ namespace Prescribing_System.Controllers
             else
                 return Json(true);
         }
-        public JsonResult CheckEmail(string emailAddress)
+        public JsonResult CheckEmail([FromQuery(Name = "UserPatient.EmailAddress")] string emailAddress)
         {
             bool emailTaken = Data.CheckEmail(emailAddress);
             if (emailTaken)
