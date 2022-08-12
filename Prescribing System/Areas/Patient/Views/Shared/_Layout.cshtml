@@ -12,26 +12,39 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" 
-                   asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img width="55" height="40" src="~/images/logo.png.svg" />
                 </a>
-                <nav class="navbar-nav navbar-expand">
-                    <div class="navbar-nav navbar-right mb-sm-1 pt-2">
-                        <div class="dropdown ">
+                <div class="navbar-nav navbar-expand mr-sm-5 ml-4">
+                    <form asp-controller="Home" asp-action="Search" method="get" class="box-columned pl-4 ml-4">
+                        <div class="box-columned box-centered">
+                            <input type="text" min="3" maxlength="20" name="keyword" placeholder="Search" />
+                        </div>
+                        <div class="box-columned box-centered">
+                            <button type="submit" class="btn btn-outline-secondary"><img width="20" height="20" src="~/icons/search-icon.png" /></button>
+                        </div>
+                    </form>
+                </div>
+                <nav class="navbar-nav navbar-expand mr-sm-5 mr-md-0 ">
+                    <div class="navbar-nav navbar-right mb-sm-1 pt-1 mw-100">
+                        <div class="dropdown">
                             <button type="button" class="btn btn-primary s_top-right_drop-btn"
                                     id="navDropdown" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                <span class="">User</span>
+                                <span class="">Menu</span>
                             </button>
+                            <span class="badge">Patient</span>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">
-                                    Privacy
+                                <a class="dropdown-item"
+                                   asp-area="" asp-controller="Home"
+                                   asp-action="About">
+                                    About
                                 </a>
-                                <form method="post" asp-action="Logout" asp-controller="Account"
+                                <form method="post" asp-action="Logout"
+                                      asp-controller="Account"
                                       asp-area="">
                                     <input type="submit" value="Log Out"
-                                           class="dropdown-item" />
+                                           class="dropdown-item btn-logout" />
                                 </form>
                             </div>
                         </div>

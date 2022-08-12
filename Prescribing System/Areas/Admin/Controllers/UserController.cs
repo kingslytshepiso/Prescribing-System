@@ -80,57 +80,6 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             return View(model);
         }
-        [HttpPost]
-        public IActionResult Add(AddUserViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                ViewBag.Message = "User added";
-                ViewBag.Area = "Admin";
-                ViewBag.Ctrl = "User";
-                ViewBag.Action = "Index";
-                if (model.SelectedUser.GetType().ToString() == "Doctor")
-                {
-                    bool result = Data.AddDoctor(model);
-                    if (result)
-                    {
-                        return View("Acknowledgement");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Error adding");
-                        return View(model);
-                    }
-                }
-                if (model.SelectedUser.GetType().ToString() == "Patient")
-                {
-                    bool result = Data.AddPatient(model);
-                    if (result)
-                    {
-                        return View("Acknowledgement");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Error adding");
-                        return View(model);
-                    }
-                }
-                if (model.SelectedUser.GetType().ToString() == "Pharmacist")
-                {
-                    bool result = Data.AddPharmacist(model);
-                    if (result)
-                    {
-                        return View("Acknowledgement");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Error adding");
-                        return View(model);
-                    }
-                }
-            }
-            ModelState.AddModelError("", "Invalid information entered.");
-            return View(model);
-        }
+       
     }
 }

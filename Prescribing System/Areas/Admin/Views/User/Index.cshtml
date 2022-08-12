@@ -40,7 +40,6 @@
             @foreach (var user in Model.DataList)
             {
                 <div class="tbl-row">
-                    <input type="checkbox" value="@user.UserId" name="selected-Users" />
                     <a class="tbl-row" asp-controller="User" asp-action="Edit"
                        asp-route-id="@user.UserId">
                         <div>@user.UserId</div>
@@ -58,14 +57,14 @@
                     <a class="page-link" asp-controller="User" asp-action="Index"
                        asp-route-pageNumber="@(Model.CurrentPage - 1)">Previous</a>
                 </li>
-                @for (int i = 1; i < Model.OverallCount; i++)
+                @for (int i = 1; i <= Model.OverallCount; i++)
                 {
                     <li class="page-item @(Model.CurrentPage == i?"active": "")">
                         <a class="page-link" asp-controller="User" asp-action="Index"
                            asp-route-pageNumber="@i">@i</a>
                     </li>
                 }
-                <li class="page-item @(Model.CurrentPage == Model.OverallCount - 1? "disabled": "")">
+                <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
                     <a class="page-link" asp-controller="User" asp-action="Index"
                        asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
                 </li>

@@ -10,7 +10,7 @@ using Prescribing_System.Areas.Admin.Models.System_Users;
 namespace Prescribing_System.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class DoctorController : Controller
+    public class PatientController : Controller
     {
         public AdminDbContext Data = new AdminDbContext();
         public bool UserIsVerified(string role = "")
@@ -24,7 +24,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            IndexViewModel model = new IndexViewModel 
+            IndexViewModel model = new IndexViewModel
             { LoggedUser = UserSingleton.GetLoggedUser() };
             if (UserIsVerified("Admin"))
                 return View(model);
@@ -36,13 +36,12 @@ namespace Prescribing_System.Areas.Admin.Controllers
         {
             var model = new AddUserViewModel()
             {
-                SelectedUser = new DoctorUser(),
+                SelectedUser = new PatientUser(),
             };
-            ViewBag.MedPracs = Data.GetAllMedPracs();
-            return View("User/Add", model);
+            return View("User/Add",model);
         }
         [HttpPost]
-        public IActionResult Add(AddDoctorViewModel model)
+        public IActionResult Add(AddPatientViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +49,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
                 ViewBag.Area = "Admin";
                 ViewBag.Ctrl = "User";
                 ViewBag.Action = "Index";
-                bool result = Data.AddDoctor(model);
+                bool result = Data.AddPatient(model);
                 if (result)
                 {
                     return View("Acknowledgement");

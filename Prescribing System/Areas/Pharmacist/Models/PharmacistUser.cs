@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Prescribing_System.Areas.Admin.Models.System_Users
+namespace Prescribing_System.Areas.Pharmacist.Models
 {
     public class PharmacistUser
     {
         public int PharmacistId { get; set; }
-        [Required(ErrorMessage ="Please enter first name")]
+        [Required(ErrorMessage = "Please enter first name")]
         [StringLength(30)]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Please enter last name.")]
@@ -25,7 +25,6 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         public string AddressLine1 { get; set; }
         //Address line 2 is not required
         public string AddressLine2 { get; set; }
-        public string ProfileImg { get; set; }
         public int PharmacyId { get; set; }
         public int SuburbId { get; set; }
         public int ProvinceId { get; set; }

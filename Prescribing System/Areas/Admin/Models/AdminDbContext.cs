@@ -156,10 +156,10 @@ namespace Prescribing_System.Areas.Admin.Models
             else
                 return false;
         }
-        public bool AddDoctor(AddUserViewModel model)
+        public bool AddDoctor(AddDoctorViewModel model)
         {
             connection();
-            DoctorUser doctor = (DoctorUser)model.SelectedUser;
+            DoctorUser doctor = model.User;
             var emailExist = CheckEmail(doctor.EmailAddress);
             if (!emailExist)
             {
@@ -189,10 +189,10 @@ namespace Prescribing_System.Areas.Admin.Models
             }
             return false;
         }
-        public bool AddPatient(AddUserViewModel model)
+        public bool AddPatient(AddPatientViewModel model)
         {
             connection();
-            PatientUser patient = (PatientUser)model.SelectedUser;
+            PatientUser patient = model.User;
             var emailExist = CheckEmail(patient.EmailAddress);
             if (!emailExist)
             {
@@ -221,10 +221,10 @@ namespace Prescribing_System.Areas.Admin.Models
             }
             return false;
         }
-        public bool AddPharmacist(AddUserViewModel model)
+        public bool AddPharmacist(AddPharmacistViewModel model)
         {
             connection();
-            PharmacistUser pharmacist = (PharmacistUser)model.SelectedUser;
+            PharmacistUser pharmacist = model.User;
             var emailExist = CheckEmail(pharmacist.EmailAddress);
             if (!emailExist)
             {
@@ -236,7 +236,7 @@ namespace Prescribing_System.Areas.Admin.Models
                 dbCmd.Parameters.AddWithValue("@EmailAddress", pharmacist.EmailAddress);
                 dbCmd.Parameters.AddWithValue("@ContactNo", pharmacist.ContactNumber);
                 dbCmd.Parameters.AddWithValue("@AddressLine1", pharmacist.AddressLine1);
-                dbCmd.Parameters.AddWithValue("@AddressLine2", pharmacist.AddressLine2);
+                dbCmd.Parameters.AddWithValue("@AddressLine2", pharmacist.AddressLine2 ?? "");
                 dbCmd.Parameters.AddWithValue("@SuburbID", pharmacist.SuburbId);
                 dbCmd.Parameters.AddWithValue("@PharmacyID", pharmacist.PharmacyId);
                 //User table columns

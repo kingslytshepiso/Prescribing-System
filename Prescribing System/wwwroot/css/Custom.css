@@ -83,6 +83,7 @@ body {
     transition: 500ms;
     background: var(--secondary_background);
     margin: .5rem;
+    color: white;
 }
     .illustration-block:hover {
         animation: block-hovering 2s infinite;
@@ -105,7 +106,7 @@ body {
     height: 7.5rem;
 }
 .illus-medium{
-    width: 20rem;
+    width: 35rem;
     height: 15rem;
 }
 .illus-large{
@@ -141,6 +142,11 @@ body {
 }
 .illustration-icd{
     background-image: url('../images/freestocks-nss2eRzQwgw-unsplash.jpg');
+}
+.illustration-medication{
+    background-image: url('../images/melany-tuinfosalud-com-F6clvre8fGg-unsplash.jpg')
+}
+.illustration-history{
 }
 .illustration-default{
     background-image: url("../images/anirudh-DhEQCtxSHXI-unsplash.jpg") !important;
@@ -204,6 +210,8 @@ main{
     margin: .250rem;
     padding: .25rem;
     width: 10rem;
+    overflow: hidden;
+    text-overflow: clip;
 }
 /*BOOTSTRAP MODIFIED CLASSES*/
 a{

@@ -11,6 +11,7 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
     [Area("Pharmacist")]
     public class HomeController : Controller
     {
+        public PharmacistDbcontext Data = new PharmacistDbcontext();
         //CHECKS IF THE USER'S ROLE AGAINST THE ROLE IN THE CURRENT AREA
         public bool UserIsVerified(string role = "")
         {
@@ -24,7 +25,11 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
         public IActionResult Index()
         {
             //GETS THE USER THAT'S STORED IN THE STATIC CLASS "UserSingleton"
-            IndexViewModel model = new IndexViewModel() { LoggedUser = UserSingleton.GetLoggedUser() };
+            IndexViewModel model = new IndexViewModel() { 
+                LoggedUser = UserSingleton.GetLoggedUser(),
+                User = Data.GetPharmacistWithId(UserSingleton.GetLoggedUser().UserId),
+                Pharmacy = Data.GetPharmacyWithId(UserSingleton.GetLoggedUser().UserId),
+            };
             if (UserIsVerified("Pharmacist"))
                 return View();
             else

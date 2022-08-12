@@ -3,6 +3,58 @@
     ViewData["Title"] = "Home";
 
 }
-<h1>WELCOME</h1>
-<h4>@Model.LoggedUser.Username</h4>
-<h4>@Model.LoggedUser.Role</h4>
+<div class="box-columned">
+    <h1 class="m-1">WELCOME</h1>
+    <div class="header-name-box">
+        @(Model.User.LastName + " " + Model.User.FirstName)
+    </div>
+    <div class="header-logo-box">
+        <img src="@Model.Pharmacy.Img" alt="pharmacy logo" />
+    </div>
+</div>
+<div class="illus-group-row">
+    <div class="illustration-block illus-large box-rowed box-centered">
+        <form asp-controller="Patient" asp-action="SearchPatient" method="get" class="">
+            <div class="form-group row">
+                <div class="col">
+                    <div class="col"><label>Enter Patient ID:</label></div>
+                    <div class="col">
+                        <input class="form-control" type="text" />
+                    </div>
+                </div>
+            </div>
+            <div class="box-columned">
+                <div class="col box-columned box-centered" >
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<div class="illus-group-col">
+    <div class="illus-group-row">
+        <a asp-controller="Medication" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-medication illus-medium">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Medication</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="History" asp-action="Index" class="block-link">
+            <div class="illustration-block illustraion-history illus-medium">
+                
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>History</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
