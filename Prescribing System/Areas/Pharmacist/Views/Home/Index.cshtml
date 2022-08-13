@@ -3,23 +3,30 @@
     ViewData["Title"] = "Home";
 
 }
-<div class="box-columned">
-    <h1 class="m-1">WELCOME</h1>
-    <div class="header-name-box">
-        @(Model.User.LastName + " " + Model.User.FirstName)
-    </div>
-    <div class="header-logo-box">
-        <img src="@Model.Pharmacy.Img" alt="pharmacy logo" />
+<div class="box-rowed box-centered">
+    <div class="box-columned box-centered">
+        <h4 class="m-1">WELCOME</h4>
+        <div class="header-name-box">
+            @(Model.User.LastName + " " + Model.User.FirstName)
+        </div>
+        <div class="header-logo-box ">
+            <label>
+                @(Model.Pharmacy.Name) - location: @(Model.Pharmacy.AddressLine1),
+                @(Model.Pharmacy.AddressLine2),
+                @(Model.Pharmacy.EmailAddress)
+            </label>
+            <img src="@Model.Pharmacy.Img" alt="pharmacy logo" />
+        </div>
     </div>
 </div>
 <div class="illus-group-row">
     <div class="illustration-block illus-large box-rowed box-centered">
-        <form asp-controller="Patient" asp-action="SearchPatient" method="get" class="">
+        <form asp-controller="Patient" asp-action="Index" method="get">
             <div class="form-group row">
                 <div class="col">
                     <div class="col"><label>Enter Patient ID:</label></div>
                     <div class="col">
-                        <input class="form-control" type="text" />
+                        <input class="form-control" type="text" name="idNumber" />
                     </div>
                 </div>
             </div>

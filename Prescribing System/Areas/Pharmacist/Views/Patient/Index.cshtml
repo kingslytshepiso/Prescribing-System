@@ -1,0 +1,75 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "Search Results";
+}
+@if (Model.PatientExist() == false)
+{
+    <div>
+        <h4 class="text-danger">
+            Patient is not registered!
+        </h4>
+    </div>
+}
+else
+{
+    <div class="patient-header-box">
+        <p>
+            ID: @Model.Patient.IdNumber
+        </p>
+        <p>
+            Name: @Model.Patient.LastName @Model.Patient.FirstName
+        </p>
+        <p>
+            Email: @Model.Patient.EmailAddress
+        </p>
+    </div>
+    <hr />
+    @if (!(Model.Prescriptions.Count > 0))
+    {
+        <div>
+            <h4 class="text-info">
+                patient has not loaded any prescriptions yet.
+            </h4>
+        </div>
+    }
+    else
+    {
+        @foreach (Prescription p in Model.Prescriptions)
+        {
+            <div class="prescription-box">
+                <div class="prescription-header">
+                    <p>Date: @p.Date</p>
+                    <p>Doctor: @p.</p>
+                </div>
+                <div class="prescription-body">
+                    @{
+                        var lines = Model.GetPrescriptionLines(p.PrescriptionID);
+                    }
+                    @if (!(lines.Count > 0))
+                    {
+                        <div>
+                            <h4 class="text-info">
+                                Prescription line is empty
+                            </h4>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (PrescriptionLine line in lines)
+                        {
+                            <div class="prescription-line">
+                                <p>Quantity: Quantity:@line.Quantity</p>
+                                <p>Instructions: @line.Instruction</p>
+                                <p>Repeat: @line.RepeatNo</p>
+                                <p>Repeats left: @line.RepeatLeft</p>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="prescription-footer">
+
+                </div>
+            </div>
+        }
+    }
+}

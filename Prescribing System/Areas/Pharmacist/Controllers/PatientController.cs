@@ -9,10 +9,9 @@ using Prescribing_System.Areas.Pharmacist.Models;
 namespace Prescribing_System.Areas.Pharmacist.Controllers
 {
     [Area("Pharmacist")]
-    public class HomeController : Controller
+    public class PatientController : Controller
     {
         public PharmacistDbcontext Data = new PharmacistDbcontext();
-        //CHECKS IF THE USER'S ROLE AGAINST THE ROLE IN THE CURRENT AREA
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);
@@ -22,14 +21,10 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
             else
                 return false;
         }
-        public IActionResult Index()
+        public IActionResult Index(string idNumber)
         {
             //GETS THE USER THAT'S STORED IN THE STATIC CLASS "UserSingleton"
-            IndexViewModel model = new IndexViewModel() { 
-                LoggedUser = UserSingleton.GetLoggedUser(),
-                User = Data.GetPharmacistWithId(UserSingleton.GetLoggedUser().UserId),
-                Pharmacy = Data.GetPharmacyWithId(UserSingleton.GetLoggedUser().UserId),
-            };
+            var model = new PatientViewModel(idNumber);
             if (UserIsVerified("Pharmacist"))
                 return View(model);
             else

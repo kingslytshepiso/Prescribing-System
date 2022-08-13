@@ -160,7 +160,17 @@ body {
     background-repeat: repeat;
 }
 
-main{
+.header-name-box{
+    font-size: 24px;
+    margin: 1rem;
+    width: 20rem;
+    height: 2rem;
+}
+.header-logo-box {
+    font-size: 24px;
+    margin: 1rem;
+    min-width: 10rem;
+    min-height: 2.5rem;
 }
 /*ADMIN STYLES*/
 .adm_layout{
