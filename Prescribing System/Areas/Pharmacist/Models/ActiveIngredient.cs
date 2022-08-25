@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace Prescribing_System.Areas.Pharmacist.Models
 {
-    public class Medication
+    public class ActiveIngredient
     {
-        public int MedicationID { get; set; }
+        public int ActiveIngreID { get; set; }
         public string Name { get; set; }
-        public int DosageID { get; set; }
-        public int ScheduleID { get; set; }
+        public string Description { get; set; }
     }
 }

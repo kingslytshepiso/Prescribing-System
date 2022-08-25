@@ -30,6 +30,7 @@ namespace Prescribing_System.Models
         public string AddressLine2 { get; set; }
         [Required()]
         public int SuburbID { get; set; }
+        public int CityID { get; set; }
         public int ProvinceID { get; set; }
     }
 }

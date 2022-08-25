@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Prescribing_System.Models;
+using Newtonsoft.Json;
 
 namespace Prescribing_System.Controllers
 {
@@ -66,7 +67,11 @@ namespace Prescribing_System.Controllers
             else
             {
                 ViewBag.Provinces = model.Provinces;
+                ViewBag.Prov_s = JsonConvert.SerializeObject(model.Provinces);
+                ViewBag.Cities = model.Cities;
+                ViewBag.City_s = JsonConvert.SerializeObject(model.Cities);
                 ViewBag.Suburbs = model.Suburbs;
+                ViewBag.Suburb_s = JsonConvert.SerializeObject(model.Suburbs);
                 if (model.UserPatient == null)
                     return View("Register");
                 return View("Register", model);

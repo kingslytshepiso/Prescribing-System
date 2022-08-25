@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 sticky-top">
             <div class="container m-sm-0 m-md-auto">
                 <a class="navbar-brand" asp-area="" asp-controller="Home"
                    asp-action="Index">
@@ -109,10 +109,42 @@
             </div>
         </nav>
     </header>
-    <div class="container container-after-nav bg-transparent">
-        <div class="adm_layout col">
-            <div class="adm_main col b_boxed bg-light">
-                <main role="main" class="pb-3 bg-transparent">
+    <div class="container m-sm-0 m-md-auto">
+        <nav aria-label="breadcrumb">
+            @{
+                var controller = ViewContext.RouteData.Values["controller"].ToString();
+                var action = ViewContext.RouteData.Values["action"].ToString();
+                var parameter = ViewContext.RouteData.Values["id"] ?? ViewContext.RouteData.Values["idNumber"];
+            }
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                @if (!(controller == "Home"))
+                {
+                    <li class="breadcrumb-item">
+                        <a asp-controller="@controller"
+                           asp-action="Index">
+                            @(controller == "Home" ? "" : controller)
+                        </a>
+                    </li>
+                    if (!(action == "Index"))
+                    {
+                        <li class="breadcrumb-item"
+                            aria-current="page">
+                            @action
+                        </li>
+                        if (!(parameter == null))
+                        {
+                            <li class="breadcrumb-item active">
+                                @parameter
+                            </li>
+                        }
+                    }
+                }
+            </ol>
+        </nav>
+        <div class="b_boxed">
+            <div>
+                <main role="main" class="pb-3">
                     @RenderBody()
                 </main>
             </div>

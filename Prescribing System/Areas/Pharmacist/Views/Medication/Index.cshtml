@@ -1,0 +1,72 @@
+﻿@model ListMedViewModel
+@{ 
+    ViewData["Title"] = "Medication";
+}
+<div>
+    <div>
+        <h2>Medication</h2>
+        <div class="pagination">
+            <form asp-controller="Medication" asp-action="Index" method="get" class="box-columned pl-4 ml-4">
+                <div class="box-columned box-centered">
+                    <input type="text" min="3" maxlength="20" name="keyword" placeholder="Search" />
+                </div>
+                <div class="box-columned box-centered">
+                    <button type="submit" class="btn btn-outline-secondary"><img width="20" height="20" src="~/icons/search-icon.png" /></button>
+                </div>
+            </form>
+        </div>
+        <div class="tbl">
+            <div class="tbl-head">
+                <div class="tbl-row">
+                    <div>Name</div>
+                    <div>Dosage</div>
+                    <div>Active Ingredient</div>
+                    <div>Strength</div>
+                    <div>Schedule</div>
+                </div>
+            </div>
+            <div class="tbl-body">
+                @foreach (var med in Model.DataList)
+                {
+                    <div class="tbl-row">
+                        <a class="tbl-row"
+                           asp-controller="Medication" asp-action="View"
+                           asp-route-medId="@med.MedicationID"
+                           asp-route-actId="@med.ActiveIngredientID">
+                            @{
+                                var medAbstract = Model.Meds.First(m => m.MedicationID == med.MedicationID);
+                                var ingredAbstract = Model.Ingredients.First(i => i.ActiveIngreID == med.ActiveIngredientID);
+                            }
+                            <div>@medAbstract.Name</div>
+                            <!--temporarily using the id instead of the actual dosage item-->
+                            <div>@medAbstract.DosageID)</div>
+                            <div>@ingredAbstract.Name</div>
+                            <div>@med.ActiveStrength</div>
+                            <!--temporarily using the id instead of the actual schedule item-->
+                            <div>@medAbstract.ScheduleID</div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
+                    <a class="page-link" asp-controller="User" asp-action="Index"
+                       asp-route-pageNumber="@(Model.CurrentPage - 1)">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.OverallCount; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i?"active": "")">
+                        <a class="page-link" asp-controller="User" asp-action="Index"
+                           asp-route-pageNumber="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
+                    <a class="page-link" asp-controller="User" asp-action="Index"
+                       asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

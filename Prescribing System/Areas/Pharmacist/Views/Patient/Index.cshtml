@@ -12,16 +12,21 @@
 }
 else
 {
-    <div class="patient-header-box">
-        <p>
-            ID: @Model.Patient.IdNumber
-        </p>
-        <p>
-            Name: @Model.Patient.LastName @Model.Patient.FirstName
-        </p>
-        <p>
-            Email: @Model.Patient.EmailAddress
-        </p>
+    <div class="box-columned justify-content-between patient-header-box">
+        <div>
+            <p>
+                ID: @Model.Patient.IdNumber
+            </p>
+            <p>
+                Name: @Model.Patient.LastName @Model.Patient.FirstName
+            </p>
+            <p>
+                Email: @Model.Patient.EmailAddress
+            </p>
+        </div>
+        <div class="patient-header-img">
+            <img src="" alt="patient profile image" title="patient profile" />
+        </div>
     </div>
     <hr />
     @if (!(Model.Prescriptions.Count > 0))
@@ -34,12 +39,23 @@ else
     }
     else
     {
+
+        var doctor = new DoctorUser();
+        var medPrac = new object();
+
         @foreach (Prescription p in Model.Prescriptions)
         {
+            doctor = Model.GetDoctor(p.DoctorID);
+            medPrac = Model.GetPractice(doctor.MedPracId);//to be changed to a medprac class
             <div class="prescription-box">
-                <div class="prescription-header">
-                    <p>Date: @p.Date</p>
-                    <p>Doctor: @p.</p>
+                <div class="box-columned justify-content-between prescription-header-details ">
+                    <div class="prescription-header-details">
+                        <p>Date: @p.Date</p>
+                        <p>Doctor: @(doctor.LastName + " " + doctor.FirstName) </p>
+                    </div>
+                    <div class="prescription-header-img">
+                        <img src="" alt="medprac-img" />
+                    </div>
                 </div>
                 <div class="prescription-body">
                     @{
@@ -70,6 +86,7 @@ else
 
                 </div>
             </div>
+            <hr />
         }
     }
 }

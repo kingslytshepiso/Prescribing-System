@@ -223,6 +223,27 @@ body {
     overflow: hidden;
     text-overflow: clip;
 }
+/*Pharmacist classes*/
+.patient-header-box{
+    padding: .5rem;
+}
+.patient-header-img{
+    width: 5rem;
+}
+.prescription-box{
+    border: 2px dashed black;
+    padding: .5rem;
+}
+.precription-header-details {
+    padding: .5rem;
+}
+.prescription-body{
+    padding: 2rem;
+}
+.prescription-line{
+    padding: .5rem;
+    margin: 1rem;
+}
 /*BOOTSTRAP MODIFIED CLASSES*/
 a{
     color: var(--secondary_color);

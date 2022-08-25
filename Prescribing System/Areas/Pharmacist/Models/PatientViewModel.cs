@@ -25,6 +25,12 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         {
             return DbData.GetDoctorWithId(id);
         }
+        //Unfinished method to get the doctor's medical practice
+        //allowing the view to access the image related to the practice
+        public object GetPractice(int id)
+        {
+            return new object();
+        }
         public bool PatientExist()
         {
             if (Patient == null)

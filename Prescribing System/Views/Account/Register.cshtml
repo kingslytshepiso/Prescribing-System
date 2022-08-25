@@ -1,10 +1,16 @@
 ﻿@model RegisterViewModel
 @{
     ViewData["Title"] = "Register";
+    <script>
+        var srlProvs = "@(ViewBag.Prov_s)";
+        var srlCities = "@ViewBag.City_s";
+        var srlSuburbs = "@ViewBag.Suburb_s";
+    </script>
 }
 @section scripts {
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
 }  
 <div class="b_h_centered">
     <div class="b_boxed">
@@ -69,33 +75,32 @@
             </div>
             <div class="form-group row">
                 <div class="form-group col">
-                    <div class="col-8"><label>Address Line 1:</label></div>
+                    <div class="col-8"><label>Province:</label></div>
                     <div class="col-12">
-                        <textarea asp-for="UserPatient.AddressLine1" class="form-control"></textarea>
-                        <span class="text-secondary">Street address, P.O box, Company name, c/o</span>
-                    </div>
-                    <div class="col">
-                        <span asp-validation-for="UserPatient.AddressLine1"
-                              class="text-danger"></span>
+                        <select id="slctProvince" asp-for="UserPatient.ProvinceID"
+                                asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
+                                        "Name"))"
+                                class="form-control">
+                        </select>
                     </div>
                 </div>
                 <div class="form-group col">
-                    <div class="col-8"><label>Address Line 2:</label></div>
+                    <div class="col-8"><label>City:</label></div>
                     <div class="col-12">
-                        <textarea asp-for="UserPatient.AddressLine2" class="form-control"></textarea>
-                        <span class="text-secondary">Apartment, suite, unit, building, floor, etc</span>
-                    </div>
-                    <div class="col">
-                        <span asp-validation-for="UserPatient.AddressLine2"
-                              class="text-danger"></span>
+                        <select id="slctCities" asp-for="UserPatient.CityID"
+                                asp-items="@(new SelectList(ViewBag.Cities, "CityID",
+                                        "Name"))"
+                                class="form-control">
+                        </select>
                     </div>
                 </div>
+                
             </div>
             <div class="form-group row">
                 <div class="form-group col">
                     <div class="col-8"><label>City/Suburb:</label></div>
                     <div class="col-12">
-                        <select asp-for="UserPatient.SuburbID"
+                        <select id="slctSuburbs" asp-for="UserPatient.SuburbID"
                                 asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
                                         "Name"))"
                                 class="form-control">
@@ -103,16 +108,18 @@
                     </div>
                 </div>
                 <div class="form-group col">
-                    <div class="col-8"><label>Province:</label></div>
+                    <div class="col-8"><label>Address Line 1:</label></div>
                     <div class="col-12">
-                        <select asp-for="UserPatient.ProvinceID"
-                                asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
-                                        "Name"))"
-                                class="form-control">
-                        </select>
+                        <input asp-for="UserPatient.AddressLine1" class="form-control"/>
+                        <span class="text-secondary">Apartment, suite, unit, building, floor, etc</span>
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="UserPatient.AddressLine1"
+                              class="text-danger"></span>
                     </div>
                 </div>
             </div>
+
             <div class="form-group row">
                 <div class="form-group col">
                     <div class="col-8"><label>Password:</label></div>

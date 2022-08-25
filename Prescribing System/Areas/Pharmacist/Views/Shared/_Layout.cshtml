@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    var user = UserSingleton.GetLoggedUser();
+    var data = new PharmacistDbcontext();
+    var pharmacist = data.GetPharmacistWithId(user.UserId);
+
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,7 +16,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 sticky-top">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img width="55" height="40" src="~/images/logo.png.svg" />
@@ -35,6 +41,17 @@
                             </button>
                             <span class="badge">Pharmacist</span>
                             <div class="dropdown-menu">
+                                <a class="dropdown-header">
+                                    @(pharmacist.LastName + " " + pharmacist.FirstName)
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="Home" asp-action="Index">
+                                    Home
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="Medication" asp-action="Index">
+                                    Medication
+                                </a>
                                 <a class="dropdown-item"
                                    asp-area="Pharmacist" asp-controller="Home"
                                    asp-action="Profile">
@@ -45,12 +62,16 @@
                                    asp-action="About">
                                     About
                                 </a>
-
+                                <a class="dropdown-item"
+                                   asp-controller="Home"
+                                   asp-action="Privacy">
+                                    Privacy
+                                </a>
                                 <form method="post" asp-action="Logout"
                                       asp-controller="Account"
                                       asp-area="">
                                     <input type="submit" value="Log Out"
-                                           class="dropdown-item btn-logout" />
+                                           class="dropdown-item logout-item" />
                                 </form>
                             </div>
                         </div>
@@ -60,13 +81,46 @@
         </nav>
     </header>
     <div class="container m-sm-0 m-md-auto">
+        <nav aria-label="breadcrumb">
+            @{
+                var controller = ViewContext.RouteData.Values["controller"].ToString();
+                var action = ViewContext.RouteData.Values["action"].ToString();
+                var parameter = ViewContext.RouteData.Values["id"] ?? ViewContext.RouteData.Values["idNumber"];
+            }
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                @if (!(controller == "Home"))
+                {
+                    <li class="breadcrumb-item">
+                        <a asp-controller="@controller"
+                           asp-action="Index">
+                            @controller
+                        </a>
+                    </li>
+                    if (!(action == "Index"))
+                    {
+                        <li class="breadcrumb-item"
+                            aria-current="page">
+                            @action
+                        </li>
+                        if (!(parameter == null))
+                        {
+                            <li class="breadcrumb-item active">
+                                @parameter
+                            </li>
+                        }
+                    }
+                }
+            </ol>
+        </nav>
         <div class="b_boxed">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
+            <div>
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
         </div>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2022 - E-P - <a asp-area="" asp-controller="Home" asp-action="About">About</a>
