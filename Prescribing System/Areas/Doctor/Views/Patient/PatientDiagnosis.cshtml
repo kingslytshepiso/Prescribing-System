@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewData["Title"] = "PatientDiagnosis";
+}
+
+<h1>Patient Diagnosis</h1>
+<link rel="stylesheet" href="~/css/main.css">
+<link rel="stylesheet" href="~/css/jquery.steps.css">
+<form id="my-form" method="post">
+    <div>
+        <h3>Chronic Diseases</h3>
+        <section>
+            <div class="form-group col">
+                    <div class="col-8"><label>Select Chronic Diseases *</label></div>
+                    <div class="col-12">
+                        <select
+                                class="form-control">
+                        </select>
+                    </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-12">
+                    <input type="date" class="form-control" />
+                </div>
+            </div>
+            <p>(*) Mandatory</p>
+             <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            <br/>
+        <div class="tbl">
+        <div class="tbl-head">
+            <div class="tbl-row">
+                <div>No:</div>
+                <div>Chronic Diseases Name</div>
+                <div>Abbreviation</div>
+                <div>Description</div>
+            </div>
+        </div>
+            @*Body of table*@
+        </div>
+        </section>
+        <h3>Acute Diseases</h3>
+        <section>
+            <div class="form-group col">
+                    <div class="col-8"><label>Select Acute Diseases *</label></div>
+                    <div class="col-12">
+                        <select
+                                class="form-control">
+                        </select>
+                    </div>
+            </div>
+             <div class="form-group col">
+                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-12">
+                    <input type="date" class="form-control" />
+                </div>
+            </div>
+            <p>(*) Mandatory</p>
+            <br/>
+        <div class="tbl">
+        <div class="tbl-head">
+            <div class="tbl-row">
+                <div>No:</div>
+                <div>Acute Diseases Name</div>
+                <div>Abbreviation</div>
+                <div>Description</div>
+            </div>
+        </div>
+            @*Body of table*@
+        </div>
+        </section>
+        <h3>Chronic Medication</h3>
+        <section>
+            <div class="form-group col">
+                    <div class="col-8"><label>Select Chronic Medications *</label></div>
+                    <div class="col-12">
+                        <select
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+            <p>(*) Mandatory</p>
+            <br/>
+        <div class="tbl">
+        <div class="tbl-head">
+            <div class="tbl-row">
+                <div>No:</div>
+                <div>Chronic Medication Name</div>
+                <div>Abbreviation</div>
+                <div>Description</div>
+            </div>
+        </div>
+            @*Body of table*@
+        </div>
+        </section>
+         <h3>Acute Medication</h3>
+        <section>
+            <div class="form-group col">
+                    <div class="col-8"><label>Select Acute Medications *</label></div>
+                    <div class="col-12">
+                        <select
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+            <p>(*) Mandatory</p>
+            <br/>
+        <div class="tbl">
+        <div class="tbl-head">
+            <div class="tbl-row">
+                <div>No:</div>
+                <div>Acute Medication Name</div>
+                <div>Abbreviation</div>
+                <div>Description</div>
+            </div>
+        </div>
+            @*Body of table*@
+        </div>
+        </section>
+        <h3>Drug Allergies</h3>
+        <section>
+            <div class="form-group col">
+                    <div class="col-8"><label>Select Drug Allergies *</label></div>
+                    <div class="col-12">
+                        <select
+                                class="form-control">
+                        </select>
+                    </div>
+                </div>
+            <p>(*) Mandatory</p>
+            <br/>
+        <div class="tbl">
+        <div class="tbl-head">
+            <div class="tbl-row">
+                <div>No:</div>
+                <div>Active-Ingredient Name</div>
+                <div>Abbreviation</div>
+                <div>Description</div>
+            </div>
+        </div>
+            @*Body of table*@
+        </div>
+        </section>
+        <h3>Current Visit</h3>
+        <section>
+            <div class="form-group col">
+                <div class="col-8"><label>What brings you in today? *</label></div>
+                    <div class="col-12">
+                    <input type="text" class="form-control" />
+                    </div>
+                <div class="col-8"><label>What hurts? *</label></div>
+                <div class="col-12">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-8"><label>What are your symptoms? *</label></div>
+                <div class="col-12">
+                    <textarea class="form-control">
+
+                    </textarea>
+                </div>
+                <div class="col-8"><label>How long has this been going on? *</label></div>
+                <div class="col-6">
+                    <input type="text" class="form-control" />
+                </div>
+                </div>
+            <p>(*) Mandatory</p>
+         
+        </section>
+    </div>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="~/js/jquery.steps.js"></script>
+<script src="~/js/script.js"></script>
+

@@ -6,3 +6,53 @@
 <h1>WELCOME</h1>
 <h4>@Model.LoggedUser.Username</h4>
 <h4>@Model.LoggedUser.Role</h4>
+<div class="illus-group-col">
+    <div  class="illus-group-row">
+        <a  asp-controller="Patient" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-doctor illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Patients</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="Prescription" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-pharmacy illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Prescriptions</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="Profile" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-pharmacist illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Profile</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-action="Logout" asp-controller="Account" asp-area="" class="block-link">
+            <div class="illustration-block illustration-icd illus-small">
+
+            </div>
+            <div class="illus-title illus-title-small">
+                <div>
+                    <h4>Logout</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
