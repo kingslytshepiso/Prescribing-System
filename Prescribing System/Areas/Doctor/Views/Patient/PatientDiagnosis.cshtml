@@ -17,7 +17,13 @@
                                 class="form-control">
                         </select>
                     </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-12">
+                    <input type="date" class="form-control" />
                 </div>
+            </div>
             <p>(*) Mandatory</p>
              <div class="col">
                     <div class="offset-8 col-8">
@@ -46,7 +52,13 @@
                                 class="form-control">
                         </select>
                     </div>
+            </div>
+             <div class="form-group col">
+                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-12">
+                    <input type="date" class="form-control" />
                 </div>
+            </div>
             <p>(*) Mandatory</p>
             <br/>
         <div class="tbl">
@@ -136,26 +148,27 @@
         <h3>Current Visit</h3>
         <section>
             <div class="form-group col">
-                    <div class="col-8"><label>Select Current Visit *</label></div>
+                <div class="col-8"><label>What brings you in today? *</label></div>
                     <div class="col-12">
-                        <select
-                                class="form-control">
-                        </select>
+                    <input type="text" class="form-control" />
                     </div>
+                <div class="col-8"><label>What hurts? *</label></div>
+                <div class="col-12">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-8"><label>What are your symptoms? *</label></div>
+                <div class="col-12">
+                    <textarea class="form-control">
+
+                    </textarea>
+                </div>
+                <div class="col-8"><label>How long has this been going on? *</label></div>
+                <div class="col-6">
+                    <input type="text" class="form-control" />
+                </div>
                 </div>
             <p>(*) Mandatory</p>
-            <br/>
-        <div class="tbl">
-        <div class="tbl-head">
-            <div class="tbl-row">
-                <div>No:</div>
-                <div>Chronic Diseases Name</div>
-                <div>Abbreviation</div>
-                <div>Description</div>
-            </div>
-        </div>
-            @*Body of table*@
-        </div>
+         
         </section>
     </div>
 </form>
