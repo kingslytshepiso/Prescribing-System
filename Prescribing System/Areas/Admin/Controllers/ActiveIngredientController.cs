@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prescribing_System.Models;
 using Prescribing_System.Areas.Admin.Models;
+using Prescribing_System.Areas.Admin.Models.System_Objects;
 
 namespace Prescribing_System.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ActiveIngredientController : Controller
     {
+        public AdminDbContext Data = new AdminDbContext();
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);
@@ -20,14 +22,65 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, int pageSize = 10, string sortBy = "none")
         {
-            IndexViewModel model = new IndexViewModel
-            { LoggedUser = UserSingleton.GetLoggedUser() };
             if (UserIsVerified("Admin"))
+            {
+                var model = Data.GetAllActIngreWithPaging(pageNumber, pageSize, sortBy);
+                switch (sortBy)
+                {
+                    case "none":break;
+                    case "name": model.DataList = model.DataList.OrderBy(x => x.Name).ToList(); break;
+                    case "description":model.DataList = model.DataList.OrderBy(x => x.Description).ToList(); break;
+                }
                 return View(model);
+
+            }
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var model = Data.GetActIngreWithId(id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Edit(ActiveIngredient model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = Data.UpdateActiveIngredient(model);
+                if (result)
+                {
+                    TempData["Message"] = "Successfully updated active ingredient.";
+                    return RedirectToAction("Index", "ActiveIngredient");
+                }
+            }
+            ModelState.AddModelError("", "Invalid value");
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(ActiveIngredient model)
+        {
+            if (ModelState.IsValid) 
+            {
+                var result = Data.AddActiveIngredient(model);
+                if (result)
+                {
+                    TempData["Message"] = "Successfully added a active ingredient.";
+                    return RedirectToAction("Index", "ActiveIngredient");
+                }
+                ModelState.AddModelError("", "Item already exist");
+            }
+            ModelState.AddModelError("", "Invalid value");
+            return View(model);
+
         }
     }
 }

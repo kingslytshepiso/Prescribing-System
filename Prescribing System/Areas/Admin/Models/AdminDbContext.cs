@@ -38,7 +38,7 @@ namespace Prescribing_System.Areas.Admin.Models
                 users.DataList = new List<User>();
                 users.OverallCount = ds.Tables.Count;
                 users.CurrentPage = pageNumber;
-                foreach (DataRow current in ds.Tables[pageNumber-1].Rows)
+                foreach (DataRow current in ds.Tables[pageNumber - 1].Rows)
                 {
                     users.DataList.Add(
                         new User()
@@ -55,6 +55,220 @@ namespace Prescribing_System.Areas.Admin.Models
             {
                 return users;
             }
+        }
+        public Act_IngreViewModel GetAllActIngreWithPaging(int pageNumber, int pageSize, string sort)
+        {
+            Act_IngreViewModel ingredients = new Act_IngreViewModel();
+            connection();
+            dbCmd = new SqlCommand("GetAllActIngreWithPaging", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@PageSize", pageSize);
+            ds = new DataSet();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(ds);
+            conn.Close();
+            if (ds.Tables.Count > 0)
+            {
+                ingredients.DataList = new List<ActiveIngredient>();
+                ingredients.OverallCount = ds.Tables.Count;
+                ingredients.CurrentPage = pageNumber;
+                ingredients.Sort = sort;
+                foreach (DataRow current in ds.Tables[pageNumber - 1].Rows)
+                {
+                    ingredients.DataList.Add(
+                        new ActiveIngredient()
+                        {
+                            ActiveIngreID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            Description = Convert.ToString(current["Description"].ToString()),
+                        });
+                }
+                return ingredients;
+            }
+            else
+            {
+                return ingredients;
+            }
+        }
+        public CndDgsisViewModel GetAllConditionDiagnosisWithPaging(int pageNumber, int pageSize,
+            string sort)
+        {
+            CndDgsisViewModel model = new CndDgsisViewModel();
+            connection();
+            dbCmd = new SqlCommand("GetAllConditionDiagnosisWithPaging", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@PageSize", pageSize);
+            ds = new DataSet();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(ds);
+            conn.Close();
+            if (ds.Tables.Count > 0)
+            {
+                model.DataList = new List<ConditionDiagnosis>();
+                model.OverallCount = ds.Tables.Count;
+                model.CurrentPage = pageNumber;
+                model.Sort = sort;
+                foreach (DataRow current in ds.Tables[pageNumber - 1].Rows)
+                {
+                    model.DataList.Add(
+                        new ConditionDiagnosis()
+                        {
+                            ConditionID = Convert.ToInt32(current["ConditionID"].ToString()),
+                            Code = Convert.ToString(current["Code"].ToString()),
+                            Description = Convert.ToString(current["Description"].ToString()),
+                            PatientID = Convert.ToInt32(current["PatientID"].ToString())
+                        }); ;
+                }
+                return model;
+            }
+            else
+            {
+                return model;
+            }
+        }
+        public CntrIndViewModel GetAllContraIndicationsWithPaging(int pageNumber, int pageSize,
+            string sort)
+        {
+            CntrIndViewModel model = new CntrIndViewModel();
+            connection();
+            dbCmd = new SqlCommand("GetAllContraIndicationsWithPaging", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@PageSize", pageSize);
+            ds = new DataSet();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(ds);
+            conn.Close();
+            if (ds.Tables.Count > 0)
+            {
+                model.DataList = new List<ContraIndicationGeneric>();
+                model.OverallCount = ds.Tables.Count;
+                model.CurrentPage = pageNumber;
+                model.Sort = sort;
+                foreach (DataRow current in ds.Tables[pageNumber - 1].Rows)
+                {
+                    model.DataList.Add(
+                        new ContraIndicationGeneric()
+                        {
+                            ContraIndicaID = Convert.ToInt32(current["ContraIndicaID"].ToString()),
+                            ActiveIngredientID = Convert.ToInt32(current["ActiveIngredientID"].ToString()),
+                            DiseaseID = Convert.ToInt32(current["DiseaseID"].ToString()),
+                            Description = Convert.ToString(current["Description"].ToString()),
+                            ActiveIngredientName = Convert.ToString(current["ActiveIngredientName"].ToString()),
+                            DiseaseName = Convert.ToString(current["DiseaseName"].ToString())
+                        });
+                }
+                return model;
+            }
+            else
+            {
+                return model;
+            }
+        }
+
+        public PatientUser GetPatientWithId(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetPatientWithId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            PatientUser user = new PatientUser();
+            if (dt.Rows.Count > 0)
+            {
+                user.PatientId = Convert.ToInt32(dt.Rows[0]["PatientID"].ToString());
+                user.FirstName = Convert.ToString(dt.Rows[0]["FirstName"].ToString());
+                user.LastName = Convert.ToString(dt.Rows[0]["LastName"].ToString());
+                user.IdNumber = Convert.ToString(dt.Rows[0]["IdNumber"].ToString());
+                user.ContactNumber = Convert.ToString(dt.Rows[0]["ContactNo"].ToString());
+                user.EmailAddress = Convert.ToString(dt.Rows[0]["EmailAddress"].ToString());
+                user.AddressLine1 = Convert.ToString(dt.Rows[0]["AddressLine1"].ToString());
+                user.AddressLine2 = Convert.ToString(dt.Rows[0]["AddressLine2"].ToString());
+                user.SuburbID = Convert.ToInt32(dt.Rows[0]["SuburbID"].ToString());
+            }
+            return user;
+        }
+        public List<PatientUser> GetAllPatients()
+        {
+            List<PatientUser> patients = new List<PatientUser>();
+            connection();
+            dbCmd = new SqlCommand("GetAllPatients", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    patients.Add(
+                        new PatientUser()
+                        {
+                            PatientId = Convert.ToInt32(current["PatientID"].ToString()),
+                            FirstName = Convert.ToString(current["FirstName"].ToString()),
+                            LastName = Convert.ToString(current["LastName"].ToString()),
+                            IdNumber = Convert.ToString(current["IdNumber"].ToString()),
+                            ContactNumber = Convert.ToString(current["ContactNo"].ToString()),
+                            EmailAddress = Convert.ToString(current["EmailAddress"].ToString()),
+                            AddressLine1 = Convert.ToString(current["AddressLine1"].ToString()),
+                            AddressLine2 = Convert.ToString(current["AddressLine2"].ToString()),
+                            SuburbID = Convert.ToInt32(current["SuburbID"].ToString()),
+                        });
+                }
+            }
+            return patients;
+        }
+        public List<ICD_Code> GetAllICDCodes()
+        {
+            List<ICD_Code> codes = new List<ICD_Code>();
+            connection();
+            dbCmd = new SqlCommand("GetAllICDCodes", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    codes.Add(
+                        new ICD_Code()
+                        {
+                            Code = Convert.ToString(current["Code"].ToString()),
+                            Description = Convert.ToString(current["Description"].ToString())
+                        });
+                }
+            }
+            return codes;
+        }
+        public List<ActiveIngredient> GetAllActiveIngredients()
+        {
+            List<ActiveIngredient> codes = new List<ActiveIngredient>();
+            connection();
+            dbCmd = new SqlCommand("GetAllActiveIngredients", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    codes.Add(
+                        new ActiveIngredient()
+                        {
+                            ActiveIngreID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            Description = Convert.ToString(current["Description"].ToString())
+                        });
+                }
+            }
+            return codes;
         }
         public List<MedicalPractice> GetAllMedPracs()
         {
@@ -116,6 +330,30 @@ namespace Prescribing_System.Areas.Admin.Models
             }
             return Pharmacies;
         }
+        public List<Disease> GetAllDiseases()
+        {
+            List<Disease> Pharmacies = new List<Disease>();
+            connection();
+            dbCmd = new SqlCommand("GetAllDiseases", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Pharmacies.Add(
+                        new Disease()
+                        {
+                            DiseaseID = Convert.ToInt32(current["DiseaseID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                        });
+                }
+            }
+            return Pharmacies;
+        }
         public User GetUserWithId(int id)
         {
             connection();
@@ -139,6 +377,92 @@ namespace Prescribing_System.Areas.Admin.Models
             else
                 return new User();
         }
+        public ActiveIngredient GetActIngreWithId(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetActIngreWithId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                return new ActiveIngredient()
+                {
+                    ActiveIngreID = Convert.ToInt32(dt.Rows[0]["ActiveIngreID"].ToString()),
+                    Name = Convert.ToString(dt.Rows[0]["Name"].ToString()),
+                    Description = Convert.ToString(dt.Rows[0]["Description"].ToString()),
+                };
+            }
+            else
+                return new ActiveIngredient();
+        }
+        public ConditionDiagnosis GetCondDiagnosisWithId(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetCondDiagnosisWithId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                return new ConditionDiagnosis()
+                {
+                    ConditionID = Convert.ToInt32(dt.Rows[0]["ConditionID"].ToString()),
+                    Code = Convert.ToString(dt.Rows[0]["Code"].ToString()),
+                    Description = Convert.ToString(dt.Rows[0]["Description"].ToString()),
+                    PatientID = Convert.ToInt32(dt.Rows[0]["PatientID"].ToString())
+                };
+            }
+            return new ConditionDiagnosis();
+        }
+        public Disease GetDiseaseWithId(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetDiseaseWithId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                return new Disease()
+                {
+                    DiseaseID = Convert.ToInt32(dt.Rows[0]["DiseaseID"].ToString()),
+                    Name = Convert.ToString(dt.Rows[0]["Name"].ToString())
+                };
+            }
+            return new Disease();
+        }
+        public ContraIndication GetCntrIndWithId(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetContrIndWithId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                return new ContraIndication()
+                {
+                    ContraIndicaID = Convert.ToInt32(dt.Rows[0]["ContraIndicaID"].ToString()),
+                    ActiveIngredientID = Convert.ToInt32(dt.Rows[0]["ActiveIngredientID"].ToString()),
+                    DiseaseID = Convert.ToInt32(dt.Rows[0]["DiseaseID"].ToString()),
+                    Description = Convert.ToString(dt.Rows[0]["Description"].ToString())
+                };
+            }
+            return new ContraIndication();
+        }
         public bool UpdateUser(User user)
         {
             connection();
@@ -155,6 +479,113 @@ namespace Prescribing_System.Areas.Admin.Models
                 return true;
             else
                 return false;
+        }
+        public bool UpdateActiveIngredient(ActiveIngredient ingredient)
+        {
+            connection();
+            dbCmd = new SqlCommand("UpdateActiveIngredient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@ActiveIngreID", ingredient.ActiveIngreID);
+            dbCmd.Parameters.AddWithValue("@Name", ingredient.Name);
+            dbCmd.Parameters.AddWithValue("@Description", ingredient.Description);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+                return true;
+            else
+                return false;
+        }
+        public bool AddActiveIngredient(ActiveIngredient ingredient)
+        {
+            connection();
+
+            dbCmd = new SqlCommand("AddActiveIngredient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@Name", ingredient.Name);
+            dbCmd.Parameters.AddWithValue("@Description", ingredient.Description);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool AddContraIndication(ContraIndication indication)
+        {
+            connection();
+
+            dbCmd = new SqlCommand("AddContraIndication", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@ActiveIngredientID", indication.ActiveIngredientID);
+            dbCmd.Parameters.AddWithValue("@DiseaseID", indication.DiseaseID);
+            dbCmd.Parameters.AddWithValue("@Description", indication.Description);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool AddConditionDiagnosis(ConditionDiagnosis model)
+        {
+            connection();
+
+            dbCmd = new SqlCommand("AddConditionDiagnosis", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@Code", model.Code);
+            dbCmd.Parameters.AddWithValue("@Description", model.Description);
+            dbCmd.Parameters.AddWithValue("@PatientID", model.PatientID);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool UpdateConditionDiagnosis(ConditionDiagnosis model)
+        {
+            connection();
+
+            dbCmd = new SqlCommand("UpdateConditionDiagnosis", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@ConditionID", model.ConditionID);
+            dbCmd.Parameters.AddWithValue("@Code", model.Code);
+            dbCmd.Parameters.AddWithValue("@Description", model.Description);
+            dbCmd.Parameters.AddWithValue("@PatientID", model.PatientID);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool UpdateContraIndication(ContraIndication model)
+        {
+            connection();
+
+            dbCmd = new SqlCommand("UpdateContraIndication", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@ContraIndicaID", model.ContraIndicaID);
+            dbCmd.Parameters.AddWithValue("@ActiveIngredientID", model.ActiveIngredientID);
+            dbCmd.Parameters.AddWithValue("@DiseaseID", model.DiseaseID);
+            dbCmd.Parameters.AddWithValue("@Description", model.Description);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                return true;
+            }
+            return false;
         }
         public bool AddDoctor(AddDoctorViewModel model)
         {

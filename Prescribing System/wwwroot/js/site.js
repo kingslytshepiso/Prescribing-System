@@ -7,36 +7,37 @@
 var provinces = document.getElementById("slctProvince");
 var cities = document.getElementById("slctCities");
 var suburbs = document.getElementById("slctSuburbs");
-const allProvs = JSON.parse(srlProvs.replace(/&quot;/g, '"'));
-const allCities = JSON.parse(srlCities.replace(/&quot;/g, '"'));
-const allSuburbs = JSON.parse(srlSuburbs.replace(/&quot;/g, '"'));
-if (provinces) {
-    provinces.addEventListener("change", function () {
-        cities.innerHTML = "";
-        for (var i = 0; i < allCities.length; i++) {
-            var obj = allCities[i];
-            let selectedProvince = provinces.options[provinces.selectedIndex].value;
-            if (selectedProvince == obj["ProvID"]) {
-                let newOption = new Option(obj["Name"], obj["CityID"]);
-                cities.add(newOption, undefined);
+if (typeof srlProvs !== 'undefined') {
+    const allProvs = JSON.parse(srlProvs.replace(/&quot;/g, '"'));
+    const allCities = JSON.parse(srlCities.replace(/&quot;/g, '"'));
+    const allSuburbs = JSON.parse(srlSuburbs.replace(/&quot;/g, '"'));
+    if (provinces) {
+        provinces.addEventListener("change", function () {
+            cities.innerHTML = "";
+            for (var i = 0; i < allCities.length; i++) {
+                var obj = allCities[i];
+                let selectedProvince = provinces.options[provinces.selectedIndex].value;
+                if (selectedProvince == obj["ProvID"]) {
+                    let newOption = new Option(obj["Name"], obj["CityID"]);
+                    cities.add(newOption, undefined);
+                }
             }
-        }
-    })
-}
-if (cities) {
-    cities.addEventListener("change", function () {
-        suburbs.innerHTML = "";
-        for (var i = 0; i < allSuburbs.length; i++) {
-            var obj = allSuburbs[i];
-            let selectedCity = cities.options[cities.selectedIndex].value;
-            if (selectedCity == obj["CityID"]) {
-                let newOption = new Option(obj["Name"], obj["SuburbID"]);
-                suburbs.add(newOption, undefined);
+        })
+    }
+    if (cities) {
+        cities.addEventListener("change", function () {
+            suburbs.innerHTML = "";
+            for (var i = 0; i < allSuburbs.length; i++) {
+                var obj = allSuburbs[i];
+                let selectedCity = cities.options[cities.selectedIndex].value;
+                if (selectedCity == obj["CityID"]) {
+                    let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                    suburbs.add(newOption, undefined);
+                }
             }
-        }
-    });
+        });
+    }
 }
-
 //Code for buttons that execute severe/important funtions in the app
 const form_critical = document.getElementsByClassName("form-critical");
 for (let i = 0; i < form_critical.length; i++) {

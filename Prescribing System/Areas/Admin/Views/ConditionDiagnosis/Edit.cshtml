@@ -1,0 +1,51 @@
+﻿@model ConditionDiagnosis
+@{
+    ViewData["Title"] = "Edit " + Model.Code;
+}
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form class="form-critical" asp-controller="ConditionDiagnosis" asp-action="Edit" method="post">
+    <input asp-for="ConditionID" type="hidden" value="@Model.ConditionID" />
+    <div class="form-group row">
+        <div class="col-8"><label>Code:</label></div>
+        <div class="col-12">
+            <input asp-for="Code" value="@Model.Code" class="form-control" disabled />
+        </div>
+    </div>
+    <input asp-for="Code" type="hidden" value="@Model.Code" />
+    <div class="form-group row">
+        <div class="col-8"><label>Description:</label></div>
+        <div class="col-12">
+            <textarea asp-for="Description" value="@Model.Description" class="form-control">
+
+                    </textarea>
+        </div>
+        <div class="col">
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-8"><label>Patient:</label></div>
+        <div class="col-12">
+            <select asp-for="PatientID" class="form-control">
+                @foreach (PatientUser p in ViewBag.Patients)
+                {
+                    <option value="@p.PatientId">@(p.LastName + " " + p.FirstName + "(" + p.IdNumber + ")")</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="button" onclick="history.back()" class="btn">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</form>

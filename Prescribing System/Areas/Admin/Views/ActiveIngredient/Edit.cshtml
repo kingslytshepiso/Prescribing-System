@@ -1,0 +1,48 @@
+﻿@model ActiveIngredient
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form class="form-critical" asp-controller="ActiveIngredient" asp-action="Edit" method="post">
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>Active Ingredient ID:</label></div>
+            <div class="col-12">
+                <input asp-for="ActiveIngreID" value="@Model.ActiveIngreID" class="form-control" disabled />
+            </div>
+        </div>
+        <input asp-for="ActiveIngreID" type="hidden" value="@Model.ActiveIngreID" />
+        <div class="form-group col">
+            <div class="col-8"><label>Name:</label></div>
+            <div class="col-12">
+                <input asp-for="Name" value="@Model.Name" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>Description:</label></div>
+            <div class="col-12">
+                <textarea asp-for="Description" value="@Model.Description" class="form-control">
+
+                    </textarea>
+            </div>
+            <div class="col">
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="button" onclick="history.back()" class="btn">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</form>

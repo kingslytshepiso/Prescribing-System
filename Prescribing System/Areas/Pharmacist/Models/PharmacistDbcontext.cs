@@ -264,6 +264,54 @@ namespace Prescribing_System.Areas.Pharmacist.Models
             }
             return ingredients;
         }
+        public List<Dosage> GetAllDosages()
+        {
+            List<Dosage> dosages = new List<Dosage>();
+            connection();
+            dbCmd = new SqlCommand("GetAllDosages", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    dosages.Add(
+                        new Dosage()
+                        {
+                            DosageID = Convert.ToInt32(current["DosageID"].ToString()),
+                            FormName = Convert.ToString(current["FormName"].ToString()),
+                        });
+                }
+            }
+            return dosages;
+        }
+        public List<Schedule> GetAllSchedules()
+        {
+            List<Schedule> schedules = new List<Schedule>();
+            connection();
+            dbCmd = new SqlCommand("GetAllSchedules", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    schedules.Add(
+                        new Schedule()
+                        {
+                            ScheduleID = Convert.ToInt32(current["ScheduleID"].ToString()),
+                            scheduleNo = Convert.ToInt32(current["ScheduleNo"].ToString()),
+                        });
+                }
+            }
+            return schedules;
+        }
         public ListMedViewModel SearchMedWithPaging(string keyword, int pageNumber,
             int pageSize)
         {
@@ -290,6 +338,8 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                 medication.DataList = new List<Med_Ingred>();
                 medication.Meds = GetAllMeds();
                 medication.Ingredients = GetAllActiveIngredients();
+                medication.Dosages = GetAllDosages();
+                medication.Schedules = GetAllSchedules();
                 medication.OverallCount = ds.Tables.Count;
                 medication.CurrentPage = pageNumber;
                 foreach (DataRow current in ds.Tables[pageNumber - 1].Rows)
@@ -299,7 +349,8 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                         {
                             MedicationID = Convert.ToInt32(current["MedicationID"].ToString()),
                             ActiveIngredientID = Convert.ToInt32(current["ActiveIngredientID"].ToString()),
-                            Description = Convert.ToString(current["Description"].ToString())
+                            Description = Convert.ToString(current["Description"].ToString()),
+                            ActiveStrength = Convert.ToInt32(current["ActiveStrength"].ToString())
                         });
                 }
             }

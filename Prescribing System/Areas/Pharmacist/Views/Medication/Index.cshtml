@@ -5,17 +5,7 @@
 <div>
     <div>
         <h2>Medication</h2>
-        <div class="pagination">
-            <form asp-controller="Medication" asp-action="Index" method="get" class="box-columned pl-4 ml-4">
-                <div class="box-columned box-centered">
-                    <input type="text" min="3" maxlength="20" name="keyword" placeholder="Search" />
-                </div>
-                <div class="box-columned box-centered">
-                    <button type="submit" class="btn btn-outline-secondary"><img width="20" height="20" src="~/icons/search-icon.png" /></button>
-                </div>
-            </form>
-        </div>
-        @if (Model.DataList.Count > 0)
+        @if (Model.OverallCount > 0)
         {
             <div class="tbl">
                 <div class="tbl-head">
@@ -23,7 +13,7 @@
                         <div>Name</div>
                         <div>Dosage</div>
                         <div>Active Ingredient</div>
-                        <div>Strength</div>
+                        <div>Strength(.mg)</div>
                         <div>Schedule</div>
                     </div>
                 </div>
@@ -38,14 +28,14 @@
                                 @{
                                     var medAbstract = Model.Meds.First(m => m.MedicationID == med.MedicationID);
                                     var ingredAbstract = Model.Ingredients.First(i => i.ActiveIngreID == med.ActiveIngredientID);
+                                    var dosageAbstract = Model.Dosages.First(m => m.DosageID == medAbstract.DosageID);
+                                    var scheduleAbstract = Model.Schedules.First(m => m.ScheduleID == medAbstract.ScheduleID);
                                 }
                                 <div>@medAbstract.Name</div>
-                                <!--temporarily using the id instead of the actual dosage item-->
-                                <div>@medAbstract.DosageID)</div>
+                                <div>@dosageAbstract.FormName</div>
                                 <div>@ingredAbstract.Name</div>
                                 <div>@med.ActiveStrength</div>
-                                <!--temporarily using the id instead of the actual schedule item-->
-                                <div>@medAbstract.ScheduleID</div>
+                                <div>@scheduleAbstract.scheduleNo</div>
                             </a>
                         </div>
                     }
@@ -70,6 +60,12 @@
                 </li>
             </ul>
         </nav>
+        }
+        else
+        {
+            <div>
+                <span>There are no records for Medication</span>
+            </div>
         }
     </div>
 </div>

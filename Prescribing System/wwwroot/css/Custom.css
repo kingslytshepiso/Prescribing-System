@@ -34,6 +34,13 @@ body {
 .box-centered {
     justify-content: center;
 }
+.box-items-from-right{
+    display: flex;
+    justify-content: flex-end;
+}
+.box-spaced-between{
+    justify-content: space-between;
+}
 .b_brand{
     background-image: url('../images/logo.png');
 }
@@ -127,7 +134,10 @@ body {
 .illus-title-large{
     width: 100%;
 }
-
+.utility-icon{
+    width: 10px;
+    height: 10px;
+}
 .illustration-drugs{
     background-image: url('../images/james-yarema-kdgiNc0sDeI-unsplash.jpg');
     background-size: contain;
@@ -191,6 +201,7 @@ body {
     display: flex;
     flex-direction: column;
     min-width: 35rem;
+    overflow: hidden;
 }
 .tbl-head{
     display: flex;
@@ -216,12 +227,14 @@ body {
     color: black;
     text-decoration: none;
 }
+
 .tbl-row div{
     margin: .250rem;
     padding: .25rem;
     width: 10rem;
     overflow: hidden;
     text-overflow: clip;
+    width: 6em;
 }
 /*Pharmacist classes*/
 .patient-header-box{
@@ -250,6 +263,9 @@ a{
 }
 .btn-primary {
     background: var(--secondary_color)
+}
+.btn-danger{
+    background: red;
 }
 .btn-primary:hover{
     color: var(--secondary_color);
