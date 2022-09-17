@@ -19,6 +19,7 @@ namespace Prescribing_System.Models
         [Required(ErrorMessage = "Please enter ID number.")]
         [Remote("CheckID", "Validation")]
         public string IdNumber { get; set; }
+        public char Gender { get; set; } = 'O';
         [Required(ErrorMessage = "Please enter email address.")]
         [Remote("CheckEmail", "Validation")]
         public string EmailAddress { get; set; }

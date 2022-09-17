@@ -7,6 +7,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
 {
     public class Med_Ingred
     {
+        public int MedIngreId { get; set; }
         public int MedicationID { get; set; }
         public int ActiveIngredientID { get; set; }
         public int ActiveStrength { get; set; }

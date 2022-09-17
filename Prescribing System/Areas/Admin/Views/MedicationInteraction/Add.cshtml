@@ -1,0 +1,44 @@
+﻿@model MedicationInteraction
+@{
+    ViewData["Title"] = "Add an interaction";
+}
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-controller="MedicationInteraction" asp-action="Add" method="post">
+    <div class="form-group row">
+        <div class="col-8"><label>First Interactor</label></div>
+        <div class="col-12">
+            <select asp-for="FirstInteractor" asp-items="@(new SelectList(ViewBag.ActiveIngredients,
+                "ActiveIngreID", "Name"))" class="form-control"></select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-8"><label>Second Interactor</label></div>
+        <div class="col-12">
+            <select asp-for="ScndInteractor" asp-items="@(new SelectList(ViewBag.ActiveIngredients,
+                "ActiveIngreID", "Name"))" class="form-control"></select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-8"><label>Effect Description</label></div>
+        <div class="col-12">
+            <textarea asp-for="EffectDescription" class="form-control"></textarea>
+        </div>
+        <div class="col">
+            <span asp-validation-for="EffectDescription" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="button" onclick="history.back()" class="btn">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</form>

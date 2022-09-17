@@ -17,7 +17,7 @@ namespace Prescribing_System.Areas.Doctor.Models
         DataSet ds;
         public void connection()
         {
-            string constring = "Data Source = localhost; Initial Catalog = E-Prescribing; Integrated Security = SSPI";
+            string constring = "Data Source = sict-sql.mandela.ac.za; Initial Catalog = GRP-4-10-E-Prescribing; Integrated Security = false; User ID = GRP-4-10; Password = grp-4-10-soit2022";
             conn = new SqlConnection(constring);
         }
 

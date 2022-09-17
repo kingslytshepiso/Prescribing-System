@@ -1,5 +1,111 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model InteractionViewModel
 @{
+    ViewData["Title"] = "Medication Interactions";
 }
+<div class="box-columned box-spaced-between">
+    <div class="">
+        <a asp-controller="MedicationInteraction" asp-action="Add"
+           class="btn btn-primary">Add</a>
+    </div>
+    <div class="">
+        <button type="button" class="btn btn-primary dropdown-toggle"
+                id="sortDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+            Sort by
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="none">
+                    -----
+                </a>
+            </li>
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="med1">
+                    First Interactor
+                </a>
+            </li>
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="med2">
+                    Second Interactor
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="box-columned overflow-scroll">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>1st Interactor</th>
+                <th>2nd Interactor</th>
+                <th>Effect</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.OverallCount > 0)
+            {
+                @foreach (var interaction in Model.DataList)
+                {
+                    <tr>
+                        <td>@interaction.InteractionID</td>
+                        <td>@interaction.GetFirstInteractor().Name</td>
+                        <td>@interaction.GetScndInteractor()</td>
+                        <td>@interaction.EffectDescription</td>
+                        <td colspan="1">
+                            <a class="btn btn-primary" asp-controller="MedicationInteraction"
+                       asp-action="Edit" asp-route-id="@interaction.InteractionID">
+                                <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+                            </a>
+                        </td>
+                        <td colspan="1">
+                            <form asp-controller="MedicationInteraction" asp-action="Delete"
+                          asp-route-id="@interaction.InteractionID" method="post"
+                          class="form-critical">
+                                <button class="btn btn-primary" type="submit">
+                                    <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>Empty</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<hr />
+<div>
+    @if (Model.OverallCount > 0)
+    {
+        <nav aria-label="Page navigation example" class="box-columned box-spaced-between">
+            <div class="box-rowed box-centered">
+                <strong>Showing @Model.CurrentPage of @Model.OverallCount</strong>
+            </div>
+            <ul class="pagination mr-0">
+                <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
+                    <a class="page-link" asp-controller="MedicationInteraction" asp-action="Index"
+                   asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-sortBy="@Model.Sort">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.OverallCount; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i?"active": "")">
+                        <a class="page-link" asp-controller="MedicationInteraction" asp-action="Index"
+                   asp-route-pageNumber="@i" asp-route-sortBy="@Model.Sort">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
+                    <a class="page-link" asp-controller="MedicationInteraction" asp-action="Index"
+                   asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-sortBy="@Model.Sort">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

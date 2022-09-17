@@ -17,7 +17,6 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         [StringLength(30)]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Please enter email address.")]
-        [Remote("CheckEmail", "Validation")]
         public string EmailAddress { get; set; }
         [Required(ErrorMessage = "Please enter contact number.")]
         public string ContactNumber { get; set; }
@@ -30,5 +29,14 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         [Required(ErrorMessage ="Please enter highest qualification")]
         public string HighestQual { get; set; }
         public int MedPracId { get; set; }
+        public string Status { get; set; }
+        public string ProfileImage { get; set; }
+    }
+    public class DoctorUserGeneric : DoctorUser
+    {
+        public string SuburbName { get; set; }
+        public string MedPracName { get; set; }
+        public string StatusName { get; set; }
+        public int CityID { get; set; }
     }
 }

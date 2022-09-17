@@ -32,5 +32,6 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         [Required()]
         public int SuburbID { get; set; }
         public int ProvinceID { get; set; }
+        public string Img { get; set; } = null;
     }
 }

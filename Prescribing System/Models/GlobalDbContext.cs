@@ -15,7 +15,7 @@ namespace Prescribing_System.Models
         DataTable dt;
         public void connection()
         {
-            string constring = "Data Source = localhost; Initial Catalog = E-Prescribing; Integrated Security = SSPI";
+            string constring = "Data Source = sict-sql.mandela.ac.za; Initial Catalog = GRP-4-10-E-Prescribing; Integrated Security = false; User ID = GRP-4-10; Password = grp-4-10-soit2022";
             conn = new SqlConnection(constring);
         }
         public bool Login(string username, string password)
@@ -187,6 +187,7 @@ namespace Prescribing_System.Models
             dbCmd.Parameters.AddWithValue("@FirstName", model.UserPatient.FirstName);
             dbCmd.Parameters.AddWithValue("@LastName", model.UserPatient.LastName);
             dbCmd.Parameters.AddWithValue("@IdNumber", model.UserPatient.IdNumber);
+            dbCmd.Parameters.AddWithValue("@Gender", model.UserPatient.Gender);
             dbCmd.Parameters.AddWithValue("@EmailAddress", model.UserPatient.EmailAddress);
             dbCmd.Parameters.AddWithValue("@ContactNo", model.UserPatient.ContactNumber);
             dbCmd.Parameters.AddWithValue("@AddressLine1", model.UserPatient.AddressLine1);

@@ -12,7 +12,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
     [Area("Admin")]
     public class ContraIndicationController : Controller
     {
-        public AdminDbContext Data = new AdminDbContext();
+        protected AdminDbContext Data = new AdminDbContext();
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);

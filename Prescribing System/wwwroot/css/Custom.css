@@ -6,6 +6,7 @@
     --secondary_background: rgba(0, 39, 56, 0.9);
     --drugs_background: url(../images/Drugs.jpg);
 }
+
 body {
     background-image: linear-gradient(var(--primary_background), white);
 }
@@ -18,13 +19,16 @@ body {
     min-width: 35rem;
     background-color: white;
     padding: 15px 20px 20px 20px;
-    border: 1px solid grey;
+    border-radius: 2px;
     box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.16);
 }
-.box-columned{
-    display:flex;
+.box-columned {
+    display: flex;
     flex-direction: row;
     margin: .25rem;
+}
+.overflow-scroll {
+    overflow: scroll;
 }
 .box-rowed {
     display: flex;
@@ -91,6 +95,7 @@ body {
     background: var(--secondary_background);
     margin: .5rem;
     color: white;
+    border-radius: 2px;
 }
     .illustration-block:hover {
         animation: block-hovering 2s infinite;
@@ -139,12 +144,15 @@ body {
     height: 10px;
 }
 .illustration-drugs{
-    background-image: url('../images/james-yarema-kdgiNc0sDeI-unsplash.jpg');
-    background-size: contain;
+    background-image: url('../images/black&white-pills-adjusted.jpg');
+    background-size: cover;
 }
 .illustration-doctor{
     background-image: url('../images/cdc-zGzZvLO5Brs-unsplash.jpg');
     background-size: cover;
+}
+.illustration-light {
+    background-image: url('../images/am-jd-OQYv1-YZkZQ-unsplash.jpg');
 }
 .illustration-pharmacy{
     background-image: url('../images/melany-tuinfosalud-com-F6clvre8fGg-unsplash.jpg');
@@ -164,12 +172,16 @@ body {
 .illustration-admin {
     background-image: url("../images/benjamin-salvatore-gfz8qqKcipo-unsplash.jpg") !important;
 }
+.admin-darker
 .background_Matte{
     background-image: url('../images/Background-Matte.svg');
     background-size: 100px 100px;
     background-repeat: repeat;
 }
-
+.global-logo{
+    max-height: 40px;
+    max-width: 100px;
+}
 .header-name-box{
     font-size: 24px;
     margin: 1rem;
@@ -182,8 +194,36 @@ body {
     min-width: 10rem;
     min-height: 2.5rem;
 }
+.profile-icon-holder{
+    max-height: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.profile-icon-holder .img{
+    cursor: pointer;
+}
+.profile-input-holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.profile-input-holder input[type="file"]{
+    display: none;
+    cursor: default;
+}
+.custom-file-input {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    width: 10px;
+}
+#imageRemover{
+    display: none;
+}
 /*ADMIN STYLES*/
-.adm_layout{
+.adm_layout {
     display: flex;
     text-decoration: none;
 }
@@ -196,6 +236,7 @@ body {
 }
 .adm_main{
 }
+
 /*TABLE ELEMENT CLASSES*/
 .tbl{
     display: flex;
@@ -241,7 +282,12 @@ body {
     padding: .5rem;
 }
 .patient-header-img{
-    width: 5rem;
+    width: 100px;
+    padding: .2em;
+}
+.patient-header-img img{
+    width: 100px;
+    height: 100px;
 }
 .prescription-box{
     border: 2px dashed black;
@@ -249,6 +295,14 @@ body {
 }
 .precription-header-details {
     padding: .5rem;
+}
+.prescription-header-img {
+    width: 100px;
+    padding: .2em;
+}
+.prescription-header-img img {
+    width: 100px;
+    height: 100px;
 }
 .prescription-body{
     padding: 2rem;

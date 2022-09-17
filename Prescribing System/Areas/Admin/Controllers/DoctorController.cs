@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Prescribing_System.Models;
 using Prescribing_System.Areas.Admin.Models;
 using Prescribing_System.Areas.Admin.Models.System_Users;
+using Newtonsoft.Json;
 
 namespace Prescribing_System.Areas.Admin.Controllers
 {
@@ -22,44 +23,81 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, int pageSize = 10, string sortBy = "none")
         {
-            IndexViewModel model = new IndexViewModel 
-            { LoggedUser = UserSingleton.GetLoggedUser() };
             if (UserIsVerified("Admin"))
+            {
+                var model = Data.GetAllDoctorsWithPaging(pageNumber, pageSize, sortBy);
+                switch (sortBy)
+                {
+                    case "none": break;
+                    case "name": model.DataList = model.DataList.OrderBy(x => x.LastName).ToList(); break;
+                    case "suburb": model.DataList = model.DataList.OrderBy(x => x.SuburbName).ToList(); break;
+                    case "medprac": model.DataList = model.DataList.OrderBy(x => x.MedPracName).ToList(); break;
+                    case "status": model.DataList = model.DataList.OrderBy(x => x.StatusName).ToList(); break;
+                }
                 return View(model);
+            }
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
         }
         [HttpGet]
         public IActionResult Add()
         {
-            var model = new AddUserViewModel()
-            {
-                SelectedUser = new DoctorUser(),
-            };
             ViewBag.MedPracs = Data.GetAllMedPracs();
-            return View("User/Add", model);
+            ViewBag.Suburbs = Data.GetAllSuburbs();
+            ViewBag.Suburb_s = JsonConvert.SerializeObject(Data.GetAllSuburbs());
+            ViewBag.Cities = Data.GetAllCities();
+            ViewBag.City_s = JsonConvert.SerializeObject(Data.GetAllCities());
+            ViewBag.Provinces = Data.GetAllProvinces();
+            ViewBag.Prov_s = JsonConvert.SerializeObject(Data.GetAllProvinces());
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.MedPracs = Data.GetAllMedPracs();
+            ViewBag.Suburbs = Data.GetAllSuburbs();
+            ViewBag.Suburb_s = JsonConvert.SerializeObject(Data.GetAllSuburbs());
+            ViewBag.Cities = Data.GetAllCities();
+            ViewBag.City_s = JsonConvert.SerializeObject(Data.GetAllCities());
+            ViewBag.Provinces = Data.GetAllProvinces();
+            ViewBag.Prov_s = JsonConvert.SerializeObject(Data.GetAllProvinces());
+            AddDoctorViewModel model = new AddDoctorViewModel()
+            {
+                User = Data.GetDoctorWithId(id),
+                UserDetails = Data.GetUserWithId(id),
+            };
+            return View(model);
         }
         [HttpPost]
         public IActionResult Add(AddDoctorViewModel model)
         {
             if (ModelState.IsValid)
             {
-                ViewBag.Message = "User added";
-                ViewBag.Area = "Admin";
-                ViewBag.Ctrl = "User";
-                ViewBag.Action = "Index";
-                bool result = Data.AddDoctor(model);
+                var result = Data.AddDoctor(model);
                 if (result)
                 {
-                    return View("Acknowledgement");
+                    TempData["Message"] = "Doctor successfully added.";
+                    return RedirectToAction("Index", "Doctor");
                 }
-                else
+                ModelState.AddModelError("", "Error adding.");
+            }
+            ModelState.AddModelError("", "Invalid information entered.");
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Edit(AddDoctorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = Data.UpdateDoctor(model);
+                if (result)
                 {
-                    ModelState.AddModelError("", "Error adding");
-                    return View(model);
+                    TempData["Message"] = "Doctor successfully updated.";
+                    return RedirectToAction("Index", "Doctor");
                 }
+                ModelState.AddModelError("", "Error updating.");
             }
             ModelState.AddModelError("", "Invalid information entered.");
             return View(model);

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prescribing_System.Models;
 using Prescribing_System.Areas.Admin.Models;
+using Prescribing_System.Areas.Admin.Models.System_Objects;
 
 namespace Prescribing_System.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class MedicationInteractionController : Controller
     {
+        public AdminDbContext Data = new AdminDbContext();
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);
@@ -20,14 +22,74 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, int pageSize = 10, string sortBy = "none")
         {
-            IndexViewModel model = new IndexViewModel
-            { LoggedUser = UserSingleton.GetLoggedUser() };
             if (UserIsVerified("Admin"))
+            {
+                var model = Data.GetAllInteractionsWithPaging(pageNumber, pageSize, sortBy);
+                switch (sortBy)
+                {
+                    case "none": break;
+                        //case "name": model.DataList = model.DataList.OrderBy(x => x.).ToList(); break;
+                        //case "suburb": model.DataList = model.DataList.OrderBy(x => x.SuburbName).ToList(); break;
+                        //case "medprac": model.DataList = model.DataList.OrderBy(x => x.MedPracName).ToList(); break;
+                        //case "status": model.DataList = model.DataList.OrderBy(x => x.StatusName).ToList(); break;
+                }
                 return View(model);
+            }
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
+        }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            ViewBag.ActiveIngredients = Data.GetAllActiveIngredients();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(MedicationInteraction model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = Data.AddInteraction(model);
+                if (result)
+                {
+                    TempData["Message"] = "Medication Interaction added.";
+                    return RedirectToAction("Index", "MedicationInteraction");
+                }
+                ModelState.AddModelError("", "Error adding.");
+            }
+            ViewBag.ActiveIngredients = Data.GetAllActiveIngredients();
+            ModelState.AddModelError("", "Invalid values.");
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.ActiveIngredients = Data.GetAllActiveIngredients();
+            var model = Data.GetInteractionWithId(id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Edit(MedicationInteraction model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = Data.UpdateInteraction(model);
+                if (result)
+                {
+                    TempData["Message"] = "Interaction modified successfully.";
+                    return RedirectToAction("Index", "MedicationInteraction");
+                }
+                ModelState.AddModelError("", "Error updating");
+            }
+            ModelState.AddModelError("", "Invalid values");
+            return View(model);
+        }
+        public IActionResult Search(string keyword)
+        {
+            List<SearchIndexModel> model = new List<SearchIndexModel>();
+            return View("/Home/Search", model);
         }
     }
 }

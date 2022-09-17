@@ -47,11 +47,8 @@ namespace Prescribing_System.Areas.Admin.Models
     }
     public class AddDoctorViewModel : AddUserViewModel
     {
-        public DoctorUser User { get; set; }
-        public AddDoctorViewModel()
-        {
-            User = (DoctorUser)SelectedUser;
-        }
+        public DoctorUserGeneric User { get; set; }
+        
         public DoctorUser GetUser()
         {
             return (DoctorUser)SelectedUser;
