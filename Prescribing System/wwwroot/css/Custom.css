@@ -38,6 +38,9 @@ body {
 .box-centered {
     justify-content: center;
 }
+.min-scrollable-size{
+    height: 300px;
+}
 .box-items-from-right{
     display: flex;
     justify-content: flex-end;
@@ -278,8 +281,9 @@ body {
     width: 6em;
 }
 /*Pharmacist classes*/
-.patient-header-box{
+.patient-header-box {
     padding: .5rem;
+    background: #e9ecef;
 }
 .patient-header-img{
     width: 100px;
@@ -293,8 +297,32 @@ body {
     border: 2px dashed black;
     padding: .5rem;
 }
-.precription-header-details {
-    padding: .5rem;
+.prescription-header-details {
+    padding: .2rem;
+}
+.prescription-lines-container{
+    padding: .2rem;
+    height: 208px;
+    width: 500px;
+}
+.lines-content{
+
+}
+.prescription-lines-container .lines-content{
+    height: 100px;
+}
+.line-view-item{
+    height: 10px;
+}
+.line-view-item td{
+    padding: 0;
+}
+.line-view-item td div a{
+    padding: 0.1em;
+    font-size: 10px;
+}
+.line-view-item td{
+    padding: 0.1em;
 }
 .prescription-header-img {
     width: 100px;
@@ -310,6 +338,19 @@ body {
 .prescription-line{
     padding: .5rem;
     margin: 1rem;
+}
+.hiddenForm{
+    display: none;
+}
+.table-container{
+    overflow: hidden;
+    text-overflow:clip;
+}
+.bg-rejected{
+    position: absolute;
+    color: red;
+    font-size: 8em;
+    text-align: center;
 }
 /*BOOTSTRAP MODIFIED CLASSES*/
 a{

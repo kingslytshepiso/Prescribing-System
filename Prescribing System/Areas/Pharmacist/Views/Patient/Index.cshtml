@@ -14,19 +14,26 @@ else
 {
     <div class="box-columned justify-content-between patient-header-box">
         <div>
-            <p>
-                ID: @Model.Patient.IdNumber
-            </p>
-            <p>
-                Name: @Model.Patient.LastName @Model.Patient.FirstName
-            </p>
-            <p>
-                Email: @Model.Patient.EmailAddress
-            </p>
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td>ID</td>
+                        <td>@Model.Patient.IdNumber</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>@Model.Patient.LastName @Model.Patient.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>@Model.Patient.EmailAddress</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="patient-header-img">
-            <img src="~/icons/user-icon.png" 
-                alt="patient profile image" title="patient profile" />
+            <img src="~/icons/user-icon.png"
+                 alt="patient profile image" title="patient profile" />
         </div>
     </div>
     <hr />
@@ -46,46 +53,89 @@ else
 
         @foreach (Prescription p in Model.Prescriptions)
         {
+            var lines = Model.GetPrescriptionLines(p.PrescriptionID).OrderByDescending(x => x.RepeatLeft).ThenBy(x => x.Status).ToList();
             doctor = Model.GetDoctor(p.DoctorID);
             medPrac = Model.GetPractice(doctor.MedPracId);//to be changed to a medprac class
             <div class="prescription-box">
                 <div class="box-columned justify-content-between prescription-header-details ">
                     <div class="prescription-header-details">
-                        <p>Date: @p.Date</p>
-                        <p>Doctor: @(doctor.LastName + " " + doctor.FirstName) </p>
+                            <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Prescription</th>
+                                </tr>
+                            </thead>
+                            </table>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>@p.Date.ToShortDateString()</td>
+                                </tr>
+                                <tr>
+                                    <td>Doctor</td>
+                                    <td>@(doctor.LastName + " " + doctor.FirstName)</td>
+                                </tr>
+                                <tr>
+                                    <td>Prescription Lines</td>
+                                    <td>@lines.Count</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="prescription-lines-container">
+                            @if (lines.Count > 1)
+                            {
+                            <div class="">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>Prescription Lines</th></tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="lines-content @(lines.Count > 3 ? "overflow-scroll" : "") ">
+                                <table class="table">
+                                    <tbody>
+                                        @{var i = 1;}
+                                        @foreach (var l in lines)
+                                        {
+                                            <tr class="border-bottom line-view-item 
+                                                    @(l.Status == "Rejected"?"bg-danger":"") 
+                                                    @(l.Status == "Dispensed"? "bg-info": "")">
+                                                <td>
+                                                    @i. Line for @l.GetMed().Name@(l.Status == "Rejected" ? "(Rejected)" : "")
+                                                    @(l.Status == "Dispensed" ? "(Dispensed)":"")
+                                                </td>
+                                                <td>
+                                                    <div class="box-items-from-right">
+                                                        <a asp-controller="Patient" asp-action="Line"
+                                                             asp-route-id="@l.LineID" asp-route-slug="@(l.GetMed().Name)"
+                                                             class="btn btn-primary">
+                                                            View
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <strong>No prescription line loaded</strong>
+                                </div>
+                            }
                     </div>
                     <div class="prescription-header-img">
                         <img src="~/icons/hospital.png"
                  alt="practice image" title="practice" />
                     </div>
                 </div>
-                <div class="prescription-body">
-                    @{
-                        var lines = Model.GetPrescriptionLines(p.PrescriptionID);
-                    }
-                    @if (!(lines.Count > 0))
-                    {
-                        <div>
-                            <h4 class="text-info">
-                                Prescription line is empty
-                            </h4>
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (PrescriptionLine line in lines)
-                        {
-                            <div class="prescription-line">
-                                <p>Quantity: Quantity:@line.Quantity</p>
-                                <p>Instructions: @line.Instruction</p>
-                                <p>Repeat: @line.RepeatNo</p>
-                                <p>Repeats left: @line.RepeatLeft</p>
-                            </div>
-                        }
-                    }
-                </div>
                 <div class="prescription-footer">
-
+                    
                 </div>
             </div>
             <hr />

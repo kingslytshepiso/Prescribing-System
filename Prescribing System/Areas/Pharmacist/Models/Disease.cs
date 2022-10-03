@@ -1,4 +1,4 @@
-﻿namespace Prescribing_System.Areas.Pharmacist.Models
+﻿namespace Prescribing_System.Areas.Admin.Models.System_Objects
 {
     public class Disease
     {

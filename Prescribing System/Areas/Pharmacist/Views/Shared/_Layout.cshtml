@@ -89,7 +89,7 @@
             }
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                @if (!(controller == "Home"))
+                @if (!(controller == "Home" || controller == "Patient"))
                 {
                     <li class="breadcrumb-item">
                         <a asp-controller="@controller"
@@ -113,6 +113,14 @@
                 }
             </ol>
         </nav>
+        @{
+            if (!(TempData["Message"] == null || TempData["Message"].ToString() == ""))
+            {
+                <script>
+                        alert("@(TempData["Message"])");
+                </script>
+            }
+        }
         <div class="b_boxed">
             <div>
                 <main role="main" class="pb-3">

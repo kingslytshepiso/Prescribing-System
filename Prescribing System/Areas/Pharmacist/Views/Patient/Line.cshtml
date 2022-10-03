@@ -1,0 +1,147 @@
+﻿@model PrescriptionLine
+@{
+    ViewData["Title"] = "Prescription lines";
+    var rjctd_dspnsd = Model.Status == "Rejected" || Model.Status == "Dispensed";
+    var alerts = Model.GetValidations();
+    var invalids = alerts.FindAll(x => x.Status == "Invalid");
+}
+<div class="prescription-body">
+    <div class="line-content">
+        <div class="prescription-line">
+            <div id="bg_container" class="table-container">
+                @if (rjctd_dspnsd) 
+                {
+                    <div id="bg_rejected" class="bg-rejected">
+                        Rejected
+                    </div>
+                }
+                <div>
+                    <table class="table table-bordered @(Model.Status == "Rejected"?"table-danger":"")">
+                        <thead>
+                            <tr>
+                                <th>Medication</th>
+                                <th>Quantity</th>
+                                <th>Instructions</th>
+                                <th>Repeat</th>
+                                <th>Repeats Left</th>
+                                <th>Last dispensed</th>
+                                <th>Last dispensed Pharmacy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Name: </strong>@Model.GetMed().Name<br />
+                                    <strong>Active Ingredient:<br /></strong>
+                                    @Model.GetMed().GetIngredient().Name
+                                    @Model.GetMed().ActiveStrength (.mg)
+                                </td>
+                                <td>@Model.Quantity</td>
+                                <td>@Model.Instruction</td>
+                                <td>@Model.RepeatNo</td>
+                                <td class="@(Model.RepeatLeft > 0? "bg-success": "bg-danger")">@Model.RepeatLeft</td>
+                                <td class="@(Model.IsDateValid()?"bg-danger": "bg-info")">@Model.LastDispensed.ToShortDateString()</td>
+                                <td>@Model.GetPharmacy().Name</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="min-scrollable-size overflow-scroll">
+                @{
+                    
+                }
+                <form id="submit-form" class="@(invalids.Count > 0 ? "form-critical": "")" asp-controller="Patient" asp-action="Dispense" method="post">
+                    <table class="table @(invalids.Count > 0 || rjctd_dspnsd? "table-danger":"table-success")">
+                        <thead>
+                            <tr><th>Alerts</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @if (invalids.Count > 0)
+                            {
+                                var i = 0;
+                                @foreach (var v in alerts.FindAll(x => x.Status == "Invalid"))
+                                {
+                                    <tr>
+                                        <td colspan="3">
+                                            Alert type: <strong>@(v.AlertType)</strong><br />
+                                            Alert Message: <b>@v.Message</b><br />
+                                            <b>@(v.Extras == null ? " " : "Alert Extra:  " + v.Extras )</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <label for="@(v.AlertType.Replace(' ', '_'))">Ignore</label>
+                                            <input class="check-decider" asp-for="Alerts[i].Ignored" type="checkbox" />
+                                        </td>
+                                        <td colspan="4">
+                                            <div class="form-group col">
+                                                <input asp-for="Alerts[i].AlertType" type="hidden" value="@v.AlertType" />
+                                                <input asp-for="Alerts[i].LineID" type="hidden" value="@Model.LineID" />
+                                                <input asp-for="Alerts[i].Message" type="hidden" value="@v.Message" />
+                                                <input asp-for="Alerts[i].Status" type="hidden" value="@v.Status" />
+                                                <input asp-for="Alerts[i].UserID" type="hidden" value="@UserSingleton.GetLoggedUser().UserId" />
+                                                <textarea asp-for="Alerts[i].TempReason" class="form-control check-dependant" disabled></textarea><br />
+                                                <span class="text-secondary">Provide a reason for ignoring</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @(i++)
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="text-info">No alerts</span>
+                                    </td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+                    <input type="hidden" name="id" value="@Model.LineID" />
+                    <input type="hidden" asp-for="PharmacyID" value="@Model.PharmacyID" />
+                </form>
+            </div>
+            <table class="table">
+                <tr>
+                    <td colspan="5">
+                        <div class="form-group row">
+                            @if (invalids.Count > 0)
+                            {
+                                <form class="form-critical-extra" asp-controller="Patient"
+                                  asp-route-id="@Model.LineID" id="reject-form"
+                                  asp-action="RejectLine" asp-route-slug="@Model.GetMed().Name" method="post">
+                                    <input type="hidden" name="message" id="messageValue" />
+                                    <input type="hidden" name="id" value="@Model.LineID" />
+                                </form>
+                                <div class="col">
+                                    <button type="submit"
+                                        class="btn btn-danger" form="reject-form" onclick="getMessage()">
+                                        Reject
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col">
+                                    <button type="button" onclick="history.back()" class="btn">Cancel</button>
+                                </div>
+                            }
+                            <div class="col">
+                                <div class="box-items-from-right">
+                                    <button type="submit" form="submit-form" @(rjctd_dspnsd? "disabled": "")
+                                            class="btn  @(rjctd_dspnsd? "disabled btn-info": "btn-primary")">
+                                        @(invalids.Count > 0 ? "Dispense anyway" : "Dispense")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

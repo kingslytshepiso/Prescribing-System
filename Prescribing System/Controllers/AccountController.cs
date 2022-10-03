@@ -11,6 +11,9 @@ namespace Prescribing_System.Controllers
     public class AccountController : Controller
     {
         public GlobalDbContext Data = new GlobalDbContext();
+        //VERIFY IF A USER IS LOGGED IN THEN REDIRECTS THEM TO THEIR DESIGNATED
+        //HOME PAGE IN THEIR AREA
+        //OTHERWISE REDIRECT THEM TO THE LOGIN PAGE
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);

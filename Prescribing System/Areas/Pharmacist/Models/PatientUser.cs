@@ -30,6 +30,8 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         //Address line 2 is not required
         public string AddressLine2 { get; set; }
         [Required()]
+        public string Slug => 
+            FirstName.ToLower() + LastName?.ToLower();
         public int SuburbID { get; set; }
         public int ProvinceID { get; set; }
         public string Img { get; set; } = null;

@@ -50,7 +50,12 @@ namespace Prescribing_System
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 //Admin routes
+                endpoints.MapAreaControllerRoute(
+                    name: "pagin_and_sorting",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller}/{action}/Page/{pageNumber}/Sort-by-{sortBy}");
                 endpoints.MapAreaControllerRoute(
                     name: "paging",
                     areaName: "Admin",
@@ -58,22 +63,27 @@ namespace Prescribing_System
                 endpoints.MapAreaControllerRoute(
                     name: "admin",
                     areaName: "Admin",
-                    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "Admin/{controller=Home}/{action=Index}/{id?}/{slug?}");
                 endpoints.MapAreaControllerRoute(
                     name: "patient",
                     areaName: "Patient",
-                    pattern: "Patient/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "Patient/{controller=Home}/{action=Index}/{id?}/{slug?}");
                 endpoints.MapAreaControllerRoute(
                     name: "doctor",
                     areaName: "Doctor",
-                    pattern: "Doctor/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "Doctor/{controller=Home}/{action=Index}/{id?}/{slug?}");
+                //Pharmacist routes
+                endpoints.MapAreaControllerRoute(
+                    name:"patient_prescription",
+                    areaName: "Pharmacist",
+                    pattern: "Pharmacist/{controller}/{action}/{idNumber}");
                 endpoints.MapAreaControllerRoute(
                     name: "pharmacist",
                     areaName: "Pharmacist",
-                    pattern: "Pharmacist/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "Pharmacist/{controller=Home}/{action=Index}/{id?}/{slug?}");
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}/{slug?}");
 
             });
         }

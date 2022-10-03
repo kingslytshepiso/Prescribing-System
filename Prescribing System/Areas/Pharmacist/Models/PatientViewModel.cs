@@ -15,11 +15,11 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public PatientViewModel(string idNumber)
         {
             Patient = DbData.GetPatientWithIdNo(idNumber);
-            Prescriptions = DbData.GetPrescriptionsWithId(Patient.PatientId);
+            Prescriptions = DbData.GetPrescriptionsWithPatientId(Patient.PatientId);
         }
         public List<PrescriptionLine> GetPrescriptionLines(int prescId)
         {
-            return DbData.GetPrescLinesWithId(prescId);
+            return DbData.GetPrescLinesWithPrescId(prescId);
         }
         public DoctorUser GetDoctor(int id)
         {
