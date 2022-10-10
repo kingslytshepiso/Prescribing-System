@@ -1,0 +1,22 @@
+﻿@model Prescribing_System.Models.Patient
+@{
+    ViewData["Title"] = "AddPrescription";
+}
+<div class="b_h_centered">
+    <div class="b_boxed">
+        <h1 class="text-center">AddPrescription</h1>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form method="get" asp-action="AddPrescriptionLine" asp-route-id="@Model.PatientID">
+            <div class="form-group row">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-primary">Add Prescription</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+</div>
+</div>
+
+

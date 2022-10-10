@@ -6,6 +6,26 @@
 <h1>WELCOME</h1>
 <h4>@Model.LoggedUser.Username</h4>
 <h4>@Model.LoggedUser.Role</h4>
+<div class="illus-group-row">
+    <div class="illustration-block illus-large box-rowed box-centered">
+        <form asp-controller="Patient" asp-action="PatientResults" method="get">
+            <div class="form-group row">
+                <div class="col">
+                    <div class="col"><label>Enter Patient ID:</label></div>
+                    <div class="col">
+                        <input class="form-control" type="number" minlength="13" maxlength="13" name="idNumber" required />
+                    </div>
+                </div>
+            </div>
+            <div class="box-columned">
+                <div class="col box-columned box-centered">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
 <div class="illus-group-col">
     <div  class="illus-group-row">
         <a  asp-controller="Patient" asp-action="Index" class="block-link">

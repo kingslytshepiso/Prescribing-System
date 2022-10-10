@@ -1,0 +1,162 @@
+﻿@model PatientPrescriptionViewModel
+@{
+    ViewData["Title"] = "AddLine";
+}
+@if (TempData["Message"] != null)
+{
+    <script>
+        window.alert("@TempData["Message"]");
+    </script>
+}
+<h3>Prescribe medication for</h3>
+<div class="b_h_centered box-rowed">
+
+    <div class="b_boxed">
+        <h4 class="text-center">Add Line</h4>
+        @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+        <form method="post" action="AddPrescriptionLine">
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>Medication Name:</label></div>
+                    <div class="col-12">
+                        <select asp-for="Medication.MedicationID"
+                                asp-items="@(new SelectList(ViewBag.Medications, "MedicationID",
+                                        "Name"))" class="form-control" required>
+                        </select>
+                    </div>
+
+                </div>
+               @* <div class="form-group col">
+                    <div class="col-8"><label>Dosage From:</label></div>
+                    <div class="col-12">
+                        <select asp-for="Dosage.DosageID"
+                                asp-items="@(new SelectList(ViewBag.DosageForms, "DosageID",
+                                        "FormName"))" class="form-control" required>
+                        </select>
+                    </div>
+
+                </div>*@
+
+            </div>
+            <div class="form-group row">
+                <div class="form-group col">
+                    <div class="col-8"><label>Number Of Respeats:</label></div>
+                    <div class="col-12">
+                        <input type="number" asp-for="PrescriptionLine.RepeatNo" class="form-control" required />
+                    </div>
+                    <div class="col">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div class="col-8"><label>Quantity:</label></div>
+                    <div class="col-12">
+                        <input type="number" asp-for="PrescriptionLine.Quantity" class="form-control" required />
+                    </div>
+                    <div class="col">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+
+                <div class="form-group col">
+                    <div class="col-8">
+                        <label>
+                            Enter Instructions:
+                        </label>
+                    </div>
+                    <div class="col-12">
+                        <textarea asp-for="PrescriptionLine.Instruction" class="form-control" required>
+
+                    </textarea>
+                    </div>
+                    <div class="col">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" asp-for="PrescriptionLine.Status" value="Prescribe" />
+            @*<input type="hidden" asp-for="PrescriptionLine.RepeatLeftNo" value=""/>*@
+            <div class="form-group row">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div></div>
+    <div class="b_boxed">
+        <div class="prescription-body">
+            <div class="line-content">
+                <div class="prescription-line">
+                    <h4 class="text-center">Prescription Lines</h4>
+                    <div class="min-size box-columned overflow-scroll">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No:</th>
+                                <th>Medication Name</th>
+                                <th>Dosage Form</th>
+                                <th>Repeat No</th>
+                                <th>Repeat Left</th>
+                                <th>Quantity</th>
+                                <th>Instructions</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                            @if (Model.DataList.Count > 0)
+                            {
+                                var count = 1;
+                                foreach (GenericPrescriptionLine line in Model.DataList)
+                                {
+                                    <tr>
+
+                                        <td>@count</td>
+                                        <td>@line.Medication.Name</td>
+                                        <td>@line.Dosage.FormName</td>
+                                        <td>@line.Line.RepeatNo</td>
+                                        <td>@line.Line.RepeatLeftNo</td>
+                                        <td>@line.Line.Quantity</td>
+                                        <td>@line.Line.Instruction</td>
+                                        @if (@line.Line.Status == "Prescribe")
+                                        {
+                                            <td><span class="label info">@line.Line.Status</span></td>
+                                        }
+                                        else if (@line.Line.Status == "Dispense")
+                                        {
+                                            <td><span class="label warning">@line.Line.Status</span></td>
+                                        }
+
+
+                                        <td colspan="1">
+                                            <a class="btn btn-primary" asp-controller="PrescriptionLine" asp-action="Edit"
+                                       asp-route-id="@line.Line.PresciptionLineID">
+                                                <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+                                            </a>
+                                        </td>
+                                        <td colspan="1">
+                                            <form asp-controller="PrescriptionLine" asp-action="Delete" asp-route-id="@line.Line.PresciptionLineID" method="post" class="form-crital">
+                                                <button class="btn btn-primary" type="submit">
+                                                    <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                    count++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,5 +13,10 @@ namespace Prescribing_System.Areas.Doctor.Models
         public string Date { get; set; }
         public int PatientID { get; set; }
         public int DiseaseID { get; set; }
+        protected DoctorDbContext Data = new DoctorDbContext();
+        public Disease GetAcuteDiseases()
+        {
+            return Data.GetAllDiseases().Find(x => x.DiseaseID == DiseaseID);
+        }
     }
 }
