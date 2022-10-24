@@ -1,0 +1,136 @@
+﻿@model PatientChronicDiseaseModel
+@{
+    ViewData["Title"] = "AddChronicDisease";
+}
+
+<h1>Patient Diagnosis</h1>
+<div class="b_h_centered box-rowed">
+    <div class="b_boxed">
+        <span class="btn btn-primary">Chronic Diseases</span>
+        <form method="post" asp-controller="Patient" asp-action="AddChronicDisease">
+            <div class="form-group col">
+                <div class="col-8"><label>Select Chronic Diseases *</label></div>
+                <div class="col-12">
+                    <select asp-for="ChronicDisease.DiseaseID" class="form-control">
+                        <option value="" disabled selected>Select Chronic Diseases</option>
+                        @foreach (Disease p in ViewBag.Diseases)
+                        {
+                            <option value="@p.DiseaseID">@p.DiseaseName</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-12">
+                    <input type="date" asp-for="ChronicDisease.Date" class="form-control" />
+                </div>
+            </div>
+           
+            <p>(*) Mandatory</p>
+            <div class="col">
+                <div class="offset-8 col-8">
+                    <button id="AddChroDisease" onclick="chronic()" type="submit" class="btn btn-primary">Add</button>
+                    <script>
+                        function chronic() {
+                            const diseaseMethod = document.getElementById('diseaseMethod');
+                            diseaseMethod.value = "chronic";
+                        }
+                    </script>
+                </div>
+            </div>
+            <input type="hidden" asp-for="PatientID" />
+        </form>
+    </div>
+    
+    <br />
+    <div class="b_boxed">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No:</th>
+                <th>Chronic Diseases Name</th>
+                <th>Diagnosis Date</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.chronicDiseaseModels.Count > 0)
+            {
+                var count = 1;
+
+
+
+                foreach (ListPatientChronicDisease list in Model.chronicDiseaseModels)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@list.Disease.DiseaseName</td>
+                        <td>@list.ChronicDisease.Date</td>
+                        <td colspan="1">
+                            <a class="btn btn-primary" asp-controller="PatientDiagnosis" asp-action="Edit"
+                       asp-route-id="@list.ChronicDisease.ChronicDiseaseID">
+                                <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+                            </a>
+                        </td>
+                        <td colspan="1">
+                            <form asp-controller="PatientDiagnosis" asp-action="Delete" asp-route-id="@list.ChronicDisease.ChronicDiseaseID" method="post" class="form-crital">
+                                <button class="btn btn-primary" type="submit">
+                                    <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    count++;
+                }
+
+
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5"><strong>Chronic Disease Empty Please Add Chronic Diseases</strong></td>
+                </tr>
+            }
+        </tbody>
+        @*Body of table*@
+    </table>
+        <div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
+                        <a class="page-link" asp-controller="Patient" asp-action="AddChronicDisease"
+                           asp-route-pageNumber="@(Model.CurrentPage - 1)">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= Model.OverallCount; i++)
+                    {
+                        <li class="page-item @(Model.CurrentPage == i?"active": "")">
+                            <a class="page-link" asp-controller="Patient" asp-action="AddChronicDisease"
+                           asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
+                        <a class="page-link" asp-controller="Patient" asp-action="AddChronicDisease"
+                           asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <br/>
+    <div class="b_boxed">
+        <form method="get" asp-controller="AcuteDisease" asp-action="Add" asp-route-id="@Model.PatientID">
+            <div class="form-group row">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-primary">Next</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

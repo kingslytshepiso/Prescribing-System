@@ -1,0 +1,32 @@
+﻿@model Allergy 
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+<form class="form-critical" asp-controller="Allergy" asp-action="Edit">
+    <input asp-for="AllergyID" type="hidden" value="@Model.AllergyID" />
+    <div class="form-group row">
+        <div class="col-8"><label>select allergy</label></div>
+        <div class="col-12">
+            <select asp-for="ActiveIngreID" class="form-control">
+                <option value="" disabled selected>Select Drug Allergies</option>
+                @foreach (ActiveIngredient a in ViewBag.Allergies)
+                {
+                    <option value="@a.ActiveIngreID">@a.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="button" onclick="history.back()" class="btn">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+
+</form>

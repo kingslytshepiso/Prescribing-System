@@ -1,149 +1,297 @@
-﻿
+﻿@model PatientDiagnosisViewModel
 @{
     ViewData["Title"] = "PatientDiagnosis";
+}
+@if (TempData["Message"] != null)
+{
+    <script>
+        window.alert("@TempData["Message"]");
+    </script>
 }
 
 <h1>Patient Diagnosis</h1>
 <link rel="stylesheet" href="~/css/main.css">
 <link rel="stylesheet" href="~/css/jquery.steps.css">
-<form id="my-form" method="post">
+<form id="my-form" method="post" action="PatientDiagnosis">
     <div>
         <h3>Chronic Diseases</h3>
-        <section>
-            <div class="form-group col">
-                    <div class="col-8"><label>Select Chronic Diseases *</label></div>
-                    <div class="col-12">
-                        <select
-                                class="form-control">
-                        </select>
-                    </div>
-            </div>
-            <div class="form-group col">
-                <div class="col-8"><label>Choose Diagnos Date *</label></div>
-                <div class="col-12">
-                    <input type="date" class="form-control" />
-                </div>
-            </div>
-            <p>(*) Mandatory</p>
-             <div class="col">
-                    <div class="offset-8 col-8">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
-                </div>
-            <br/>
-        <div class="tbl">
-        <div class="tbl-head">
-            <div class="tbl-row">
-                <div>No:</div>
-                <div>Chronic Diseases Name</div>
-                <div>Abbreviation</div>
-                <div>Description</div>
+    <section>
+        <input id="diseaseMethod" name="diseaseMethod" type="hidden" value="" />
+        <div class="form-group col">
+            <div class="col-8"><label>Select Chronic Diseases *</label></div>
+            <div class="col-12">
+                <select asp-for="Disease.DiseaseID" class="form-control">
+                    <option value="" disabled selected>Select Chronic Diseases</option>
+                    @foreach (Disease p in ViewBag.Diseases)
+                    {
+                        <option value="@p.DiseaseID">@p.DiseaseName</option>
+                    }
+
+                </select>
             </div>
         </div>
+        <div class="form-group col">
+            <div class="col-8"><label>Choose Diagnos Date *</label></div>
+            <div class="col-12">
+                <input type="date" asp-for="ChronicDisease.Date" class="form-control" />
+            </div>
+        </div>
+        @*<input type="hidden" asp-for="ChronicDisease.PatientID" />*@
+        <p>(*) Mandatory</p>
+        <div class="col">
+            <div class="offset-8 col-8">
+                <button id="AddChroDisease" onclick="chronic()" type="submit" class="btn btn-primary">Add</button>
+                <script>
+                    function chronic(){
+                        const diseaseMethod = document.getElementById('diseaseMethod');
+                        diseaseMethod.value = "chronic";
+                    }
+                </script>
+            </div>
+        </div>
+        <br />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No:</th>
+                    <th>Chronic Diseases Name</th>
+                    <th>Diagnosis Date</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                    @if (Model.chronicDiseases.Count > 0)
+                    {
+                        var count = 1;
+                        
+
+                            
+                            foreach (ListPatientChronicDisease list in Model.chronicDiseases)
+                            {
+                                <tr>
+                                <td>@count</td>
+                                <td>@list.Disease.DiseaseName</td>
+                                <td>@list.ChronicDisease.Date</td>
+                                <td colspan="1">
+                                    <a class="btn btn-primary" asp-controller="PatientDiagnosis" asp-action="Edit"
+                               asp-route-id="@list.ChronicDisease.ChronicDiseaseID">
+                                        <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+                                    </a>
+                                </td>
+                                <td colspan="1">
+                                    @*<form asp-controller="PatientDiagnosis" asp-action="Delete" asp-route-id="@list.ChronicDisease.ChronicDiseaseID" method="post" class="form-crital">
+                                        <button class="btn btn-primary" type="submit">
+                                            <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+                                        </button>
+                                    </form>*@
+                                </td>
+                                </tr>
+                              count++;
+                            }
+                        
+                        
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5"><strong>Chronic Disease Empty Please Add Chronic Diseases</strong></td>
+                        </tr>
+                    }
+            </tbody>
             @*Body of table*@
-        </div>
-        </section>
+        </table>
+
+    </section>
         <h3>Acute Diseases</h3>
         <section>
             <div class="form-group col">
-                    <div class="col-8"><label>Select Acute Diseases *</label></div>
-                    <div class="col-12">
-                        <select
-                                class="form-control">
-                        </select>
-                    </div>
-            </div>
-             <div class="form-group col">
-                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-8"><label>Select Acute Diseases *</label></div>
                 <div class="col-12">
-                    <input type="date" class="form-control" />
+                    <select asp-for="Disease.DiseaseID" class="form-control">
+                        <option value="" disabled selected>Select Acute Diseases</option>
+                        @foreach (Disease d in ViewBag.Diseases)
+                        {
+                            <option value="@d.DiseaseID">@d.DiseaseName</option>
+                        }
+                    </select>
                 </div>
             </div>
-            <p>(*) Mandatory</p>
-            <br/>
-        <div class="tbl">
-        <div class="tbl-head">
-            <div class="tbl-row">
-                <div>No:</div>
-                <div>Acute Diseases Name</div>
-                <div>Abbreviation</div>
-                <div>Description</div>
+            <div class="form-group col">
+                <div class="col-8"><label>Choose Diagnos Date *</label></div>
+                <div class="col-12">
+                    <input type="date" asp-for="AcuteDisease.Date" class="form-control" />
+                </div>
             </div>
-        </div>
-            @*Body of table*@
-        </div>
+           @* <input type="hidden" asp-for="AcuteDisease.PatientID" />*@
+            <p>(*) Mandatory</p>
+            <div class="col">
+                <div class="offset-8 col-8">
+                    <button id="AddAcuteDisease" type="submit" onclick="acute()" class="btn btn-primary">Add</button>
+                    <script>
+                        function acute() {
+                            const diseaseMethod = document.getElementById('diseaseMethod');
+                            diseaseMethod.value = "acute";
+                        }
+                    </script>
+                </div>
+            </div>
+            <br />
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No:</th>
+                        <th>Acute Diseases Name</th>
+                        <th>Abbreviation</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                @*Body of table*@
+            </table>
+
+
         </section>
         <h3>Chronic Medication</h3>
         <section>
             <div class="form-group col">
                     <div class="col-8"><label>Select Chronic Medications *</label></div>
                     <div class="col-12">
-                        <select
-                                class="form-control">
-                        </select>
+                    <select asp-for="Medication.MedicationID"
+                            asp-items="@(new SelectList(ViewBag.Medications, "MedicationID",
+                                        "Name"))" class="form-control">
+                    </select>
                     </div>
                 </div>
             <p>(*) Mandatory</p>
-            <br/>
-        <div class="tbl">
-        <div class="tbl-head">
-            <div class="tbl-row">
-                <div>No:</div>
-                <div>Chronic Medication Name</div>
-                <div>Abbreviation</div>
-                <div>Description</div>
+            <div class="col">
+                <div class="offset-8 col-8">
+                    <button type="submit" onclick="chronicMeds()" class="btn btn-primary">Add</button>
+                    <script>
+                        function chronicMeds() {
+                            const diseaseMethod = document.getElementById('diseaseMethod');
+                            diseaseMethod.value = "chronicMeds";
+                        }
+                    </script>
+                </div>
             </div>
-        </div>
-            @*Body of table*@
-        </div>
+            <br/>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>No:</th>
+                <th>Chronic Medication Name</th>
+                <th>Abbreviation</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+           </tbody>
+        </table>
         </section>
          <h3>Acute Medication</h3>
         <section>
             <div class="form-group col">
                     <div class="col-8"><label>Select Acute Medications *</label></div>
                     <div class="col-12">
-                        <select
-                                class="form-control">
-                        </select>
+                    <select asp-for="Medication.MedicationID"
+                            asp-items="@(new SelectList(ViewBag.Medications, "MedicationID",
+                                        "Name"))" class="form-control">
+                    </select>
                     </div>
                 </div>
             <p>(*) Mandatory</p>
-            <br/>
-        <div class="tbl">
-        <div class="tbl-head">
-            <div class="tbl-row">
-                <div>No:</div>
-                <div>Acute Medication Name</div>
-                <div>Abbreviation</div>
-                <div>Description</div>
+            <div class="col">
+                <div class="offset-8 col-8">
+                    <button type="submit" onclick="acuteMeds()" class="btn btn-primary">Add</button>
+                    <script>
+                        function acuteMeds() {
+                            const diseaseMethod = document.getElementById('diseaseMethod');
+                            diseaseMethod.value = "acuteMeds";
+                        }
+                    </script>
+                </div>
             </div>
-        </div>
-            @*Body of table*@
-        </div>
+            <br/>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>No:</th>
+                <th>Acute Medication Name</th>
+                <th>Abbreviation</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+            <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+        </table>
         </section>
         <h3>Drug Allergies</h3>
         <section>
             <div class="form-group col">
                     <div class="col-8"><label>Select Drug Allergies *</label></div>
-                    <div class="col-12">
-                        <select
-                                class="form-control">
-                        </select>
-                    </div>
+                <div class="col-12">
+                    <select asp-for="Allergy.ActiveIngreID" class="form-control">
+                        <option value="" disabled selected>Select Drug Allergies</option>
+                        @foreach (ActiveIngredient a in ViewBag.Allergies)
+                        {
+                            <option value="@a.ActiveIngreID">@a.Name</option>
+                        }
+                    </select>
+                </div>
                 </div>
             <p>(*) Mandatory</p>
-            <br/>
-        <div class="tbl">
-        <div class="tbl-head">
-            <div class="tbl-row">
-                <div>No:</div>
-                <div>Active-Ingredient Name</div>
-                <div>Abbreviation</div>
-                <div>Description</div>
+            <div class="col">
+                <div class="offset-8 col-8">
+                    <button type="submit" onclick="allerges()" class="btn btn-primary">Add</button>
+                    <script>
+                        function allerges() {
+                            const diseaseMethod = document.getElementById('diseaseMethod');
+                            diseaseMethod.value = "allerges";
+                        }
+                    </script>
+                </div>
             </div>
-        </div>
-            @*Body of table*@
-        </div>
+            <br/>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>No:</th>
+                <th>Active-Ingredient Name</th>
+                <th>Abbreviation</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+            <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+            </tbody>
+        </table>
         </section>
         <h3>Current Visit</h3>
         <section>
@@ -172,6 +320,7 @@
         </section>
     </div>
 </form>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="~/js/jquery.steps.js"></script>

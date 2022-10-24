@@ -1,0 +1,82 @@
+﻿@model CurrentDoctorVisit
+@{
+    ViewData["Title"] = "Add";
+}
+@if (TempData["Message"] != null)
+{
+	<script>
+		window.alert("@TempData["Message"]");
+	</script>
+}
+<h1>Current Visit</h1>
+<div class="b_h_centered box-rowed">
+	<div class="b_boxed">
+		<span class="btn btn-primary">6. Current Visit</span>
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<form class="form-critical" method="post" asp-controller="CurrentVisit" asp-action="Add">
+			<div class="form-group col">
+				<div class="col-8"><label>What brings you in today? *</label></div>
+				<div class="col-12">
+					<input type="text" asp-for="ReasonOfVist" class="form-control"  />
+				</div>
+				<div class="col">
+					<span asp-validation-for="ReasonOfVist"
+						  class="text-danger"></span>
+				</div>
+				<div class="col-8"><label>What hurts? *</label></div>
+				<div class="col-12">
+					<input type="text" asp-for="Whathurts" class="form-control" />
+				</div>
+				<div class="col">
+					<span asp-validation-for="Whathurts"
+						  class="text-danger"></span>
+				</div>
+				<div class="col-8"><label>What are your symptoms? *</label></div>
+				<div class="col-12">
+					<textarea asp-for="Symptoms" class="form-control" >
+
+                    </textarea>
+				</div>
+				<div class="col">
+                        <span asp-validation-for="Symptoms"
+                              class="text-danger"></span>
+                    </div>
+				<div class="col-8"><label>How long has this been going on? *</label></div>
+				<div class="col-6">
+					<input type="text" asp-for="SymptomDurtion" class="form-control"  />
+				</div>
+				<div class="col">
+					<span asp-validation-for="SymptomDurtion"
+						  class="text-danger"></span>
+				</div>
+				<input type="hidden" asp-for="PatientID" value="@Model"/>
+				<input type="hidden" asp-for="DoctorID" value="@Model"/>
+				<div class="col">
+					<div class="offset-8 col-8">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<p>(*) Mandatory</p>
+	</div>
+	<div class="b_boxed">
+		<div class="form-group row">
+			<form method="get" asp-controller="Allergy" asp-action="Add" asp-route-id="@Model">
+				<div class="col">
+					<div class="offset-8 col-8">
+						<button type="submit" class="btn btn-primary">Previous</button>
+					</div>
+				</div>
+			</form>
+			<form method="get" asp-controller="Prescription" asp-action="AddPrescription" asp-route-id="@Model">
+				<div class="col">
+					<div class="offset-8 col-8">
+						<button type="submit" class="btn btn-primary">Done</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	</div>
+

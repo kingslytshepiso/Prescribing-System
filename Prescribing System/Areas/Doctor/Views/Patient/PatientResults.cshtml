@@ -1,0 +1,383 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "My Health Record";
+}
+
+<h1><strong>My Health Record</strong></h1>
+<div class="box-columned justify-content-between patient-header-box">
+    <div class="box-columned">
+        <table class="table table-boarderless mr-10">
+                <tbody>
+                    <tr>
+                        <td>ID:</td>
+                        <td class="underlined-text">@Model.Patient.IdNumber</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td class="underlined-text">@Model.Patient.LastName @Model.Patient.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>Gender:</td>
+                        <td class="underlined-text">@Model.Patient.EmailAddress</td>
+                    </tr>
+                </tbody>
+            </table>
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td>Email:</td>
+                    <td class="underlined-text">@Model.Patient.EmailAddress</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td class="underlined-text">@Model.Patient.ContactNumber</td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td class="underlined-text">@Model.Patient.AddressLine1 @Model.Patient.AddressLine2</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="patient-header-img">
+        <img src="~/icons/user-icon.png"
+             alt="patient profile image" title="patient profile" />
+    </div>
+</div>
+<hr />
+@if (!(Model.ChronicDiseases.Count > 0))
+{
+    
+    <div class="box-columned">
+        <div>
+            <h4 class="text-info">
+                patient has not loaded health record yet.
+            </h4>
+        </div>
+        <div class="form-group row">
+            <form method="get" asp-controller="ChronicDisease" asp-action="Add" asp-route-id="@Model.Patient.PatientId">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-warning">Diagnosis Patient</button>
+                    </div>
+                </div>
+            </form>
+            <form method="post" asp-controller="Prescription" asp-action="AddPrescription" asp-route-id="@Model.Patient.PatientId">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn-success">Prescribed Medications</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    var count = 1;
+    var countAcuteD = 1;
+    var countA = 1;
+    var countCM = 1;
+    var countV = 1;
+
+    @*   <div class="prescription-box">
+            <div class="box-columned justify-content-between prescription-header-details ">
+                <div class="line-content">
+                    <div class="prescription-line">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" colspan="3">Known Chronic Diseases</th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Name</th>
+                                    <th>Diagnosis Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (ChronicDisease c in Model.ChronicDiseases)
+                            {
+
+                                <tr>
+                                    <td>@count</td>
+                                    <td>@c.GetChronicDiseases().DiseaseName</td>
+                                    <td>@c.Date</td>
+                                </tr>
+                                count++;
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        count++;*@
+
+<div class="prescription-box">
+    <div class="box-columned">
+        <div class="box-columned justify-content-between prescription-header-details ">
+            <div class="line-content">
+                <div class="prescription-line">
+                        
+                        <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" colspan="3">Known Chronic Diseases</th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+                                <th>No:</th>
+                                <th>Name</th>
+                                <th>Diagnosis Date</th>
+                            </tr>
+                        </thead>
+                        </table>
+                        <div class="min-size box-columned overflow-scroll">
+                            <table class="table table-bordered m-0">
+                            <tbody>
+                                @foreach (ChronicDisease c in Model.ChronicDiseases)
+                                {
+
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>@c.GetChronicDiseases().DiseaseName</td>
+                                        <td>@c.Date</td>
+                                    </tr>
+                                    count++;
+                                }
+                            </tbody>
+                    </table>
+                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-columned justify-content-between prescription-header-details ">
+            <div class="line-content">
+                <div class="prescription-line">
+                        
+                        <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" colspan="3">Known Acute Diseases</th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+                                <th>No:</th>
+                                <th>Name</th>
+                                <th>Diagnosis Date</th>
+                            </tr>
+                        </thead>
+                        </table>
+                        <div class="min-size box-columned overflow-scroll">
+                            <table class="table table-bordered m-0">
+                        <tbody>
+                            @foreach (AcuteDisease a in Model.AcuteDiseases)
+                            {
+
+                                    <tr>
+                                        <td>@countAcuteD</td>
+                                        <td>@a.GetAcuteDiseases().DiseaseName</td>
+                                        <td>@a.Date</td>
+                                    </tr>
+                                    countAcuteD++;
+                                }
+                            
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="box-columned justify-content-between prescription-header-details ">
+                <div class="line-content">
+                    <div class="prescription-line">
+                        <div class="">
+                            <table class="table table-bordered m-0">
+                                <thead>
+                                    <tr>
+                                        <th class=" text-capitalize" colspan="3">Known Medical Allergies</th>
+                                    </tr>
+                                    <tr>
+                                        <th width="8">No:</th>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="min-size box-columned overflow-scroll">
+
+                                <table class="table table-bordered m-0">
+
+
+                                    <tbody>
+                                        @foreach (Allergy a in Model.Allergies)
+                                        {
+                                            <tr>
+                                                <td width="10">@countA</td>
+                                                <td>@a.GetIngredient().Name</td>
+                                            </tr>
+                                            countA++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-columned">
+            <div class="box-columned justify-content-between prescription-header-details ">
+                <div class="line-content">
+                    <div class="prescription-line">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-capitalize" colspan="6">Chronic Medications</th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Name</th>
+                                    <th>Dosege</th>
+                                    <th>Active Ingredient</th>
+                                    <th>Schedule</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="min-size box-columned overflow-scroll">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    @foreach (ChronicMedication m in Model.ChronicMedications)
+                                    {
+                                        <tr>
+                                            <td>@countCM</td>
+                                            <td>@m.MedName</td>
+                                            <td>@m.GetDosage().FormName</td>
+                                            <td>@m.GetIngredient().Name</td>
+                                            <td>@m.GetSchedules().ScheduleNo</td>
+                                        </tr>
+                                        countCM++;
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-columned justify-content-between prescription-header-details ">
+                <div class="line-content">
+                    <div class="prescription-line">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-capitalize" colspan="6">Acute Medications</th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Name</th>
+                                    <th>Strength</th>
+                                    <th>Active Ingredient</th>
+                                    <th>Schedule</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="min-size box-columned overflow-scroll">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    @foreach (AcuteMedication a in Model.AcuteMedications)
+                                    {
+                                        <tr>
+                                            <td>@countCM</td>
+                                            @*<td>@a.GetMedications().Name</td>*@
+                                            <td>Null of now</td>
+                                            <td>@a.GetIngredient().Name</td>
+                                            <td></td>
+                                        </tr>
+                                        countCM++;
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="box-columned">
+            <div class="box-columned justify-content-between prescription-header-details ">
+                <div class="line-content">
+                    <div class="prescription-line">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" colspan="7">Doctor Visit</th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    @*<th>Physican Pain</th>*@
+                                    <th>Symptoms</th>
+                                    <th>Durtion</th>
+                                    <th>Doctor</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="min-size box-columned overflow-scroll">
+                            <table class="table table-bordered">
+                                @*<tbody>
+                                    @foreach (CurrentDoctorVisit c in Model.DoctorVisits)
+                                   {
+                                        <tr>
+                                            <td>@countV</td>
+                                            <td>@c.VisitDate</td>
+                                            <td>@c.ReasonOfVist</td>
+                                            <td>@c.Whathurts</td>
+                                            <td>@c.Symptoms</td>
+                                            <td>@c.SymptomDurtion</td>
+                                            <td>Dr @c.GetDoctors().FirstName @c.GetDoctors().LastName</td>
+                                        </tr>
+                                        countV++;
+                                    }
+                                    
+                                </tbody>*@
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="box-columned">
+        <div class="form-group row">
+            <form method="get" asp-controller="ChronicDisease" asp-action="Add" asp-route-id="@Model.Patient.PatientId">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn btn-warning">Diagnosis Patient</button>
+                    </div>
+                </div>
+            </form>
+            <form method="post" asp-controller="Prescription" asp-action="AddPrescription" asp-route-id="@Model.Patient.PatientId">
+                <div class="col">
+                    <div class="offset-8 col-8">
+                        <button type="submit" class="btn-success">Prescribed Medications</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+    </div>
+<vr/>
+ </div>
+ }

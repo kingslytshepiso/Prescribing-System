@@ -1,0 +1,29 @@
+﻿@model AcuteMedication
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+<form class="form-critical" asp-controller="AcuteMedication" asp-action="Edit">
+    <input asp-for="AcuteMedicationID" type="hidden" value="@Model.AcuteMedicationID" />
+    <div class="form-group row">
+        <div class="col-8"><label>select acute medication</label></div>
+        <div class="col-12">
+            <select asp-for="MedicationID"
+                    asp-items="@(new SelectList(ViewBag.Medications, "MedicationID",
+                                        "Name"))" class="form-control">
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="button" onclick="history.back()" class="btn">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+
+</form>

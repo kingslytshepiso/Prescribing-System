@@ -1,67 +1,67 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Prescribing_System.Models;
 using Prescribing_System.Areas.Doctor.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
+using Prescribing_System.Models;
 
 namespace Prescribing_System.Areas.Doctor.Controllers
 {
     [Area("Doctor")]
-    public class ChronicDiseaseController : Controller
+    public class ChronicMedicationController : Controller
     {
         public DoctorDbContext DoctorDbContext = new DoctorDbContext();
         [HttpGet]
-        public IActionResult Add(PatientChronicDiseaseModel model, int id, int pageNumber = 1, int pageSize = 5)
+        public IActionResult Add(PatientChronicMedicationModel model, int id, int pageNumber = 1, int pageSize = 5)
         {
-
             model.PatientID = id;
-            model = DoctorDbContext.GetAllPatientChronicDisease(id, pageNumber, pageSize);
-            ViewBag.Diseases = DoctorDbContext.GetAllChronicDiseasesD();
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+            }
+            
+            //model.List.Patient.PatientID = patientID;
+            ViewBag.Medications = DoctorDbContext.GetChonicMedications();
+            model = DoctorDbContext.GetAllPatientChronicMedications(id, pageNumber, pageSize);
             return View(model);
         }
         [HttpPost]
-        public IActionResult Add(PatientChronicDiseaseModel model, int id)
+        public IActionResult Add(PatientChronicMedicationModel model, int id)
         {
             model.PatientID = id;
             if (ModelState.IsValid)
             {
-                bool isAdded = DoctorDbContext.AddPatientChronicDisease(model);
+                bool isAdded = DoctorDbContext.AddPatientChronicMedication(model);
                 if (isAdded)
                 {
-                    TempData["Message"] = "Chronic disease Added Successfully";
+                    TempData["Message"] = "Chronic medication added successfully";
                     return RedirectToAction("Add");
                 }
             }
             return View(model);
         }
         [HttpGet]
-        public IActionResult Edit(ChronicDisease model,int id)
+        public IActionResult Edit(int id,ChronicMedication model)
         {
-            model = DoctorDbContext.GetAllChronicDiesase(id);
-            ViewBag.Diseases = DoctorDbContext.GetAllDiseases();
+            ViewBag.Medications = DoctorDbContext.GetAllMeds();
+            model = DoctorDbContext.GetChronicMedicationById(id);
             return View(model);
         }
         [HttpPost]
-        public IActionResult Edit(ChronicDisease model)
+        public IActionResult Edit(ChronicMedication model)
         {
             if (ModelState.IsValid)
             {
-                bool result = DoctorDbContext.UpdatePatientChronicDisease(model);
+                bool result = DoctorDbContext.UpdatePatientChronicMedication(model);
                 if (result)
                 {
-                    TempData["Message"] = "Chronic disease Updated Successfully";
+                    TempData["Message"] = "Chronic medication updated successfully";
                     return RedirectToAction("Index");
                 }
             }
             return View(model);
         }
         [HttpGet]
-        public IActionResult Delete(int id, ChronicDisease model)
+        public IActionResult Delete(int id,ChronicMedication model)
         {
-            model = DoctorDbContext.GetAllChronicDiesase(id);
+            model = DoctorDbContext.GetChronicMedicationById(id);
             return View(model);
         }
         [HttpPost]
@@ -69,14 +69,14 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool result = DoctorDbContext.DeletePatientChronicDisease(id);
+                bool result = DoctorDbContext.DeletePatientChronicMedication(id);
                 if (result)
                 {
-                    TempData["Message"] = "Chronic disease deleted Successfully";
+                    TempData["Message"] = "Chronic medication deleted successfully";
                     return RedirectToAction("Add");
                 }
             }
-            TempData["Message"] = "Chronic disease not deleted Successfully";
+            TempData["Message"] = "Chronic medication deleted successfully";
             return RedirectToAction("Add");
         }
         public bool UserIsVerified(string role = "")

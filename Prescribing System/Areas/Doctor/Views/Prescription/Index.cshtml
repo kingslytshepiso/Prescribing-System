@@ -1,45 +1,44 @@
 ﻿@model Prescribing_System.Areas.Doctor.Models.PatientListContex
 @{
-    ViewData["Title"] = "Patients";
+    ViewData["Title"] = "Index";
 }
 
 <h1>All Patients</h1>
-<div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>No:</th>
-                <th>Name</th>
-                <th>Identity Number</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Action</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.PatientList.Count > 0)
-            {
-                var count = 1;
 
-                @foreach (var patient in Model.PatientList)
-                {
-                    
-                    <tr>
-                        <td>@count</td>
-                        <td><strong>@patient.FirstName @patient.LastName</strong></td>
-                        <td><strong>@patient.IdNumber</strong></td>
-                        <td>@patient.EmailAddress</td>
-                        <td>@patient.AddressLine1 @patient.AddressLine2</td>
-                        <td>
-                            <a class="btn btn-success" asp-controller="ChronicDisease" asp-action="Add"
-                   asp-route-id="@patient.PatientID">Diagnos Patient</a>
-                        </td>
-                    </tr>
-                    count++;
-                }
+    <table class="table">
+    <thead>
+        <tr>
+            <th>No:</th>
+            <th>Name</th>
+            <th>Identity Number</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Action</th>
+            <th></th>
+        </tr>
+    </thead>
+        <tbody>
+        @if (Model.PatientList.Count > 0)
+        {
+            var count = 1;
+            @foreach (var patient in Model.PatientList)
+            {
+
+                <tr>
+                    <td>@count</td>
+                    <td><strong>@patient.FirstName @patient.LastName</strong></td>
+                    <td><strong>@patient.IdNumber</strong></td>
+                    <td>@patient.EmailAddress</td>
+                    <td>@patient.AddressLine1 @patient.AddressLine2</td>
+                    <td>
+                        <a class="btn btn-success" asp-controller="Prescription" asp-action="AddPrescription"
+                   asp-route-id="@patient.PatientID">Add Prescription</a>
+                    </td>
+                </tr>
+                count++;
             }
-       </tbody>
+        }
+        </tbody>
     </table>
     <div>
         <nav aria-label="Page navigation example">
@@ -62,5 +61,5 @@
             </ul>
         </nav>
     </div>
-</div>
+
 
