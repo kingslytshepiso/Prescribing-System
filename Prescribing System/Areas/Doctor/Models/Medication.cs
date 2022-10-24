@@ -1,4 +1,5 @@
 ﻿using Prescribing_System.Areas.Pharmacist.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Prescribing_System.Areas.Doctor.Models
@@ -27,6 +28,10 @@ namespace Prescribing_System.Areas.Doctor.Models
         {
             return Data.GetMedication_ActiveIngredientById(MedicationID);
         }
-        
+        public List<Med_Ingred> GetIngredients()
+        {
+            return Data.GetAllMedicationIngredient().FindAll(x => x.MedicationID == MedicationID);
+        }
+
     }
 }

@@ -52,9 +52,27 @@ namespace Prescribing_System.Areas.Doctor.Models
         {
             LineAlerts.Add(alert);
         }
+        public Med_Ingred GetMedIngre()
+        {
+            var med = Data.GetAllMedicationIngredient().Find(x => x.MedicationID == MedicationID);
+            if (med != null)
+            {
+                return med;
+            }
+            return new Med_Ingred();
+        }
         public Medication GetMed()
         {
             var med = Data.GetAllMeds().Find(x => x.MedicationID == MedicationID);
+            if (med != null)
+            {
+                return med;
+            }
+            return new Medication();
+        }
+        public Medication GetActualMed()
+        {
+            var med = Data.GetAllMeds().Find(x => x.MedicationID == this.MedicationID);
             if (med != null)
             {
                 return med;
@@ -89,6 +107,20 @@ namespace Prescribing_System.Areas.Doctor.Models
             list.Add(GetMed());
             return list;
         }
+        public List<Med_Ingred> GetPatientMedicationIngredients()
+        {
+            List<Med_Ingred> list = new List<Med_Ingred>();
+            var patient_medications = Data.GetAllPatientMedications()
+                .FindAll(x => x.PatientID == GetPatient().PatientID);
+            foreach (var pm in patient_medications)
+            {
+                list.Add(Data.GetAllMedicationIngredient()
+                    .Find(x => x.MedicationID == pm.MedicationID));
+            }
+            list.Add(GetMedIngre());
+            list.RemoveAll(x => x == null);
+            return list;
+        }
         public List<Allergy> GetAllergies()
         {
             var Allergies = Data.GetAllergies().FindAll(x => x.PatientID == GetPatient().PatientID);
@@ -109,8 +141,8 @@ namespace Prescribing_System.Areas.Doctor.Models
         {
             string str = "";
             List<MedicationInteraction> interactions = Data.GetAllInteraction()
-                .FindAll(x => x.FirstInteractor == GetMed().ActiveIngredientID
-                || x.ScndInteractor == GetMed().ActiveIngredientID);
+                .FindAll(x => x.FirstInteractor == this.GetMedIngre().ActiveIngredientID
+                || x.ScndInteractor == this.GetMedIngre().ActiveIngredientID);
             foreach (MedicationInteraction i in interactions)
             {
                 str += Data.GetActIngreWithId(i.FirstInteractor).Name + " interacts with "
@@ -134,21 +166,21 @@ namespace Prescribing_System.Areas.Doctor.Models
 
         public bool IsInteractionValid()
         {
-            var patientMeds = GetPatientMedication();
+            var patientMeds = GetPatientMedicationIngredients();
             bool foundOne = false;
             var interactions = Data.GetAllInteraction();
             foreach (var pm in patientMeds)
             {
                 foreach (var inter in interactions)
                 {
-                    if (inter.FirstInteractor == GetMed().ActiveIngredientID
+                    if (GetActualMed().GetIngredients().Any(x => inter.FirstInteractor == x.ActiveIngredientID)
                    && inter.ScndInteractor == pm.ActiveIngredientID)
                     {
                         foundOne = true;
                         break;
                     }
                     else if (inter.FirstInteractor == pm.ActiveIngredientID
-                        && inter.ScndInteractor == GetMed().ActiveIngredientID)
+                        && GetActualMed().GetIngredients().Any(x => inter.ScndInteractor == x.ActiveIngredientID))
                     {
                         foundOne = true;
                         break;
@@ -176,7 +208,7 @@ namespace Prescribing_System.Areas.Doctor.Models
             {
                 foreach (var c in contras)
                 {
-                    if (c.ActiveIngredientID == GetMed().ActiveIngredientID
+                    if (GetActualMed().GetIngredients().Any(x => c.ActiveIngredientID == x.ActiveIngredientID)
                     && c.DiseaseID == m.DiseaseID)
                     {
                         valid = false; break;
@@ -191,7 +223,7 @@ namespace Prescribing_System.Areas.Doctor.Models
         }
         public bool IsAllergyValid()
         {
-            return !GetAllergies().Any(x => x.ActiveIngreID == GetMed().ActiveIngredientID);
+            return !GetAllergies().Any(x => x.ActiveIngreID == GetMedIngre().ActiveIngredientID);
         }
         public bool IsDateValid()
         {

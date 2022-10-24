@@ -1,9 +1,15 @@
 ﻿@model AddPrescriptionLineViewModel
 @{
     ViewData["Title"] = "AddLine";
-    var rjctd_dspnsd = Model.line.Status == "Rejected" || Model.line.Status == "Dispensed";
+    DoctorDbContext DoctorDbContext = new DoctorDbContext();
+    ViewBag.Medications = DoctorDbContext.GetAllMeds();
+    var rjctdOnly = Model.line.Status == "Rejected";
+    var dspnsdOnly = Model.line.Status == "Dispensed" || !Model.line.IsRepeatValid();
+    var rjctd_dspnsd = rjctdOnly || dspnsdOnly;
     var alerts = Model.line.GetValidations();
     var invalids = alerts.FindAll(x => x.Status == "Invalid");
+    var presc_Rjtd = Model.line.GetPrescription().PrescrStatus == "Rejected";
+    var presc_inactive = Model.line.GetPrescription().PrescrStatus == "Inactive";
 }
 @if (TempData["Message"] != null)
 {
@@ -30,9 +36,13 @@
                 <div class="form-group col">
                     <div class="col-8"><label>Medication Name:</label></div>
                     <div class="col-12">
-                        <select asp-for="line.MedicationID"
-                                asp-items="@(new SelectList(ViewBag.Medications, "MedicationID",
-                                        "Name"))" class="form-control" required>
+                        <select asp-for="line.MedicationID" class="form-control" required>
+                            <option value="" disabled selected>Select Medications</option>
+                            @foreach (Medication m in ViewBag.Medications)
+                            {
+                                <option value="@m.MedicationID">@m.Name</option>
+                            }
+
                         </select>
                     </div>
 
@@ -120,7 +130,7 @@
                                     <th>Delete</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            @*<tbody>
                                 @if (Model.DataList.Count > 0)
                                 {
                                     var count = 1;
@@ -167,10 +177,59 @@
                                         count++;
                                     }
                                 }
-                            </tbody>
+                            </tbody>*@
                         </table>
                     </div>
                 </div>
+            </div>
+            <div class="min-scrollable-size overflow-scroll">
+                <form id="submit-form" class="@(invalids.Count > 0 ? "form-critical": "")" asp-controller="Patient" asp-action="Dispense" method="post">
+                    <table class="table @(invalids.Count > 0 || rjctd_dspnsd || presc_Rjtd? "table-danger":"table-success")">
+                        <thead>
+                            <tr><th>Alerts</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @if (invalids.Count > 0)
+                            {
+                                var i = 0;
+                                @foreach (var v in alerts.FindAll(x => x.Status == "Invalid"))
+                                {
+                                    <tr>
+                                        <td colspan="3">
+                                            Alert type: <strong>@(v.AlertType)</strong><br />
+                                            Alert Message: <b>@v.Message</b><br />
+                                            <b>@(v.Extras == null ? " " : "Alert Extra:  " + v.Extras)</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <label for="@(v.AlertType.Replace(' ', '_'))">Ignore</label>
+                                            <input class="check-decider" asp-for="line.Alerts[i].Ignored" type="checkbox" />
+                                        </td>
+                                        <td colspan="4">
+                                            <div class="form-group col">
+                                                <input asp-for="line.Alerts[i].AlertType" type="hidden" value="@v.AlertType" />
+                                                <input asp-for="line.Alerts[i].LineID" type="hidden" value="@Model.line.PresciptionLineID" />
+                                                <input asp-for="line.Alerts[i].Message" type="hidden" value="@v.Message" />
+                                                <input asp-for="line.Alerts[i].Status" type="hidden" value="@v.Status" />
+                                                <input asp-for="line.Alerts[i].UserID" type="hidden" value="@UserSingleton.GetLoggedUser().UserId" />
+                                                <textarea asp-for="line.Alerts[i].TempReason" class="form-control check-dependant" disabled></textarea><br />
+                                                <span class="text-secondary">Provide a reason for ignoring</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="text-info">No alerts</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>

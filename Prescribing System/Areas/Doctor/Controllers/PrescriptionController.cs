@@ -101,6 +101,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 DataList = DoctorDbContext
                 .GetPrescLinesByDoctorIdPatienId(id),
                 line = new PrescriptionLine(),
+
             };
             //PrescriptionID = PrescriptionModel.GetPrescription().PrescriptionID;
             ViewBag.Medications = DoctorDbContext.GetAllMeds();

@@ -152,6 +152,32 @@ namespace Prescribing_System.Areas.Doctor.Models
             }
             return prescription;
         }
+        public List<Med_Ingred> GetAllMedicationIngredient()
+        {
+            List<Med_Ingred> meds = new List<Med_Ingred>();
+            connection();
+            dbCmd = new SqlCommand("GetAllMedicationIngredient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    meds.Add(
+                        new Med_Ingred()
+                        {
+                            MedIngreId = Convert.ToInt32(current["MedIngreID"].ToString()),
+                            MedicationID = Convert.ToInt32(current["MedicationID"].ToString()),
+                            ActiveIngredientID = Convert.ToInt32(current["ActiveIngredientID"].ToString()),
+                            ActiveStrength = Convert.ToDouble(current["ActiveStrength"].ToString()),
+                        });
+                }
+            }
+            return meds;
+        }
         public Prescription GetPrescriptionTop()
         {
             int i = 0;
