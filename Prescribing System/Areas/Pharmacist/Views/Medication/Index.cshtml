@@ -29,13 +29,11 @@
                                     var medAbstract = Model.Meds.First(m => m.MedicationID == med.MedicationID);
                                     var ingredAbstract = Model.Ingredients.First(i => i.ActiveIngreID == med.ActiveIngredientID);
                                     var dosageAbstract = Model.Dosages.First(m => m.DosageID == medAbstract.DosageID);
-                                    var scheduleAbstract = Model.Schedules.First(m => m.ScheduleID == medAbstract.ScheduleID);
                                 }
                                 <div>@medAbstract.Name</div>
                                 <div>@dosageAbstract.FormName</div>
                                 <div>@ingredAbstract.Name</div>
                                 <div>@med.ActiveStrength</div>
-                                <div>@scheduleAbstract.scheduleNo</div>
                             </a>
                         </div>
                     }

@@ -1,0 +1,43 @@
+﻿@model PrescLineAnalytic
+@{
+    ViewData["Title"] = "Analysis of prescription lines";
+}
+<div>
+    <div class="illustration-block illus-for-chart bg-grey">
+        <canvas id="prescriptionChart" width="400" height="400"></canvas>
+        <script src="~/lib/chart.js/chart.min.js"></script>
+        <script>
+            const presclineCtx = document.getElementById('prescriptionChart').getContext('2d');
+            const prescChart = new Chart(presclineCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Active', 'Inactive', 'Dispensed', 'Rejected'],
+                    datasets: [{
+                        label: '# of lines',
+                        data: [@Model.ActiveCount, @Model.InactiveCount, @Model.DispensedCount, @Model.RejectedCount],
+                        backgroundColor: [
+                            'rgba(0, 39, 56, 0.9)',
+                            'rgba(0, 39, 56, 0.9)',
+                            'rgba(0, 39, 56, 0.9)',
+                            'rgba(0, 39, 56, 0.9)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 39, 56, 0.9)',
+                            'rgba(0, 39, 56, 0.9)',
+                            'rgba(0, 39, 56, 0.9)',
+                            'rgba(0, 39, 56, 0.9)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</div>

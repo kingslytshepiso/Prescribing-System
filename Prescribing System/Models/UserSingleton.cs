@@ -27,5 +27,10 @@ namespace Prescribing_System.Models
             else
                 return CurrentUser;
         }
+        public static void Reset()
+        {
+            uniqueInstance = null;
+            CurrentUser = null;
+        }
     }
 }

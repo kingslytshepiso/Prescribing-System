@@ -1,17 +1,135 @@
 ﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Home";
-
+    var prescAn = Model.PrescriptionLineAnalytics;
+    var medAn = Model.MedicationAnalytics.MedCountList;
 }
-
+<div class="illus-group-col">
+    <div class="illus-group-row">
+        <a asp-controller="Analytic" asp-action="PrescriptionLines" class="block-link">
+            <div class="illustration-block illus-for-chart bg-grey">
+                <canvas id="prescriptionChart" width="400" height="400"></canvas>
+                <script src="~/lib/chart.js/chart.min.js"></script>
+                <script>
+                    const presclineCtx = document.getElementById('prescriptionChart').getContext('2d');
+                    const prescChart = new Chart(presclineCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Active', 'Inactive', 'Dispensed', 'Rejected'],
+                            datasets: [{
+                                label: '# of lines',
+                                data: [@prescAn.ActiveCount, @prescAn.InactiveCount, @prescAn.DispensedCount, @prescAn.RejectedCount],
+                                backgroundColor: [
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)'
+                                ],
+                                borderColor: [
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+            <div class="illus-title illus-title-medium">
+                <div>
+                    <h4>Prescription Lines</h4>
+                    <span class="text-secondary">
+                        A graphic for different prescription line statuses
+                    </span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="Analytic" asp-action="Medication" class="block-link">
+            <div class="illustration-block illus-for-chart bg-grey">
+                <canvas id="medicationChart" width="400" height="400"></canvas>
+                <script src="~/lib/chart.js/chart.min.js"></script>
+                <script>
+                    const medCtx = document.getElementById('medicationChart').getContext('2d');
+                    const medChart = new Chart(medCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [@{
+                                foreach(var r in medAn){
+                                    @Html.Raw("'"+ r.Key +"',")
+                                }
+                            }],
+                            datasets: [{
+                                label: 'Medication',
+                                data: [@{
+                                foreach(var r in medAn){
+                            @Html.Raw(r.Value + ",")
+                                }
+                            }],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)',
+                                    'rgba(0, 39, 56, 0.9)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+            <div class="illus-title illus-title-medium">
+                <div>
+                    <h4>Medication</h4>
+                    <span class="text-secondary">
+                        A graphic for the top 10 prescribed medication
+                    </span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
 <div class="illus-group-row">
     <div class="illustration-block illus-large box-rowed box-centered">
-        <form asp-controller="Patient" asp-action="Index" method="get">
+        <form asp-controller="Home" asp-action="Search" method="get">
             <div class="form-group row">
                 <div class="col">
                     <div class="col"><label>Enter Patient ID:</label></div>
                     <div class="col">
-                        <input class="form-control" type="text" name="idNumber" />
+                        <input class="form-control" type="text" asp-for="IdNumber" 
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                               required/>
+                    </div>
+                    <div class="col">
+                        <span asp-validation-for="IdNumber"></span>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     </div>
                 </div>
             </div>
@@ -26,23 +144,11 @@
 <hr />
 <div class="illus-group-col">
     <div class="illus-group-row">
-        <a asp-controller="Medication" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-medication illus-medium">
-
-            </div>
-            <div class="illus-title illus-title-small">
-                <div>
-                    <h4>Medication</h4>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="illus-group-row">
-        <a asp-controller="History" asp-action="Index" class="block-link">
-            <div class="illustration-block illustraion-history illus-medium">
+        <a asp-controller="Home" asp-action="History" class="block-link">
+            <div class="illustration-block illus-for-chart bg-grey">
                 
             </div>
-            <div class="illus-title illus-title-small">
+            <div class="illus-title illus-title-medium">
                 <div>
                     <h4>History</h4>
                 </div>

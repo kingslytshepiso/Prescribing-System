@@ -11,6 +11,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
     [Area("Admin")]
     public class MedicalPracticeController : Controller
     {
+        public AdminDbContext Data = new AdminDbContext();
         public bool UserIsVerified(string role = "")
         {
             var session = new MySession(HttpContext.Session);
@@ -20,12 +21,13 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, int pageSize = 5, string sortBy = "none")
         {
-            IndexViewModel model = new IndexViewModel 
-            { LoggedUser = UserSingleton.GetLoggedUser() };
             if (UserIsVerified("Admin"))
+            {
+                var model = Data.GetAllMedPracsWithPaging(pageNumber, pageSize, sortBy);
                 return View(model);
+            }
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
         }

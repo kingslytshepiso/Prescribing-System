@@ -22,7 +22,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10, string sortBy = "none")
+        public IActionResult Index(int pageNumber = 1, int pageSize = 5, string sortBy = "none")
         {
             if (UserIsVerified("Admin"))
             {
@@ -30,10 +30,6 @@ namespace Prescribing_System.Areas.Admin.Controllers
                 switch (sortBy)
                 {
                     case "none": break;
-                        //case "name": model.DataList = model.DataList.OrderBy(x => x.).ToList(); break;
-                        //case "suburb": model.DataList = model.DataList.OrderBy(x => x.SuburbName).ToList(); break;
-                        //case "medprac": model.DataList = model.DataList.OrderBy(x => x.MedPracName).ToList(); break;
-                        //case "status": model.DataList = model.DataList.OrderBy(x => x.StatusName).ToList(); break;
                 }
                 return View(model);
             }

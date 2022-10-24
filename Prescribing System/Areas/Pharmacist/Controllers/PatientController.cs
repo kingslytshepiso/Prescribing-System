@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 namespace Prescribing_System.Areas.Pharmacist.Controllers
 {
     [Area("Pharmacist")]
-    [Route("[area]/[controller]s/[action]/{id?}")]
+    [Route("[area]/[controller]/[action]/{id?}")]
 
     public class PatientController : Controller
     {
@@ -25,15 +25,26 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
             else
                 return false;
         }
-        public IActionResult Index(string idNumber)
+        public IActionResult Index(string sortBy = "none")
         {
+            //Testing
+            var urlCheck = this.Url;
+            var model = new PatientViewModel(PatientModel.GetPatient().IdNumber);
             if (UserIsVerified("Pharmacist"))
             {
-                var model = new PatientViewModel(idNumber);
+                switch (sortBy)
+                {
+                    case "none":model.Prescriptions = model.Prescriptions.OrderBy(x => x.Status)
+                            .ToList();break;
+                    case "datenewest":model.Prescriptions = model.Prescriptions.OrderBy(x => x.Status)
+                            .ThenByDescending(x => x.Date).ToList();break;
+                    case "dateoldest":model.Prescriptions = model.Prescriptions.OrderBy(x => x.Status)
+                            .ThenBy(x => x.Date).ToList();break;
+                }
                 return View(model);
             }
             else
-                return RedirectToAction("Index", "Home", new { area = "" });
+                return RedirectToAction("Login", "Account", new { area = "", returnUrl = this.Url });
         }
         public IActionResult Line(int id)
         {
@@ -43,7 +54,7 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                 return View(model);
             }
             else
-                return RedirectToAction("Index", "Home", new { area = "" });
+                return RedirectToAction("Login", "Account", new { area = "", returnUrl = this.Url });
         }
         [HttpPost]
         public IActionResult Dispense(int id, PrescriptionLine model)
@@ -62,6 +73,7 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                         if (results)
                         {
                             TempData["Message"] = "Successfully dispensed";
+                            line = Data.GetPrescLineWithId(id);
                         }
                         else
                             TempData["Message"] = "There was an error while dispensing";
@@ -77,13 +89,17 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                     var valid = !(line.GetValidations().Any(x => x.Status == "Invalid"));
                     if (valid)
                     {
-                        var alertsAdded = Data.AddAlerts(line.GetValidations());
+                        //Add alerts first
+                        var alertsAdded = Data.AddAlerts(line.GetValidations()
+                            .FindAll(x => x.Status == "Ignored"));
                         if (alertsAdded)
                         {
+                            //Re-dispense the medication again
                             var results = Data.DispenseMedication(line);
                             if (results)
                             {
                                 TempData["Message"] = "Successfully dispensed";
+                                line = Data.GetPrescLineWithId(id);
                             }
                             else
                                 TempData["Message"] = "There was an error while dispensing";
@@ -101,27 +117,55 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                 return View("Line", line);
             }
             else
-                return RedirectToAction("Index", "Home", new { area = "" });
+                return RedirectToAction("Login", "Account", new { area = "", returnUrl = this.Url.RouteUrl("") });
         }
         [HttpPost]
         [Route("for-{slug}")]
-        public IActionResult RejectLine(int id, string message)
+        public IActionResult RejectLine(int id, string lineMessage)
         {
-            var line = Data.GetPrescLineWithId(id);
-            if (!(string.IsNullOrEmpty(message)))
+            if (UserIsVerified("Pharmacist"))
             {
-                line.Status = "Rejected";
-                var results = Data.RejectPrescriptionLine(line, message);
-                if (results)
+                var line = Data.GetPrescLineWithId(id);
+                if (!(string.IsNullOrEmpty(lineMessage)))
                 {
-                    TempData["Message"] = "Line Rejected";
-                    return View("line", line);
+                    line.Status = "Rejected";
+                    var results = Data.RejectPrescriptionLine(line, lineMessage);
+                    if (results)
+                    {
+                        TempData["Message"] = "Line Rejected";
+                        return View("line", line);
+                    }
+                    //return Dispense(id, line);
                 }
-                //return Dispense(id, line);
+                TempData["Message"] = "Error rejecting the prescription line.";
+                return View("Line", line);
             }
-            TempData["Message"] = "Error rejecting the prescription line.";
-            return View("Line", line);
+            else
+                return RedirectToAction("Login", "Account", new { area = "", returnUrl = this.Url });
         }
+        public IActionResult RejectPrescription(int id, string prescMessage)
+        {
+            if (UserIsVerified("Pharmacist"))
+            {
+                var prescription = Data.GetAllPrescriptions().Find(x => x.PrescriptionID == id);
+                var line = Data.GetPrescLineWithId(id);
+                if (!(string.IsNullOrEmpty(prescMessage)))
+                {
+                    prescription.Status = "Rejected";
+                    var results = Data.RejectPrescription(prescription, prescMessage);
+                    if (results)
+                    {
+                        TempData["Message"] = "Prescription Rejected";
+                        return RedirectToAction("Index", "Patient");
+                    }
+                    //return Dispense(id, line);
+                }
+                TempData["Message"] = "Error rejecting the prescription.";
+                return View("Line", line);
+            }
+            else
+                return RedirectToAction("Login", "Account", new { area = "", returnUrl = this.Url });
+            }
         protected List<Alert> Revalidate(PrescriptionLine line)
         {
             var model = new List<Alert>();
@@ -219,7 +263,6 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                 {
                     LineID = line.LineID,
                     AlertType = "Medication Interactions",
-
                     Message = "The Medication specified interacts with one of the medications that the " +
                     "patient is currently on",
                     Status = "Invalid",
@@ -242,7 +285,7 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                     LineID = line.LineID,
                     AlertType = "Last Refill",
                     Message = "20 days has not passed since your last refill",
-                    Status = "Valid",
+                    Status = "Invalid",
                     StatusReason = "Invalid - Last Refill",
                     UserID = line.GetPatient().PatientId,
                     Extras = "The patient is not allowed to refill before 20 days have passed",

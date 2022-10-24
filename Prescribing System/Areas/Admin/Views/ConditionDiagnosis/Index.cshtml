@@ -35,7 +35,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Condition ID</th>
+            <th></th>
             <th>Code</th>
             <th>Description</th>
             <th>Patient</th>
@@ -46,10 +46,11 @@
     <tbody>
         @if (Model.OverallCount > 0)
         {
+            var i = 1;
             @foreach (var condition in Model.DataList)
             {
                 <tr>
-                    <td>@condition.ConditionID</td>
+                    <td>@i</td>
                     <td>@condition.Code</td>
                     <td>@condition.Description</td>
                     <td>@(
@@ -71,6 +72,7 @@
                         </form>
                     </td>
                 </tr>
+                i++;
             }
         }
         else

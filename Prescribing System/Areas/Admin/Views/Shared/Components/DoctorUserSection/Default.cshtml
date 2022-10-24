@@ -106,7 +106,7 @@
             <div class="col-8"><label>City/Suburb:</label></div>
             <div class="col-12">
                 <select asp-for="User.SuburbID"
-                        asp-items="@(new SelectList(Model.GetSuburbs(), "SuburbID",
+                        asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
                                         "Name"))"
                         class="form-control">
                 </select>
@@ -116,7 +116,7 @@
             <div class="col-8"><label>Province:</label></div>
             <div class="col-12">
                 <select asp-for="User.ProvinceID"
-                        asp-items="@(new SelectList(Model.GetProvinces(), "ProvID",
+                        asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
                                         "Name"))"
                         class="form-control">
                 </select>

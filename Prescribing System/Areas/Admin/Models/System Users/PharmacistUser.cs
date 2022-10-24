@@ -17,7 +17,7 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         [StringLength(30)]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Please enter email address.")]
-        [Remote("CheckEmail", "Validation")]
+        //[Remote("CheckEmail", "Validation")]
         public string EmailAddress { get; set; }
         [Required(ErrorMessage = "Please enter contact number.")]
         public string ContactNumber { get; set; }
@@ -29,5 +29,10 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         public int PharmacyId { get; set; }
         public int SuburbId { get; set; }
         public int ProvinceId { get; set; }
+    }
+    public class PharmacistGeneric : PharmacistUser
+    {
+        public string SuburbName { get; set; }
+        public string PharmacyName { get; set; }
     }
 }

@@ -1,0 +1,90 @@
+﻿@model List<PharmacistAnalytic>
+@{
+    ViewData["Title"] = "History";
+    var orderedModel = Model;
+}
+@if (Model.Count > 0)
+{
+    <div class="box-columned box-spaced-between">
+        <div class="">
+        </div>
+        <div class="">
+            <button type="button" class="btn btn-primary dropdown-toggle"
+                id="sortDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+                Sort by
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                <li class="dropdown-item">
+                    <a asp-controller="Home" asp-action="History" asp-route-sortBy="datenewest">
+                        Date(Newest)
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a asp-controller="Home" asp-action="History" asp-route-sortBy="dateoldest">
+                        Date(Oldest)
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a asp-controller="Home" asp-action="History" asp-route-sortBy="action">
+                        Action
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Patient ID No</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var indexer = 0;
+                    var counter = 0;
+                    var currentMY = orderedModel[indexer].Date.ToString("Y");
+                    var itemMY = "";
+                }
+                <tr class="bg-grey"><td colspan="5" class="text-center">@orderedModel[indexer].Date.ToString("Y")</td></tr>
+                @while (counter < orderedModel.Count)
+                {
+                    itemMY = orderedModel[counter].Date.ToString("Y");
+                    if (currentMY != itemMY)
+                    {
+                        currentMY = orderedModel[counter].Date.ToString("Y");
+                        <tr class="bg-grey"><td colspan="5" class="text-center">@itemMY</td></tr>
+                    }
+                    var currentMonth = orderedModel[counter].Date.ToString("MMMM");
+                    <tr class="@(orderedModel[counter].Action.Contains("Dispensed")? "bg-info":"")
+                    @(orderedModel[counter].Action.Contains("Rejected")? "bg-danger": ""))">
+                        <td>@orderedModel[counter].Date</td>
+                        <td>@orderedModel[counter].Action</td>
+                        <td>
+                            @{
+                                var idString = orderedModel[counter].GetPatient().IdNumber.ToArray();
+                                for (var c = 0; c < idString.Length; c++)
+                                {
+                                    if (c < 10)
+                                        @(
+                                        "*"
+                                            )
+                                    else
+                                        @idString[c]
+                                }
+                            }
+                        </td>
+                    </tr>
+                    counter++;
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else{
+    <p>Nothing to show here</p>
+}
+

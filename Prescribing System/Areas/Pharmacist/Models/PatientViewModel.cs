@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prescribing_System.Areas.Pharmacist.Models
 {
     public class PatientViewModel
     {
-        public PatientUser Patient { get; set; }
+        public PatientUser Patient;
+        
         public List<Prescription> Prescriptions { get; set; }
         public List<PrescriptionLine> Lines { get; set; }
         public DoctorUser Doctor { get; set; }
@@ -15,6 +18,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public PatientViewModel(string idNumber)
         {
             Patient = DbData.GetPatientWithIdNo(idNumber);
+            PatientModel.SetPatient(Patient);
             Prescriptions = DbData.GetPrescriptionsWithPatientId(Patient.PatientId);
         }
         public List<PrescriptionLine> GetPrescriptionLines(int prescId)

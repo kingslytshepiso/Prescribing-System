@@ -16,5 +16,6 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public string LicenceNo { get; set; }
         public string Img { get; set; }
         public int SuburbID { get; set; }
+        public int PharmacistID { get; set; }
     }
 }

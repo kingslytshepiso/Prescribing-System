@@ -36,9 +36,9 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>1st Interactor</th>
-                <th>2nd Interactor</th>
+                <th></th>
+                <th>1st ingredient</th>
+                <th>2nd ingredient</th>
                 <th>Effect</th>
                 <th></th>
                 <th></th>
@@ -47,10 +47,11 @@
         <tbody>
             @if (Model.OverallCount > 0)
             {
+                var i = 1;
                 @foreach (var interaction in Model.DataList)
                 {
                     <tr>
-                        <td>@interaction.InteractionID</td>
+                        <td>@i</td>
                         <td>@interaction.GetFirstInteractor().Name</td>
                         <td>@interaction.GetScndInteractor()</td>
                         <td>@interaction.EffectDescription</td>
@@ -70,6 +71,7 @@
                             </form>
                         </td>
                     </tr>
+                    i++;
                 }
             }
             else

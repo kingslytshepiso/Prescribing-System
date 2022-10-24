@@ -30,37 +30,165 @@ namespace Prescribing_System.Areas.Pharmacist.Models
             dbCmd.Parameters.AddWithValue("@LineID", line.LineID);
             dbCmd.Parameters.AddWithValue("@PharmacyID", line.PharmacyID);
             dbCmd.Parameters.AddWithValue("@Date", DateTime.Today);
+            dbCmd.Parameters.AddWithValue("@PharmacistID", UserSingleton.GetLoggedUser().UserId);
             conn.Open();
             int i = dbCmd.ExecuteNonQuery();
             conn.Close();
             if (i >= 1)
             {
+                UpdatePharmacistAnalytic("Dispensed medication");
                 return true;
             }
             return false;
         }
         public bool AddAlerts(List<Alert> alerts)
         {
-            return true;
+            bool added = false;
+            foreach (Alert alert in alerts)
+            {
+                connection();
+                dbCmd = new SqlCommand("AddAlert", conn);
+                dbCmd.CommandType = CommandType.StoredProcedure;
+                dbCmd.Parameters.AddWithValue("@AlertType", alert.AlertType);
+                dbCmd.Parameters.AddWithValue("@LineID", alert.LineID);
+                dbCmd.Parameters.AddWithValue("@Message", alert.Message);
+                dbCmd.Parameters.AddWithValue("@Status", alert.Status);
+                dbCmd.Parameters.AddWithValue("@StatusReason", alert.StatusReason);
+                dbCmd.Parameters.AddWithValue("@UserID", alert.UserID);
+                conn.Open();
+                int i = dbCmd.ExecuteNonQuery();
+                conn.Close();
+                if (i >= 1)
+                {
+                    added = true;
+                    UpdateAfterDispense(alert.LineID);
+                    UpdatePharmacistAnalytic("Ignored an alert");
+                }
+                else
+                {
+                    added = false;
+                    break;
+                }
+            }
+            return added;
+        }
+        public void UpdateAfterDispense(int lineID)
+        {
+            connection();
+            dbCmd = new SqlCommand("UpdateAfterDispense", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@LineID", lineID);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
         }
         public bool RejectPrescriptionLine(PrescriptionLine line, string message)
         {
             connection();
-
             dbCmd = new SqlCommand("RejectLine", conn);
             dbCmd.CommandType = CommandType.StoredProcedure;
             dbCmd.Parameters.AddWithValue("@LineID", line.LineID);
             dbCmd.Parameters.AddWithValue("@PharmacyID", line.PharmacyID);
             dbCmd.Parameters.AddWithValue("@Date", DateTime.Today);
             dbCmd.Parameters.AddWithValue("@StatusMessage", message);
+            dbCmd.Parameters.AddWithValue("@PharmacistID", UserSingleton.GetLoggedUser().UserId);
             conn.Open();
             int i = dbCmd.ExecuteNonQuery();
             conn.Close();
             if (i >= 1)
             {
+                UpdatePharmacistAnalytic("Rejected a prescription line");
                 return true;
             }
             return false;
+        }
+        public bool RejectPrescription(Prescription presc, string message)
+        {
+            connection();
+            dbCmd = new SqlCommand("RejectPrescription", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@PrescriptionID", presc.PrescriptionID);
+            dbCmd.Parameters.AddWithValue("@Date", DateTime.Today);
+            dbCmd.Parameters.AddWithValue("@StatusMessage", message);
+            dbCmd.Parameters.AddWithValue("@PharmacistID", UserSingleton.GetLoggedUser().UserId);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i >= 1)
+            {
+                UpdatePharmacistAnalytic("Rejected a prescription");
+                return true;
+            }
+            return false;
+        }
+        public List<PharmacistAnalytic> GetPharmacistHistory()
+        {
+            List<PharmacistAnalytic> histories = new List<PharmacistAnalytic>();
+            connection();
+            dbCmd = new SqlCommand("GetPharmacistHistories", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    histories.Add(
+                        new PharmacistAnalytic()
+                        {
+                            HistoryID = Convert.ToInt32(current["HistoryID"].ToString()),
+                            PharmacistID = Convert.ToInt32(current["PharmacistID"].ToString()),
+                            PatientID = Convert.ToInt32(current["PatientID"].ToString()),
+                            Date = Convert.ToDateTime(current["Date"].ToString()),
+                            Action = Convert.ToString(current["Action"].ToString()),
+                        });
+                }
+            }
+            return histories.FindAll(x => x.PharmacistID == UserSingleton.GetLoggedUser().UserId);
+        }
+        public void UpdatePharmacistAnalytic(string action)
+        {
+            try
+            {
+                connection();
+                dbCmd = new SqlCommand("UpdatePharmacistAnalytic", conn);
+                dbCmd.CommandType = CommandType.StoredProcedure;
+                dbCmd.Parameters.AddWithValue("@PharmacistID", UserSingleton.GetLoggedUser().UserId);
+                dbCmd.Parameters.AddWithValue("@PatientID", PatientModel.GetPatient().PatientId);
+                dbCmd.Parameters.AddWithValue("@Date", DateTime.Now);
+                dbCmd.Parameters.AddWithValue("@Action", action);
+                //dbCmd.Parameters.AddWithValue("@MedicationID", line.MedicationID);
+                conn.Open();
+                int i = dbCmd.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch(Exception ex)
+            {
+                
+            }
+        }
+        public PrescLineAnalytic GetPrescLinesAnalyticWithPharmacistId(int id)
+        {
+            PrescLineAnalytic ana = new PrescLineAnalytic();
+            connection();
+            dbCmd = new SqlCommand("GetPrescLineAnalyticsWithPharmacistId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                ana.ID = Convert.ToInt32(dt.Rows[0]["ID"].ToString());
+                ana.IgnoredCount = Convert.ToInt32(dt.Rows[0]["IgnoredCount"].ToString());
+                ana.DispensedCount = Convert.ToInt32(dt.Rows[0]["DispensedCount"].ToString());
+                ana.PharmacistID = Convert.ToInt32(dt.Rows[0]["PharmacistID"].ToString());
+                ana.RejectedCount = Convert.ToInt32(dt.Rows[0]["RejectedCount"].ToString());
+            }
+            return ana;
         }
         public PharmacistUser GetPharmacistWithId(int id)
         {
@@ -134,6 +262,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                 pharmacy.ContactNo = Convert.ToString(dt.Rows[0]["ContactNo"].ToString());
                 pharmacy.LicenceNo = Convert.ToString(dt.Rows[0]["LicenceNo"].ToString());
                 pharmacy.SuburbID = Convert.ToInt32(dt.Rows[0]["SuburbID"].ToString());
+                pharmacy.PharmacistID = Convert.ToInt32(dt.Rows[0]["PharmacistID"].ToString()) ;
             }
             return pharmacy;
         }
@@ -207,9 +336,71 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                     prescription.Date = Convert.ToDateTime(dt.Rows[i]["Date"].ToString());
                     prescription.PatientID = Convert.ToInt32(dt.Rows[i]["PatientID"].ToString());
                     prescription.DoctorID = Convert.ToInt32(dt.Rows[i]["DoctorID"].ToString());
+                    prescription.Status = Convert.ToString(dt.Rows[i]["Status"].ToString());
                 }
             }
             return prescription;
+        }
+        public List<Prescription> GetAllPrescriptions()
+        {
+            connection();
+            dbCmd = new SqlCommand("GetAllPrescriptions", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            List<Prescription> prescriptions = new List<Prescription>();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    prescriptions.Add(
+                        new Prescription
+                        {
+                            PrescriptionID = Convert.ToInt32(dr["PrescriptionID"].ToString()),
+                            Date = Convert.ToDateTime(dr["Date"].ToString()),
+                            PatientID = Convert.ToInt32(dr["PatientID"].ToString()),
+                            DoctorID = Convert.ToInt32(dr["DoctorID"].ToString()),
+                            Status = Convert.ToString(dr["Status"].ToString()),
+                        });
+                };
+            }
+            return prescriptions;
+        }
+        public List<PrescriptionLine> GetAllPrescriptionLines()
+        {
+            connection();
+            dbCmd = new SqlCommand("GetAllPrescriptionLines", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            List<PrescriptionLine> lines = new List<PrescriptionLine>();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    lines.Add(
+                        new PrescriptionLine
+                        {
+                            LineID = Convert.ToInt32(dr["LineID"].ToString()),
+                            Quantity = Convert.ToInt32(dr["Quantity"].ToString()),
+                            Instruction = Convert.ToString(dr["Instruction"].ToString()),
+                            RepeatNo = Convert.ToInt32(dr["RepeatNo"].ToString()),
+                            RepeatLeft = Convert.ToInt32(dr["RepeatLeftNo"].ToString()),
+                            PrescriptionID = Convert.ToInt32(dr["PrescriptionID"].ToString()),
+                            MedicationID = Convert.ToInt32(dr["MedicationID"].ToString()),
+                            StatusMessage = Convert.ToString(dr["StatusMessage"].ToString()),
+                            PharmacyID = Convert.ToInt32(dr["PharmacyID"].ToString()),
+                            DiseaseID = Convert.ToInt32(dr["DiseaseID"].ToString()),
+                            LastDispensed = Convert.ToDateTime(dr["LastDispensed"].ToString()),
+                            Status = Convert.ToString(dr["Status"].ToString()),
+                        });
+                };
+            }
+            return lines;
         }
         public Prescription GetPrescriptionWithPatientId(int id, int i = 0)
         {
@@ -231,6 +422,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                     prescription.Date = Convert.ToDateTime(dt.Rows[i]["Date"].ToString());
                     prescription.PatientID = Convert.ToInt32(dt.Rows[i]["PatientID"].ToString());
                     prescription.DoctorID = Convert.ToInt32(dt.Rows[i]["DoctorID"].ToString());
+                    prescription.Status = Convert.ToString(dt.Rows[i]["Status"].ToString());
                 }
             }
             return prescription;
@@ -354,6 +546,32 @@ namespace Prescribing_System.Areas.Pharmacist.Models
             }
             return lines;
         }
+        public List<Med_Ingred> GetAllMedicationIngredient()
+        {
+            List<Med_Ingred> meds = new List<Med_Ingred>();
+            connection();
+            dbCmd = new SqlCommand("GetAllMedicationIngredient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    meds.Add(
+                        new Med_Ingred()
+                        {
+                            MedIngreId = Convert.ToInt32(current["MedIngreID"].ToString()),
+                            MedicationID = Convert.ToInt32(current["MedicationID"].ToString()),
+                            ActiveIngredientID = Convert.ToInt32(current["ActiveIngredientID"].ToString()),
+                            ActiveStrength = Convert.ToDouble(current["ActiveStrength"].ToString()),
+                        });
+                }
+            }
+            return meds;
+        }
         public List<Medication> GetAllMeds()
         {
             List<Medication> meds = new List<Medication>();
@@ -373,9 +591,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                         {
                             MedicationID = Convert.ToInt32(current["MedicationID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            ActiveIngredientID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
-                            //DosageID = Convert.ToInt32(current["DosageID"].ToString()),
-                            ActiveStrength = Convert.ToInt32(current["ActiveStrength"].ToString()),
+                            DosageID = Convert.ToInt32(current["DosageID"].ToString()),
                             ScheduleID = Convert.ToInt32(current["ScheduleID"].ToString()),
                         });
                 }
@@ -457,7 +673,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                         new PatientMedication()
                         {
                             PatientMedID = Convert.ToInt32(current["PatientMedID"].ToString()),
-                            Date = Convert.ToDateTime(current["Date"].ToString()),
+                            //Date = Convert.ToDateTime(current["Date"].ToString()),
                             PatientID = Convert.ToInt32(current["PatientID"].ToString()),
                             MedicationID = Convert.ToInt32(current["MedicationID"].ToString()),
                         });
@@ -465,7 +681,126 @@ namespace Prescribing_System.Areas.Pharmacist.Models
             }
             return medications;
         }
-
+        public List<Suburb> GetAllSuburbs()
+        {
+            List<Suburb> Suburbs = new List<Suburb>();
+            connection();
+            dbCmd = new SqlCommand("GetAllSuburbs", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Suburbs.Add(
+                        new Suburb()
+                        {
+                            SuburbID = Convert.ToInt32(current["SuburbID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
+                            CityID = Convert.ToInt32(current["CityID"].ToString())
+                        });
+                }
+                return Suburbs;
+            }
+            else
+            {
+                return Suburbs;
+            }
+        }
+        public List<City> GetAllCities()
+        {
+            List<City> Cities = new List<City>();
+            connection();
+            dbCmd = new SqlCommand("GetAllCities", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Cities.Add(
+                        new City()
+                        {
+                            CityID = Convert.ToInt32(current["CityID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
+                            ProvID = Convert.ToInt32(current["ProvID"].ToString())
+                        });
+                }
+                return Cities;
+            }
+            else
+            {
+                return Cities;
+            }
+        }
+        public List<Pharmacy> GetAllPharmacies()
+        {
+            List<Pharmacy> Pharmacies = new List<Pharmacy>();
+            connection();
+            dbCmd = new SqlCommand("GetAllPharmacies", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Pharmacies.Add(
+                        new Pharmacy()
+                        {
+                            PharmacyID = Convert.ToInt32(current["PharmacyID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            ContactNo = Convert.ToString(current["ContactNo"].ToString()),
+                            EmailAddress = Convert.ToString(current["EmailAddress"].ToString()),
+                            LicenceNo = Convert.ToString(current["LicenceNo"].ToString()),
+                            AddressLine1 = Convert.ToString(current["AddressLine1"].ToString()),
+                            AddressLine2 = Convert.ToString(current["AddressLine2"].ToString()),
+                            SuburbID = Convert.ToInt32(current["SuburbID"].ToString()),
+                            PharmacistID = Convert.ToInt32(current["PharmacistID"].ToString()),
+                        });
+                }
+            }
+            return Pharmacies;
+        }
+        public List<Province> GetAllProvinces()
+        {
+            List<Province> Provinces = new List<Province>();
+            connection();
+            dbCmd = new SqlCommand("GetAllProvinces", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow current in dt.Rows)
+                {
+                    Provinces.Add(
+                        new Province()
+                        {
+                            ProvID = Convert.ToInt32(current["ProvID"].ToString()),
+                            Name = Convert.ToString(current["Name"].ToString()),
+                            Abbreviation = Convert.ToString(current["Abbreviation"].ToString()),
+                        });
+                }
+                return Provinces;
+            }
+            else
+            {
+                return Provinces;
+            }
+        }
         public Disease GetDiseaseWithId(int id)
         {
             connection();

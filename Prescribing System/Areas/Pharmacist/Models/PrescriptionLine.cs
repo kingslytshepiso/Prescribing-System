@@ -17,6 +17,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public string Status { get; set; }
         public int PrescriptionID { get; set; }
         public int MedicationID { get; set; }
+        public int DiseaseID { get; set; }
         public string StatusMessage { get; set; }
         public int DosageID { get; set; }
         public int PharmacyID { get; set; }
@@ -48,9 +49,18 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         {
             LineAlerts.Add(alert);
         }
-        public Medication GetMed()
+        public Med_Ingred GetMedIngre()
         {
-            var med = Data.GetAllMeds().Find(x => x.MedicationID == MedicationID);
+            var med = Data.GetAllMedicationIngredient().Find(x => x.MedicationID == MedicationID);
+            if (med != null)
+            {
+                return med;
+            }
+            return new Med_Ingred();
+        }
+        public Medication GetActualMed()
+        {
+            var med = Data.GetAllMeds().Find(x => x.MedicationID == this.MedicationID);
             if (med != null)
             {
                 return med;
@@ -73,16 +83,18 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         {
             return Data.GetAllPatientDiseases().FindAll(x => x.PatientID == GetPatient().PatientId);
         }
-        public List<Medication> GetPatientMedication()
+        public List<Med_Ingred> GetPatientMedicationIngredients()
         {
-            List<Medication> list = new List<Medication>();
+            List<Med_Ingred> list = new List<Med_Ingred>();
             var patient_medications = Data.GetAllPatientMedications()
                 .FindAll(x => x.PatientID == GetPatient().PatientId);
             foreach (var pm in patient_medications)
             {
-                list.Add(Data.GetAllMeds().Find(x => x.MedicationID == pm.MedicationID));
+                list.Add(Data.GetAllMedicationIngredient()
+                    .Find(x => x.MedicationID == pm.MedicationID));
             }
-            list.Add(GetMed());
+            list.Add(GetMedIngre());
+            list.RemoveAll(x => x == null);
             return list;
         }
         public List<Allergy> GetAllergies()
@@ -105,8 +117,8 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         {
             string str = "";
             List<MedicationInteraction> interactions = Data.GetAllInteraction()
-                .FindAll(x => x.FirstInteractor == GetMed().ActiveIngredientID
-                || x.ScndInteractor == GetMed().ActiveIngredientID);
+                .FindAll(x => x.FirstInteractor == this.GetMedIngre().ActiveIngredientID
+                || x.ScndInteractor == this.GetMedIngre().ActiveIngredientID);
             foreach (MedicationInteraction i in interactions)
             {
                 str += Data.GetActIngreWithId(i.FirstInteractor).Name + " interacts with "
@@ -121,7 +133,11 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         //Validation checks 
         public bool IsRepeatValid()
         {
-            return RepeatNo > 0;
+            if (RepeatLeft > 0)
+            {
+                return true;
+            }
+            else return false;
         }
         public bool IsStatusValid()
         {
@@ -130,21 +146,21 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         
         public bool IsInteractionValid()
         {
-            var patientMeds = GetPatientMedication();
+            var patientMeds = GetPatientMedicationIngredients();
             bool foundOne = false;
             var interactions = Data.GetAllInteraction();
             foreach (var pm in patientMeds)
             {
                 foreach(var inter in interactions)
                 {
-                    if (inter.FirstInteractor == GetMed().ActiveIngredientID
+                    if (GetActualMed().GetIngredients().Any(x => inter.FirstInteractor == x.ActiveIngredientID)
                    && inter.ScndInteractor == pm.ActiveIngredientID)
                     {
                         foundOne = true;
                         break;
                     }
                     else if (inter.FirstInteractor == pm.ActiveIngredientID
-                        && inter.ScndInteractor == GetMed().ActiveIngredientID)
+                        && GetActualMed().GetIngredients().Any(x => inter.ScndInteractor == x.ActiveIngredientID))
                     {
                         foundOne=true;
                         break;
@@ -171,7 +187,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
             foreach (var m in GetPatientDiseases()) {
                 foreach (var c in contras)
                 {
-                    if (c.ActiveIngredientID == GetMed().ActiveIngredientID
+                    if (GetActualMed().GetIngredients().Any(x => c.ActiveIngredientID == x.ActiveIngredientID)
                     && c.DiseaseID == m.DiseaseID)
                     {
                         valid = false; break;
@@ -186,11 +202,14 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         }
         public bool IsAllergyValid()
         {
-            return !GetAllergies().Any(x => x.ActiveIngredientID == GetMed().ActiveIngredientID);
+            return !GetAllergies().Any(x => x.ActiveIngredientID == GetMedIngre().ActiveIngredientID);
         }
         public bool IsDateValid()
         {
-            return !(LastDispensed > DateTime.Now.AddDays(-20));
+            var minRequiredDate = DateTime.Now.AddDays(-20);
+            var pastRequiredDate = LastDispensed > minRequiredDate;
+            var valid = pastRequiredDate && !pastRequiredDate;
+            return valid;
         }
     }
 }

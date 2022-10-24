@@ -40,23 +40,53 @@ else
     @if (!(Model.Prescriptions.Count > 0))
     {
         <div>
-            <h4 class="text-info">
-                patient has not loaded any prescriptions yet.
-            </h4>
+            <table class="table">
+                <thead><tr><th>No prescription line loaded</th></tr></thead>
+            </table>
         </div>
     }
     else
     {
-
+        <div class="box-columned box-spaced-between">
+            <div class="">
+                
+            </div>
+            <div class="">
+                <button type="button" class="btn btn-primary dropdown-toggle"
+                id="sortDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+                    Sort by
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                    <li class="dropdown-item">
+                        <a asp-controller="Patient" asp-action="Index" asp-route-sortBy="datenewest">
+                            Date(Newest)
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a asp-controller="Patient" asp-action="Index" asp-route-sortBy="dateoldest">
+                            Date(Oldest)
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a asp-controller="Patient" asp-action="Index" asp-route-sortBy="status">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         var doctor = new DoctorUser();
         var medPrac = new object();
-
+        var lines = new List<PrescriptionLine>();
         @foreach (Prescription p in Model.Prescriptions)
         {
-            var lines = Model.GetPrescriptionLines(p.PrescriptionID).OrderByDescending(x => x.RepeatLeft).ThenBy(x => x.Status).ToList();
+            lines = Model.GetPrescriptionLines(p.PrescriptionID).OrderByDescending(x => x.RepeatLeft).ThenBy(x => x.Status).ToList();
             doctor = Model.GetDoctor(p.DoctorID);
             medPrac = Model.GetPractice(doctor.MedPracId);//to be changed to a medprac class
-            <div class="prescription-box">
+            var rejected = p.Status == "Rejected";
+            var inactive = p.Status == "Inactive";
+            <div class="prescription-box @(inactive?"bg-grey": "") @(rejected ? "bg-danger" : "")">
                 <div class="box-columned justify-content-between prescription-header-details ">
                     <div class="prescription-header-details">
                             <table class="table">
@@ -80,11 +110,15 @@ else
                                     <td>Prescription Lines</td>
                                     <td>@lines.Count</td>
                                 </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>@p.Status</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="prescription-lines-container">
-                            @if (lines.Count > 1)
+                            @if (lines.Count > 0)
                             {
                             <div class="">
                                 <table class="table">
@@ -101,15 +135,15 @@ else
                                         {
                                             <tr class="border-bottom line-view-item 
                                                     @(l.Status == "Rejected"?"bg-danger":"") 
-                                                    @(l.Status == "Dispensed"? "bg-info": "")">
+                                                    @(l.Status == "Dispensed" || !l.IsRepeatValid()? "bg-info": "")">
                                                 <td>
-                                                    @i. Line for @l.GetMed().Name@(l.Status == "Rejected" ? "(Rejected)" : "")
-                                                    @(l.Status == "Dispensed" ? "(Dispensed)":"")
+                                                    @i. Line for @l.GetActualMed().Name@(l.Status == "Rejected" ? "(Rejected)" : "")
+                                                    @(l.Status == "Dispensed" || !l.IsRepeatValid()? "(Dispensed)":"") - @(l.LastDispensed.ToShortDateString())
                                                 </td>
                                                 <td>
                                                     <div class="box-items-from-right">
                                                         <a asp-controller="Patient" asp-action="Line"
-                                                             asp-route-id="@l.LineID" asp-route-slug="@(l.GetMed().Name)"
+                                                             asp-route-id="@l.LineID" asp-route-slug="@(l.GetActualMed().Name)"
                                                              class="btn btn-primary">
                                                             View
                                                         </a>
@@ -124,9 +158,11 @@ else
                             }
                             else
                             {
-                                <div>
-                                    <strong>No prescription line loaded</strong>
-                                </div>
+                            <div>
+                                <table class="table">
+                                    <thead><tr><th>No prescription line loaded</th></tr></thead>
+                                </table>
+                            </div>
                             }
                     </div>
                     <div class="prescription-header-img">

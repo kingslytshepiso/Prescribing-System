@@ -21,7 +21,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10,string sort = "none")
+        public IActionResult Index(int pageNumber = 1, int pageSize = 5,string sort = "none")
         {
             if (UserIsVerified("Admin"))
             {

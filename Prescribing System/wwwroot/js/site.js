@@ -11,6 +11,28 @@ if (typeof srlProvs !== 'undefined') {
     const allProvs = JSON.parse(srlProvs.replace(/&quot;/g, '"'));
     const allCities = JSON.parse(srlCities.replace(/&quot;/g, '"'));
     const allSuburbs = JSON.parse(srlSuburbs.replace(/&quot;/g, '"'));
+    if (cities) {
+        cities.innerHTML = "";
+        for (var i = 0; i < allCities.length; i++) {
+            var obj = allCities[i];
+            let selectedProvince = provinces.options[provinces.selectedIndex].value;
+            if (selectedProvince == obj["ProvID"]) {
+                let newOption = new Option(obj["Name"], obj["CityID"]);
+                cities.add(newOption, undefined);
+            }
+        }
+    }
+    if (suburbs) {
+        suburbs.innerHTML = "";
+        for (var i = 0; i < allSuburbs.length; i++) {
+            var obj = allSuburbs[i];
+            let selectedCity = cities.options[cities.selectedIndex].value;
+            if (selectedCity == obj["CityID"]) {
+                let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                suburbs.add(newOption, undefined);
+            }
+        }
+    }
     if (provinces) {
         provinces.addEventListener("change", function () {
             cities.innerHTML = "";
@@ -20,6 +42,15 @@ if (typeof srlProvs !== 'undefined') {
                 if (selectedProvince == obj["ProvID"]) {
                     let newOption = new Option(obj["Name"], obj["CityID"]);
                     cities.add(newOption, undefined);
+                }
+            }
+            suburbs.innerHTML = "";
+            for (var i = 0; i < allSuburbs.length; i++) {
+                var obj = allSuburbs[i];
+                let selectedCity = cities.options[cities.selectedIndex].value;
+                if (selectedCity == obj["CityID"]) {
+                    let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                    suburbs.add(newOption, undefined);
                 }
             }
         })
@@ -66,7 +97,8 @@ const form_critical = document.getElementsByClassName("form-critical");
 const forms_critical_extra = document.getElementsByClassName("form-critical-extra");
 const btns_critical_extra = document.getElementsByClassName("btn-critical-extra");
 const btns_critical = document.getElementsByClassName("btn-critical");
-var messageElement = document.getElementById("messageValue");
+var lineMessageElement = document.getElementById("lineMessageValue");
+var prescMessageElement = document.getElementById("prescMessageValue");
 for (let i = 0; i < form_critical.length; i++) {
     if (form_critical[i]) {
         form_critical[i].addEventListener("submit", function (e) {
@@ -95,7 +127,8 @@ for (let i = 0; i < forms_critical_extra.length; i++) {
             if (!(message === null) || message) {
                 let result = confirm("Are you sure you want to proceed?");
                 if (result) {
-                    messageElement.value = message;
+                    lineMessageElement.value = message;
+                    prescMessageElement.value = message;
                     return true;
                 }
                 else {
@@ -133,6 +166,7 @@ window.addEventListener('load', (event) => {
             }
         }
     }
+    
 });
 //Code for checking if an item is checked or not for it to disable a textbox
 

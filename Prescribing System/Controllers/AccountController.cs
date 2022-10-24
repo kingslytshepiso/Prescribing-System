@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prescribing_System.Models;
 using Newtonsoft.Json;
+using Prescribing_System.Areas.Pharmacist.Models;
 
 namespace Prescribing_System.Controllers
 {
@@ -50,6 +51,11 @@ namespace Prescribing_System.Controllers
                     if (UserIsVerified(session.GetRole()))
                     {
                         UserSingleton.LogUser(user);
+                        if(!String.IsNullOrEmpty(model.ReturnUrl) &&
+                            Url.IsLocalUrl(model.ReturnUrl))
+                        {
+                            return Redirect(model.ReturnUrl);
+                        }
                         return RedirectToAction("Index", "Home",
                             new { area = session.GetRole() });
                     }
@@ -114,6 +120,8 @@ namespace Prescribing_System.Controllers
         public IActionResult Logout()
         {
             new MySession(HttpContext.Session).KillSession();
+            PatientModel.Reset();
+            UserSingleton.Reset();
             return RedirectToAction("Index", "Home", new { area = "" });
         }
     }

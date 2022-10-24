@@ -48,25 +48,25 @@
                                    asp-controller="Home" asp-action="Index">
                                     Home
                                 </a>
+                                @if (PatientModel.IsFound())
+                                {
+                                    <a class="dropdown-item"
+                                   asp-controller="Patient"
+                                   asp-action="Index">
+                                        Searched Patient
+                                    </a>
+                                }
                                 <a class="dropdown-item"
-                                   asp-controller="Medication" asp-action="Index">
-                                    Medication
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-area="Pharmacist" asp-controller="Home"
+                                   asp-controller="Home"
                                    asp-action="Profile">
                                     Profile
                                 </a>
                                 <a class="dropdown-item"
-                                   asp-area="" asp-controller="Home"
+                                   asp-controller="Home"
                                    asp-action="About">
                                     About
                                 </a>
-                                <a class="dropdown-item"
-                                   asp-controller="Home"
-                                   asp-action="Privacy">
-                                    Privacy
-                                </a>
+                                
                                 <form method="post" asp-action="Logout"
                                       asp-controller="Account"
                                       asp-area="">
@@ -86,14 +86,15 @@
                 var controller = ViewContext.RouteData.Values["controller"].ToString();
                 var action = ViewContext.RouteData.Values["action"].ToString();
                 var parameter = ViewContext.RouteData.Values["id"] ?? ViewContext.RouteData.Values["idNumber"];
+                var slug = ViewContext.RouteData.Values["slug"];
             }
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                @if (!(controller == "Home" || controller == "Patient"))
+                @if (!(controller == "Home" || controller =="Analytic"))
                 {
                     <li class="breadcrumb-item">
                         <a asp-controller="@controller"
-                           asp-action="Index">
+                       asp-action="Index">
                             @controller
                         </a>
                     </li>
@@ -101,12 +102,12 @@
                     {
                         <li class="breadcrumb-item"
                             aria-current="page">
-                            @action
+                            @(action == "Dispense" || action == "RejectLine" || action=="RejectPrescription" ?"Line" : @action)
                         </li>
                         if (!(parameter == null))
                         {
                             <li class="breadcrumb-item active">
-                                @parameter
+                                @parameter@slug
                             </li>
                         }
                     }

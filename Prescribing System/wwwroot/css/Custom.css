@@ -81,6 +81,7 @@ body {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        width: 100%;
     }
 .block-link:hover{
     text-decoration: none;
@@ -109,6 +110,7 @@ body {
     padding: .5rem;
     overflow: hidden;
     background-size: cover;
+    width: 100%;
 }
 .illus-group-col {
     display: flex;
@@ -121,9 +123,12 @@ body {
     height: 7.5rem;
 }
 .illus-medium{
-    width: 35rem;
-    height: 15rem;
-}
+    width: 440px;
+    height: 256px;
+}illus-for-chart{
+     width: auto;
+     height:auto;
+ }
 .illus-large{
     width: 100%;
     height: 15rem;
@@ -134,10 +139,10 @@ body {
     animation: none;
 }
 .illus-title-small{
-    width: 15rem;
+    width: 220px;
 }
-.illus-title-medium{
-    width: 20rem;
+.illus-title-medium {
+    width: 440px;
 }
 .illus-title-large{
     width: 100%;
@@ -240,6 +245,7 @@ body {
 .adm_main{
 }
 
+
 /*TABLE ELEMENT CLASSES*/
 .tbl{
     display: flex;
@@ -283,7 +289,7 @@ body {
 /*Pharmacist classes*/
 .patient-header-box {
     padding: .5rem;
-    background: #e9ecef;
+    background: #e9ecef;/*grey background*/
 }
 .patient-header-img{
     width: 100px;
@@ -351,6 +357,13 @@ body {
     color: red;
     font-size: 8em;
     text-align: center;
+    z-index: 3;
+}
+.blur-a-bit{
+    filter: blur(5px);
+}
+.bg-grey {
+    background: #e9ecef;
 }
 /*BOOTSTRAP MODIFIED CLASSES*/
 a{

@@ -16,7 +16,6 @@ namespace Prescribing_System.Areas.Admin.Models.Components
             var modelSerialized = JsonConvert.SerializeObject(userModel);
             model = JsonConvert.DeserializeObject<AddPharmacistViewModel>(modelSerialized);
             var userSerialized = JsonConvert.SerializeObject(userModel.SelectedUser);
-            model.SelectedUser = JsonConvert.DeserializeObject<PharmacistUser>(userSerialized);
             return View(model);
         }
     }

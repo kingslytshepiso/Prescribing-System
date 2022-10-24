@@ -16,6 +16,5 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public int OverallCount = 0;
         public int CurrentPage = 1;
         protected PharmacistDbcontext gData = new PharmacistDbcontext();
-        
     }
 }

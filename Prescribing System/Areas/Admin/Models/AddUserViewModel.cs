@@ -21,37 +21,29 @@ namespace Prescribing_System.Areas.Admin.Models
         public List<City> GetCities() => gData.GetAllCities();
         public List<Province> GetProvinces() => gData.GetAllProvinces();
     }
-    public class AddPatientViewModel : AddUserViewModel
+
+    public class AddPatientViewModel
     {
         public PatientUser User { get; set; }
-        public AddPatientViewModel()
-        {
-            User = (PatientUser)SelectedUser;
-        }
-        public PatientUser GetUser()
-        {
-            return (PatientUser)SelectedUser;
-        }
+        public User UserDetails { get; set; }
     }
-    public class AddPharmacistViewModel : AddUserViewModel
+    public class PharmacistDataModel
     {
         public PharmacistUser User { get; set; }
-        public AddPharmacistViewModel()
+        public User UserDetails { get; set; }
+        public PharmacistDataModel()
         {
-            User = (PharmacistUser)SelectedUser;
-        }
-        public PharmacistUser GetUser()
-        {
-            return (PharmacistUser)SelectedUser;
+            User = new PharmacistUser();
+            UserDetails = new User();
         }
     }
-    public class AddDoctorViewModel : AddUserViewModel
+    public class AddPharmacistViewModel : PharmacistDataModel
+    {
+        
+    }
+    public class AddDoctorViewModel
     {
         public DoctorUserGeneric User { get; set; }
-        
-        public DoctorUser GetUser()
-        {
-            return (DoctorUser)SelectedUser;
-        }
+        public User UserDetails { get; set; }
     }
 }

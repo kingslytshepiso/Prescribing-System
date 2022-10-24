@@ -1,0 +1,225 @@
+﻿@model PharmacistDataModel
+@{
+    ViewData["Title"] = "Update Pharmacist";
+}
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" asp-controller="Pharmacist" asp-action="Edit">
+    <input type="hidden" asp-for="User.PharmacistId" value="@Model.User.PharmacistId"/>
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>First Name:</label></div>
+            <div class="col-12">
+                <input asp-for="User.FirstName" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.FirstName"
+                      class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="col-8"><label>Last Name:</label></div>
+            <div class="col-12">
+                <input asp-for="User.LastName" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.LastName"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>Email Address:</label></div>
+            <div class="col-12">
+                <input asp-for="User.EmailAddress" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.EmailAddress"
+                      class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="col-8"><label>Contact Number:</label></div>
+            <div class="col-12">
+                <input asp-for="User.ContactNumber" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.ContactNumber"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group col m-0">
+            <div class="col-8"><label>Province:</label></div>
+            <div class="col-12">
+                <select id="pageProvinceElement"
+                        asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
+                                "Name"))"
+                        class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="col-8"><label>City:</label></div>
+            <div class="col-12">
+                <select id="pageCityElement"
+                        asp-items="@(new SelectList(ViewBag.Cities, "CityID",
+                                "Name"))"
+                        class="form-control">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>Suburb:</label></div>
+            <div class="col-12">
+                <select id="pageSuburbElement" asp-for="User.SuburbId"
+                        asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
+                                "Name"))"
+                        class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="col-8"><label>Address Line 1:</label></div>
+            <div class="col-12">
+                <input asp-for="User.AddressLine1" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.AddressLine1"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>Pharmacy</label></div>
+            <div class="col-12">
+                <select asp-for="User.PharmacyId"
+                        asp-items="@(new SelectList(ViewBag.Pharmacies, "PharmacyId",
+                                "Name"))"
+                        class="form-control">
+                </select>
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.PharmacistId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="col-8"><label>Address Line 2:</label></div>
+            <div class="col-12">
+                <input asp-for="User.AddressLine2" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="User.AddressLine2"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" asp-for="UserDetails.UserId" value="@Model.UserDetails.UserId" />
+    <div class="form-group row">
+        <div class="form-group col">
+            <div class="col-8"><label>Password:</label></div>
+            <div class="col-12">
+                <input asp-for="UserDetails.Password" class="form-control" value="@Model.UserDetails.Password" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="UserDetails.Password"
+                      class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col">
+            <div class="col-8"><label>Confirm Password:</label></div>
+            <div class="col-12">
+                <input asp-for="UserDetails.ConfPassword" class="form-control" value="@Model.UserDetails.Password"/>
+            </div>
+            <div class="col">
+                <span asp-validation-for="UserDetails.ConfPassword"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" asp-for="UserDetails.Role" value="Pharmacist" />
+    <div class="form-group row">
+        <div class="col">
+                <button type="button" onclick="history.back()" class="btn btn-secondary">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var srlProvs = "@(ViewBag.Prov_s)";
+        var srlCities = "@ViewBag.City_s";
+        var srlSuburbs = "@ViewBag.Suburb_s";
+        var thisProvinces = document.getElementById('pageProvinceElement');
+        var thisCities = document.getElementById('pageCityElement');
+        var thisSuburbs = document.getElementById('pageSuburbElement');
+        if (typeof srlProvs !== "undefined") {
+            const allProvs = JSON.parse(srlProvs.replace(/&quot;/g, '"'));
+            const allCities = JSON.parse(srlCities.replace(/&quot;/g, '"'));
+            const allSuburbs = JSON.parse(srlSuburbs.replace(/&quot;/g, '"'));
+            thisCities.innerHTML = "";
+            for (var i = 0; i < allCities.length; i++) {
+                var obj = allCities[i];
+                let selectedProvince = thisProvinces.options[thisProvinces.selectedIndex].value;
+                if (selectedProvince == obj["ProvID"]) {
+                    let newOption = new Option(obj["Name"], obj["CityID"]);
+                    thisCities.add(newOption, undefined);
+                }
+            }
+            thisSuburbs.innerHTML = "";
+            for (var i = 0; i < allSuburbs.length; i++) {
+                var obj = allSuburbs[i];
+                let selectedCity = thisCities.options[thisCities.selectedIndex].value;
+                if (selectedCity == obj["CityID"]) {
+                    let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                    thisSuburbs.add(newOption, undefined);
+                }
+            }
+            if (thisProvinces) {
+                thisProvinces.addEventListener("change", function () {
+                    thisCities.innerHTML = "";
+                    for (var i = 0; i < allCities.length; i++) {
+                        var obj = allCities[i];
+                        let selectedProvince = thisProvinces.options[thisProvinces.selectedIndex].value;
+                        if (selectedProvince == obj["ProvID"]) {
+                            let newOption = new Option(obj["Name"], obj["CityID"]);
+                            thisCities.add(newOption, undefined);
+                        }
+                    }
+                    thisSuburbs.innerHTML = "";
+                    for (var i = 0; i < allSuburbs.length; i++) {
+                        var obj = allSuburbs[i];
+                        let selectedCity = thisCities.options[thisCities.selectedIndex].value;
+                        if (selectedCity == obj["CityID"]) {
+                            let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                            thisSuburbs.add(newOption, undefined);
+                        }
+                    }
+                })
+            }
+            if (thisCities) {
+                thisCities.addEventListener("change", function () {
+                    thisSuburbs.innerHTML = "";
+                    for (var i = 0; i < allSuburbs.length; i++) {
+                        var obj = allSuburbs[i];
+                        let selectedCity = thisCities.options[thisCities.selectedIndex].value;
+                        if (selectedCity == obj["CityID"]) {
+                            let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                            thisSuburbs.add(newOption, undefined);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</form>

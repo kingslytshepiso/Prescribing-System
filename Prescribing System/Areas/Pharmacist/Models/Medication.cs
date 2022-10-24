@@ -12,11 +12,10 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public int DosageID { get; set; }
         public int ScheduleID { get; set; }
         public int ActiveIngredientID { get; set; }
-        public int ActiveStrength { get; set; }
         protected PharmacistDbcontext Data = new PharmacistDbcontext();
-        public ActiveIngredient GetIngredient()
+        public List<Med_Ingred> GetIngredients()
         {
-            return Data.GetActIngreWithId(ActiveIngredientID);
+            return Data.GetAllMedicationIngredient().FindAll(x => x.MedicationID == MedicationID);
         }
     }
 }

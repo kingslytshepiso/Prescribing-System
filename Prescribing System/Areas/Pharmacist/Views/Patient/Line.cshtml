@@ -1,28 +1,42 @@
 ﻿@model PrescriptionLine
 @{
     ViewData["Title"] = "Prescription lines";
-    var rjctd_dspnsd = Model.Status == "Rejected" || Model.Status == "Dispensed";
+    var rjctdOnly = Model.Status == "Rejected";
+    var dspnsdOnly = Model.Status == "Dispensed" || !Model.IsRepeatValid();
+    var rjctd_dspnsd = rjctdOnly || dspnsdOnly;
     var alerts = Model.GetValidations();
     var invalids = alerts.FindAll(x => x.Status == "Invalid");
+    var presc_Rjtd = Model.GetPrescription().Status == "Rejected";
+    var presc_inactive = Model.GetPrescription().Status == "Inactive";
 }
 <div class="prescription-body">
     <div class="line-content">
         <div class="prescription-line">
             <div id="bg_container" class="table-container">
-                @if (rjctd_dspnsd) 
+                @if (rjctdOnly || presc_Rjtd) 
                 {
                     <div id="bg_rejected" class="bg-rejected">
                         Rejected
                     </div>
                 }
+                else if(dspnsdOnly){
+                    <div id="bg_rejected" class="bg-rejected text-info">
+                        Dispensed
+                    </div>
+                }
+                else if(presc_inactive){
+                    <div id="bg_rejected" class="bg-rejected text-white">
+                        Inactive
+                    </div>
+                }
                 <div>
-                    <table class="table table-bordered @(Model.Status == "Rejected"?"table-danger":"")">
+                    <table class="table table-bordered @(rjctd_dspnsd || presc_inactive || presc_Rjtd?"table-danger blur-a-bit":"")">
                         <thead>
                             <tr>
                                 <th>Medication</th>
                                 <th>Quantity</th>
                                 <th>Instructions</th>
-                                <th>Repeat</th>
+                                <th>Repeats</th>
                                 <th>Repeats Left</th>
                                 <th>Last dispensed</th>
                                 <th>Last dispensed Pharmacy</th>
@@ -31,30 +45,28 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <strong>Name: </strong>@Model.GetMed().Name<br />
+                                    <strong>Name: </strong>@Model.GetActualMed().Name<br />
                                     <strong>Active Ingredient:<br /></strong>
-                                    @Model.GetMed().GetIngredient().Name
-                                    @Model.GetMed().ActiveStrength (.mg)
+                                    @foreach(var i in Model.GetActualMed().GetIngredients()){
+                                        @(i.GetActiveIngredient().Name)
+                                        @(i.ActiveStrength + "(.mg)")
+                                    }
                                 </td>
                                 <td>@Model.Quantity</td>
                                 <td>@Model.Instruction</td>
                                 <td>@Model.RepeatNo</td>
                                 <td class="@(Model.RepeatLeft > 0? "bg-success": "bg-danger")">@Model.RepeatLeft</td>
-                                <td class="@(Model.IsDateValid()?"bg-danger": "bg-info")">@Model.LastDispensed.ToShortDateString()</td>
+                                <td class="@(Model.IsDateValid()?"bg-info": "bg-danger")">@Model.LastDispensed.ToShortDateString()</td>
                                 <td>@Model.GetPharmacy().Name</td>
                             </tr>
-
                         </tbody>
                     </table>
 
                 </div>
             </div>
             <div class="min-scrollable-size overflow-scroll">
-                @{
-                    
-                }
                 <form id="submit-form" class="@(invalids.Count > 0 ? "form-critical": "")" asp-controller="Patient" asp-action="Dispense" method="post">
-                    <table class="table @(invalids.Count > 0 || rjctd_dspnsd? "table-danger":"table-success")">
+                    <table class="table @(invalids.Count > 0 || rjctd_dspnsd || presc_Rjtd? "table-danger":"table-success")">
                         <thead>
                             <tr><th>Alerts</th><th></th></tr>
                         </thead>
@@ -86,7 +98,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @(i++)
+                                    i++;
                                 }
                             }
                             else
@@ -97,8 +109,6 @@
                                     </td>
                                 </tr>
                             }
-
-
                         </tbody>
                     </table>
                     <input type="hidden" name="id" value="@Model.LineID" />
@@ -109,30 +119,42 @@
                 <tr>
                     <td colspan="5">
                         <div class="form-group row">
-                            @if (invalids.Count > 0)
-                            {
-                                <form class="form-critical-extra" asp-controller="Patient"
+                            <form class="form-critical-extra" asp-controller="Patient"
                                   asp-route-id="@Model.LineID" id="reject-form"
-                                  asp-action="RejectLine" asp-route-slug="@Model.GetMed().Name" method="post">
-                                    <input type="hidden" name="message" id="messageValue" />
-                                    <input type="hidden" name="id" value="@Model.LineID" />
-                                </form>
-                                <div class="col">
-                                    <button type="submit"
-                                        class="btn btn-danger" form="reject-form" onclick="getMessage()">
+                                  asp-action="RejectLine" asp-route-slug="@Model.GetActualMed().Name" method="post">
+                                <input type="hidden" name="message" id="messageValue" />
+                                <input type="hidden" name="id" value="@Model.LineID" />
+                            </form>
+                            <div class="col">
+                                <div class="">
+                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                            id="sortDropdownBtn" data-toggle="dropdown"
+                                            aria-expanded="false" @(rjctd_dspnsd || presc_inactive || presc_Rjtd? "disabled": "")>
                                         Reject
                                     </button>
+                                    <div class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                                        <form class="form-critical-extra" asp-controller="Patient"
+                                              asp-route-id="@Model.LineID" id="reject-form"
+                                              asp-action="RejectLine" asp-route-slug="@Model.GetActualMed().Name" method="post">
+                                            <input type="hidden" name="lineMessage" id="lineMessageValue" />
+                                            <input type="hidden" name="id" value="@Model.LineID" />
+                                            <input type="submit" value="Reject this line"
+                                                   class="btn-critical-extra dropdown-item" />
+                                        </form>
+                                        <form class="form-critical-extra" asp-controller="Patient"
+                                              asp-route-id="Model.LineID.PrescriptionID"
+                                              asp-action="RejectPrescription" asp-route-slug="entire-prescription">
+                                            <input type="hidden" name="prescMessage" id="prescMessageValue" />
+                                            <input type="hidden" name="id" value="@Model.LineID" />
+                                            <input type="submit" value="Reject prescription"
+                                                   class="btn-critical-extra dropdown-item" />
+                                        </form>
+                                    </div>
                                 </div>
-                            }
-                            else
-                            {
-                                <div class="col">
-                                    <button type="button" onclick="history.back()" class="btn">Cancel</button>
-                                </div>
-                            }
+                            </div>
                             <div class="col">
                                 <div class="box-items-from-right">
-                                    <button type="submit" form="submit-form" @(rjctd_dspnsd? "disabled": "")
+                                    <button type="submit" form="submit-form" @(rjctd_dspnsd || presc_inactive || presc_Rjtd? "disabled": "")
                                             class="btn  @(rjctd_dspnsd? "disabled btn-info": "btn-primary")">
                                         @(invalids.Count > 0 ? "Dispense anyway" : "Dispense")
                                     </button>

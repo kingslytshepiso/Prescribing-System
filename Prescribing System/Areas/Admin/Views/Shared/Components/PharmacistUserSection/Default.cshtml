@@ -9,13 +9,13 @@
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <form method="post" asp-controller="Pharmacist" asp-action="Add">
     <div class="form-group row">
-        <div class="form-group col">
-            <div class="col-8"><label>Pharmacy:</label></div>
-            <select asp-for="User.PharmacyId"
+        <div class="col-8"><lable>Pharmacy</lable></div>
+        <div class="col-12">
+                <select asp-for="User.PharmacyId"
                     asp-items="@(new SelectList(ViewBag.Pharmacies, "PharmacyId",
                                         "Name"))"
                     class="form-control">
-            </select>
+                </select>
         </div>
     </div>
     <div class="form-group row">
@@ -91,7 +91,7 @@
             <div class="col-8"><label>City/Suburb:</label></div>
             <div class="col-12">
                 <select asp-for="User.SuburbId"
-                        asp-items="@(new SelectList(Model.GetSuburbs(), "SuburbID",
+                        asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
                                         "Name"))"
                         class="form-control">
                 </select>
@@ -101,7 +101,7 @@
             <div class="col-8"><label>Province:</label></div>
             <div class="col-12">
                 <select asp-for="User.ProvinceId"
-                        asp-items="@(new SelectList(Model.GetProvinces(), "ProvID",
+                        asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
                                         "Name"))"
                         class="form-control">
                 </select>

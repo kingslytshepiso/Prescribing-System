@@ -27,6 +27,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public string AddressLine2 { get; set; }
         public int PharmacyId { get; set; }
         public int SuburbId { get; set; }
+        public int CityId { get; set; }
         public int ProvinceId { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public DateTime Date { get; set; }
         public int PatientID { get; set; }
         public int DoctorID { get; set; }
+        public string Status { get; set; }
     }
 }
