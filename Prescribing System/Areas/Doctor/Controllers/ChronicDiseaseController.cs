@@ -18,14 +18,24 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         {
 
             model.PatientID = id;
-            model = DoctorDbContext.GetAllPatientChronicDisease(id, pageNumber, pageSize);
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             ViewBag.Diseases = DoctorDbContext.GetAllChronicDiseasesD();
+            model = DoctorDbContext.GetAllPatientChronicDisease(id, pageNumber, pageSize);
             return View(model);
         }
         [HttpPost]
         public IActionResult Add(PatientChronicDiseaseModel model, int id)
         {
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             if (ModelState.IsValid)
             {
                 bool isAdded = DoctorDbContext.AddPatientChronicDisease(model);
@@ -53,7 +63,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 if (result)
                 {
                     TempData["Message"] = "Chronic disease Updated Successfully";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Add");
                 }
             }
             return View(model);

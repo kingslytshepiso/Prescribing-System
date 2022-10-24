@@ -12,14 +12,24 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         [HttpGet]
         public IActionResult Add(PatientAcuteMedicationModel model, int id, int pageNumber = 1, int pageSize = 5)
         {
-            ViewBag.Medications = DoctorDbContext.GetAcuteMedications();
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
+            ViewBag.Medications = DoctorDbContext.GetAcuteMedications();
             model = DoctorDbContext.GetAllPatientAcuteMedications(id, pageNumber, pageSize);
             return View(model);
         }
         public IActionResult Add(PatientAcuteMedicationModel model, int id)
         {
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             if (ModelState.IsValid)
             {
                 bool isAdded = DoctorDbContext.AddPatientAcuteMedication(model);
@@ -47,7 +57,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 if (result)
                 {
                     TempData["Message"] = "Acute medication updated successfully";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Add");
                 }
             }
             return View(model);

@@ -1,6 +1,9 @@
-﻿@model PatientPrescriptionViewModel
+﻿@model AddPrescriptionLineViewModel
 @{
     ViewData["Title"] = "AddLine";
+    var rjctd_dspnsd = Model.line.Status == "Rejected" || Model.line.Status == "Dispensed";
+    var alerts = Model.line.GetValidations();
+    var invalids = alerts.FindAll(x => x.Status == "Invalid");
 }
 @if (TempData["Message"] != null)
 {
@@ -8,6 +11,14 @@
         window.alert("@TempData["Message"]");
     </script>
 }
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
 <h3>Prescribe medication for</h3>
 <div class="b_h_centered box-rowed">
 
@@ -19,7 +30,7 @@
                 <div class="form-group col">
                     <div class="col-8"><label>Medication Name:</label></div>
                     <div class="col-12">
-                        <select asp-for="Medication.MedicationID"
+                        <select asp-for="line.MedicationID"
                                 asp-items="@(new SelectList(ViewBag.Medications, "MedicationID",
                                         "Name"))" class="form-control" required>
                         </select>
@@ -42,7 +53,7 @@
                 <div class="form-group col">
                     <div class="col-8"><label>Number Of Respeats:</label></div>
                     <div class="col-12">
-                        <input type="number" asp-for="PrescriptionLine.RepeatNo" class="form-control" required />
+                        <input type="number" asp-for="line.RepeatNo" class="form-control" required />
                     </div>
                     <div class="col">
                         <span class="text-danger"></span>
@@ -51,7 +62,7 @@
                 <div class="form-group col">
                     <div class="col-8"><label>Quantity:</label></div>
                     <div class="col-12">
-                        <input type="number" asp-for="PrescriptionLine.Quantity" class="form-control" required />
+                        <input type="number" asp-for="line.Quantity" class="form-control" required />
                     </div>
                     <div class="col">
                         <span class="text-danger"></span>
@@ -67,7 +78,7 @@
                         </label>
                     </div>
                     <div class="col-12">
-                        <textarea asp-for="PrescriptionLine.Instruction" class="form-control" required>
+                        <textarea asp-for="line.Instruction" class="form-control" required>
 
                     </textarea>
                     </div>
@@ -76,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden" asp-for="PrescriptionLine.Status" value="Prescribe" />
+            <input type="hidden" asp-for="line.Status" value="Prescribed" />
             @*<input type="hidden" asp-for="PrescriptionLine.RepeatLeftNo" value=""/>*@
             <div class="form-group row">
                 <div class="col">
@@ -94,66 +105,70 @@
                 <div class="prescription-line">
                     <h4 class="text-center">Prescription Lines</h4>
                     <div class="min-size box-columned overflow-scroll">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No:</th>
-                                <th>Medication Name</th>
-                                <th>Dosage Form</th>
-                                <th>Repeat No</th>
-                                <th>Repeat Left</th>
-                                <th>Quantity</th>
-                                <th>Instructions</th>
-                                <th>Status</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Medication Name</th>
+                                    <th>Dosage Form</th>
+                                    <th>Repeat No</th>
+                                    <th>Repeat Left</th>
+                                    <th>Quantity</th>
+                                    <th>Instructions</th>
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
                             <tbody>
-                            @if (Model.DataList.Count > 0)
-                            {
-                                var count = 1;
-                                foreach (GenericPrescriptionLine line in Model.DataList)
+                                @if (Model.DataList.Count > 0)
                                 {
-                                    <tr>
+                                    var count = 1;
+                                    @foreach (GenericPrescriptionLine line in Model.DataList)
+                                    {
+                                        <tr>
 
-                                        <td>@count</td>
-                                        <td>@line.Medication.Name</td>
-                                        <td>@line.Dosage.FormName</td>
-                                        <td>@line.Line.RepeatNo</td>
-                                        <td>@line.Line.RepeatLeftNo</td>
-                                        <td>@line.Line.Quantity</td>
-                                        <td>@line.Line.Instruction</td>
-                                        @if (@line.Line.Status == "Prescribe")
-                                        {
-                                            <td><span class="label info">@line.Line.Status</span></td>
-                                        }
-                                        else if (@line.Line.Status == "Dispense")
-                                        {
-                                            <td><span class="label warning">@line.Line.Status</span></td>
-                                        }
+                                            <td>@count</td>
+                                            <td>@line.Line.GetMeds().Name</td>
+                                            <td>@line.Line.GetDosage().FormName</td>
+                                            <td>@line.Line.RepeatNo</td>
+                                            <td>@line.Line.RepeatLeftNo</td>
+                                            <td>@line.Line.Quantity</td>
+                                            <td>@line.Line.Instruction</td>
+                                            @if (@line.Line.Status == "Prescribed")
+                                            {
+                                                <td><span class="label label-info">@line.Line.Status</span></td>
+                                            }
+                                            else if (@line.Line.Status == "Dispense")
+                                            {
+                                                <td><span class="label label-warning">@line.Line.Status</span></td>
+                                            }
+                                            else if (line.Line.Status == "Rejected")
+                                            {
+                                                <td><span class="label label-danger">@line.Line.Status</span></td>
+                                            }
 
 
-                                        <td colspan="1">
-                                            <a class="btn btn-primary" asp-controller="PrescriptionLine" asp-action="Edit"
-                                       asp-route-id="@line.Line.PresciptionLineID">
-                                                <span><img class="utility-icon" src="~/icons/edit.png" /></span>
-                                            </a>
-                                        </td>
-                                        <td colspan="1">
-                                            <form asp-controller="PrescriptionLine" asp-action="Delete" asp-route-id="@line.Line.PresciptionLineID" method="post" class="form-crital">
-                                                <button class="btn btn-primary" type="submit">
-                                                    <span><img class="utility-icon" src="~/icons/delete.png" /></span>
-                                                </button>
-                                            </form>
-                                        </td>
+                                            <td colspan="1">
+                                                <a class="btn btn-primary" asp-controller="PrescriptionLine" asp-action="Edit"
+                                           asp-route-id="@line.Line.PresciptionLineID">
+                                                    <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+                                                </a>
+                                            </td>
+                                            <td colspan="1">
+                                                <form asp-controller="PrescriptionLine" asp-action="Delete" asp-route-id="@line.Line.PresciptionLineID" method="post" class="form-crital">
+                                                    <button class="btn btn-primary" type="submit">
+                                                        <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+                                                    </button>
+                                                </form>
+                                            </td>
 
-                                    </tr>
-                                    count++;
+                                        </tr>
+                                        count++;
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

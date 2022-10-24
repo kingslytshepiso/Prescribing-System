@@ -15,6 +15,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             if (id == 0)
             {
                 id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
             }
             
             //model.List.Patient.PatientID = patientID;
@@ -26,6 +27,11 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         public IActionResult Add(PatientChronicMedicationModel model, int id)
         {
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             if (ModelState.IsValid)
             {
                 bool isAdded = DoctorDbContext.AddPatientChronicMedication(model);
@@ -53,7 +59,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 if (result)
                 {
                     TempData["Message"] = "Chronic medication updated successfully";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Add");
                 }
             }
             return View(model);

@@ -16,12 +16,22 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         public IActionResult Add(CurrentDoctorVisit model, int id)
         {
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             return View();
         }
         [HttpPost]
         public IActionResult Add(CurrentDoctorVisit model, int id, int doctorID)
         {
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             model.VisitDate = DateTime.Now.ToString();
             model.DoctorID = UserSingleton.GetLoggedUser().UserId;
             if (ModelState.IsValid)

@@ -15,7 +15,7 @@ namespace Prescribing_System.Areas.Doctor.Models
         public string MedName { get; set; }
 
         //public Medication Patient { get; set; }
-        protected DoctorDbContext Data = new DoctorDbContext();
+        //protected DoctorDbContext Data = new DoctorDbContext();
         public Medication GetMedications()
         {
             return Data.GetAllMeds().Find(x => x.MedicationID == MedicationID);

@@ -11,14 +11,24 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         [HttpGet]
         public IActionResult Add(PatientAllergyModel model, int id, int pageNumber = 1, int pageSize = 5)
         {
-            ViewBag.Allergies = DbContext.GetAllActiveIngredients();
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
+            ViewBag.Allergies = DbContext.GetAllActiveIngredients();
             model = DbContext.GetAllPatientAllergy(id, pageNumber, pageSize);
             return View(model);
         }
         public IActionResult Add(PatientAllergyModel model, int id)
         {
             model.PatientID = id;
+            if (id == 0)
+            {
+                id = PatientModel.GetPatient().PatientID;
+                model.PatientID = id;
+            }
             if (ModelState.IsValid)
             {
                 bool isAdded = DbContext.AddPatientAllergies(model);
@@ -46,7 +56,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 if (result)
                 {
                     TempData["Message"] = "Allergy updated successfully";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Add");
                 }
             }
             return View(model);
