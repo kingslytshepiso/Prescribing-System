@@ -1,0 +1,170 @@
+﻿@model PrescriptionLine
+@{
+    ViewData["Title"] = "Prescription lines";
+    var rjctdOnly = Model.Status == "Rejected";
+    var dspnsdOnly = Model.Status == "Dispensed" || !Model.IsRepeatValid();
+    var rjctd_dspnsd = rjctdOnly || dspnsdOnly;
+    var alerts = Model.GetValidations();
+    var invalids = alerts.FindAll(x => x.Status == "Invalid");
+    var presc_Rjtd = Model.GetPrescription().PrescrStatus == "Rejected";
+    var presc_inactive = Model.GetPrescription().PrescrStatus == "Inactive";
+}
+<div class="prescription-body">
+    <div class="line-content">
+        <div class="prescription-line">
+            <div id="bg_container" class="table-container">
+                @if (rjctdOnly || presc_Rjtd) 
+                {
+                    <div id="bg_rejected" class="bg-rejected">
+                        Rejected
+                    </div>
+                }
+                else if(dspnsdOnly){
+                    <div id="bg_rejected" class="bg-rejected text-info">
+                        Dispensed
+                    </div>
+                }
+                else if(presc_inactive){
+                    <div id="bg_rejected" class="bg-rejected text-white">
+                        Inactive
+                    </div>
+                }
+                <div>
+                    <table class="table table-bordered @(rjctd_dspnsd || presc_inactive || presc_Rjtd?"table-danger blur-a-bit":"")">
+                        <thead>
+                            <tr>
+                                <th>Medication</th>
+                                <th>Quantity</th>
+                                <th>Instructions</th>
+                                <th>Repeats</th>
+                                <th>Repeats Left</th>
+                                <th>Last dispensed</th>
+                                <th>Last dispensed Pharmacy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Name: </strong>@Model.GetActualMed().Name<br />
+                                    <strong>Active Ingredient:<br /></strong>
+                                    @foreach(var i in Model.GetActualMed().GetIngredients()){
+                                        @(i.GetActiveIngredient().Name)
+                                        @(i.ActiveStrength + "(.mg)")
+                                    }
+                                </td>
+                                <td>@Model.Quantity</td>
+                                <td>@Model.Instruction</td>
+                                <td>@Model.RepeatNo</td>
+                                <td class="@(Model.RepeatLeftNo > 0? "bg-success": "bg-danger")">@Model.RepeatLeftNo</td>
+                                <td class="@(Model.IsDateValid()?"bg-info": "bg-danger")">@Model.LastDispensed.ToShortDateString()</td>
+                               @* <td>@Model.GetPharmacy().Name</td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="min-scrollable-size overflow-scroll">
+                <form id="submit-form" class="@(invalids.Count > 0 ? "form-critical": "")" asp-controller="Patient" asp-action="Dispense" method="post">
+                    <table class="table @(invalids.Count > 0 || rjctd_dspnsd || presc_Rjtd? "table-danger":"table-success")">
+                        <thead>
+                            <tr><th>Alerts</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @if (invalids.Count > 0)
+                            {
+                                var i = 0;
+                                @foreach (var v in alerts.FindAll(x => x.Status == "Invalid"))
+                                {
+                                    <tr>
+                                        <td colspan="3">
+                                            Alert type: <strong>@(v.AlertType)</strong><br />
+                                            Alert Message: <b>@v.Message</b><br />
+                                            <b>@(v.Extras == null ? " " : "Alert Extra:  " + v.Extras )</b>
+                                        </td>
+                                        <td colspan="2">
+                                            <label for="@(v.AlertType.Replace(' ', '_'))">Ignore</label>
+                                            <input class="check-decider" asp-for="Alerts[i].Ignored" type="checkbox" />
+                                        </td>
+                                        <td colspan="4">
+                                            <div class="form-group col">
+                                                <input asp-for="Alerts[i].AlertType" type="hidden" value="@v.AlertType" />
+                                                <input asp-for="Alerts[i].LineID" type="hidden" value="@Model.PresciptionLineID" />
+                                                <input asp-for="Alerts[i].Message" type="hidden" value="@v.Message" />
+                                                <input asp-for="Alerts[i].Status" type="hidden" value="@v.Status" />
+                                                <input asp-for="Alerts[i].UserID" type="hidden" value="@UserSingleton.GetLoggedUser().UserId" />
+                                                <textarea asp-for="Alerts[i].TempReason" class="form-control check-dependant" disabled></textarea><br />
+                                                <span class="text-secondary">Provide a reason for ignoring</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="text-info">No alerts</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <input type="hidden" name="id" value="@Model.PresciptionLineID" />
+                    @*<input type="hidden" asp-for="@" value="@Model.PharmacyID" />*@
+                </form>
+            </div>
+            <table class="table">
+                <tr>
+                    <td colspan="5">
+                        <div class="form-group row">
+                            <form class="form-critical-extra" asp-controller="Patient"
+                                  asp-route-id="@Model.PresciptionLineID" id="reject-form"
+                                  asp-action="RejectLine" asp-route-slug="@Model.GetActualMed().Name" method="post">
+                                <input type="hidden" name="message" id="messageValue" />
+                                <input type="hidden" name="id" value="@Model.PresciptionLineID" />
+                            </form>
+                            <div class="col">
+                                <div class="">
+                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                            id="sortDropdownBtn" data-toggle="dropdown"
+                                            aria-expanded="false" @(rjctd_dspnsd || presc_inactive || presc_Rjtd? "disabled": "")>
+                                        Reject
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                                        <form class="form-critical-extra" asp-controller="Patient"
+                                              asp-route-id="@Model.PresciptionLineID" id="reject-form"
+                                              asp-action="RejectLine" asp-route-slug="@Model.GetActualMed().Name" method="post">
+                                            <input type="hidden" name="lineMessage" id="lineMessageValue" />
+                                            <input type="hidden" name="id" value="@Model.PresciptionLineID" />
+                                            <input type="submit" value="Reject this line"
+                                                   class="btn-critical-extra dropdown-item" />
+                                        </form>
+                                        <form class="form-critical-extra" asp-controller="Patient"
+                                              asp-route-id="Model.LineID.PrescriptionID"
+                                              asp-action="RejectPrescription" asp-route-slug="entire-prescription">
+                                            <input type="hidden" name="prescMessage" id="prescMessageValue" />
+                                            <input type="hidden" name="id" value="@Model.PresciptionLineID" />
+                                            <input type="submit" value="Reject prescription"
+                                                   class="btn-critical-extra dropdown-item" />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box-items-from-right">
+                                    <button type="submit" form="submit-form" @(rjctd_dspnsd || presc_inactive || presc_Rjtd? "disabled": "")
+                                            class="btn  @(rjctd_dspnsd? "disabled btn-info": "btn-primary")">
+                                        @(invalids.Count > 0 ? "Dispense anyway" : "Dispense")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

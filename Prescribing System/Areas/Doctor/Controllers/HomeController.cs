@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prescribing_System.Models;
 using Prescribing_System.Areas.Doctor.Models;
+using Newtonsoft.Json;
 
 namespace Prescribing_System.Areas.Doctor.Controllers
 {
@@ -29,6 +30,28 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 return View(model);
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
+        }
+        public DoctorDbContext Data = new DoctorDbContext();
+        public IActionResult Profile()
+        {
+            if (UserIsVerified("Doctor"))
+            {
+                ViewBag.MedPracs = Data.GetAllMedPracs();
+                ViewBag.Suburbs = Data.GetAllSuburbs();
+                ViewBag.Suburb_s = JsonConvert.SerializeObject(Data.GetAllSuburbs());
+                ViewBag.Cities = Data.GetAllCities();
+                ViewBag.City_s = JsonConvert.SerializeObject(Data.GetAllCities());
+                ViewBag.Provinces = Data.GetAllProvinces();
+                ViewBag.Prov_s = JsonConvert.SerializeObject(Data.GetAllProvinces());
+                var model = new UserUpdateViewModel();
+                return View(model);
+            }
+            else
+                return RedirectToAction("Login", "Account", new
+                {
+                    area = "",
+                    returnUrl = this.Url
+                });
         }
     }
 }

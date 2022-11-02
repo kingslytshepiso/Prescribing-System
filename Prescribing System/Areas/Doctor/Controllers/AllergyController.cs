@@ -48,8 +48,9 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Edit(Allergy model)
+        public IActionResult Edit(Allergy model, int id)
         {
+            model.AllergyID = id;
             if (ModelState.IsValid)
             {
                 bool result = DbContext.UpdatePatientAllergy(model);

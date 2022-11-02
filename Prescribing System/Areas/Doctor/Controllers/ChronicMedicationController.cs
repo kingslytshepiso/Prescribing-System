@@ -51,8 +51,9 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Edit(ChronicMedication model)
+        public IActionResult Edit(ChronicMedication model, int id)
         {
+            model.ChronicMedID = id;
             if (ModelState.IsValid)
             {
                 bool result = DoctorDbContext.UpdatePatientChronicMedication(model);

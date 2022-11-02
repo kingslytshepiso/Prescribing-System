@@ -1,65 +1,226 @@
-﻿@model Prescribing_System.Areas.Doctor.Models.PatientListContex
+﻿@model PrescriptionViewModel
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>All Patients</h1>
-
-    <table class="table">
-    <thead>
-        <tr>
-            <th>No:</th>
-            <th>Name</th>
-            <th>Identity Number</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Action</th>
-            <th></th>
-        </tr>
-    </thead>
-        <tbody>
-        @if (Model.PatientList.Count > 0)
-        {
-            var count = 1;
-            @foreach (var patient in Model.PatientList)
-            {
-
-                <tr>
-                    <td>@count</td>
-                    <td><strong>@patient.FirstName @patient.LastName</strong></td>
-                    <td><strong>@patient.IdNumber</strong></td>
-                    <td>@patient.EmailAddress</td>
-                    <td>@patient.AddressLine1 @patient.AddressLine2</td>
-                    <td>
-                        <a class="btn btn-success" asp-controller="Prescription" asp-action="AddPrescription"
-                   asp-route-id="@patient.PatientID">Add Prescription</a>
-                    </td>
-                </tr>
-                count++;
-            }
-        }
-        </tbody>
-    </table>
+@if (Model.PrescriptionExist() == false)
+{
     <div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
-                    <a class="page-link" asp-controller="Patient" asp-action="Index"
-                       asp-route-pageNumber="@(Model.CurrentPage - 1)">Previous</a>
-                </li>
-                @for (int i = 1; i < Model.OverallCount; i++)
-                {
-                    <li class="page-item @(Model.CurrentPage == i?"active": "")">
-                        <a class="page-link" asp-controller="Patient" asp-action="Index"
-                       asp-route-pageNumber="@i">@i</a>
-                    </li>
-                }
-                <li class="page-item @(Model.CurrentPage == Model.OverallCount - 1? "disabled": "")">
-                    <a class="page-link" asp-controller="Patient" asp-action="Index"
-                       asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <h4 class="text-danger">
+            No Prescriptions Written!
+        </h4>
     </div>
-
-
+}
+else
+{
+    <div class="box-columned justify-content-between patient-header-box">
+        <div class="box-columned">
+            <table class="table table-boarderless">
+                <tbody>
+                    <tr>
+                        <td>Highest Qualification:</td>
+                        <td>@Model.Doctor.HighestQual</td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td>@Model.Doctor.LastName @Model.Doctor.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>Phone No:</td>
+                        <td>@Model.Doctor.ContactNumber</td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td>@Model.Doctor.EmailAddress</td>
+                    </tr>
+                    <tr>
+                        <td>Address:</td>
+                        <td>@Model.Doctor.AddressLine1 @Model.Doctor.AddressLine2</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td>Practice Name:</td>
+                        <td>@Model.Doctor.GetMedicalPractice().Name</td>
+                    </tr>
+                    <tr>
+                        <td>Practice No:</td>
+                        <td>@Model.Doctor.GetMedicalPractice().PracticeNo</td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td>@Model.Doctor.GetMedicalPractice().EmailAddress</td>
+                    </tr>
+                    <tr>
+                        <td>Phone No:</td>
+                        <td>@Model.Doctor.GetMedicalPractice().ContactNo</td>
+                    </tr>
+                    <tr>
+                        <td>Address:</td>
+                        <td>@Model.Doctor.GetMedicalPractice().AddressLine1 @Model.Doctor.GetMedicalPractice().AddressLine2</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="patient-header-img">
+            <img src="~/icons/user-icon.png"
+             alt="patient profile image" title="patient profile" />
+        </div>
+    </div>
+    <hr />
+    @if (!(Model.Prescriptions.Count > 0))
+    {
+        <div>
+            <table class="table">
+                <thead><tr><th>No prescription line loaded</th></tr></thead>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="box-columned box-spaced-between">
+            <div class="">
+            </div>
+            <div class="">
+                <button type="button" class="btn btn-primary dropdown-toggle"
+                id="sortDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+                    Sort by
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                    <li class="dropdown-item">
+                        <a asp-controller="Prescription" asp-action="Index" asp-route-sortBy="datenewest">
+                            Date(Newest)
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a asp-controller="Prescription" asp-action="Index" asp-route-sortBy="dateoldest">
+                            Date(Oldest)
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a asp-controller="Prescription" asp-action="Index" asp-route-sortBy="status">
+                            Status
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        var patient = new PatientUseD();
+        var medPrac = new object();
+        var lines = new List<PrescriptionLine>();
+        @foreach (Prescription p in Model.Prescriptions)
+        {
+            lines = Model.GetPrescriptionLines(p.PrescriptionID).OrderByDescending(x => x.RepeatLeftNo).ThenBy(x => x.Status).ToList();
+            patient = Model.GetPatient(p.PatientID);
+            @*medPrac = Model.GetPractice(doctor.MedPracId);*@//to be changed to a medprac class
+            var rejected = p.PrescrStatus == "Rejected";
+            var inactive = p.PrescrStatus == "Inactive";
+            <div class="prescription-box @(inactive?"bg-grey": "") @(rejected ? "bg-danger" : "")">
+                <div class="box-columned justify-content-between prescription-header-details ">
+                    <div class="prescription-header-details">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Prescription</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>Date:</td>
+                                    <td>@p.Date.ToShortDateString()</td>
+                                </tr>
+                                <tr>
+                                    <td>Patient:</td>
+                                    <td>@(patient.LastName + " " + patient.FirstName)</td>
+                                </tr>
+                                <tr>
+                                    <td>Prescription Lines:</td>
+                                    <td>@lines.Count</td>
+                                </tr>
+                                <tr>
+                                    <td>Status:</td>
+                                    <td>@p.PrescrStatus</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <a asp-controller="PrescriptionLine" asp-action="Index"
+                                   asp-route-id="@p.PrescriptionID"
+                                   class="btn btn-primary">
+                                                View
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="prescription-lines-container">
+                        @if (lines.Count > 0)
+                        {
+                            <div class="">
+                                <table class="table">
+                                    <thead>
+                                        <tr><th>Prescription Lines</th></tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="lines-content @(lines.Count > 3 ? "overflow-scroll" : "") ">
+                                <table class="table">
+                                    <tbody>
+                                        @{
+                                            var i = 1;
+                                        }
+                                        @foreach (var l in lines)
+                                        {
+                                            <tr class="border-bottom line-view-item
+                                                    @(l.Status == "Rejected"?"bg-danger":"")
+                                                    @(l.Status == "Dispensed" || !l.IsRepeatValid()? "bg-info": "")">
+                                                <td>
+                                                    @i. Line for @l.GetActualMed().Name@(l.Status == "Rejected" ? "(Rejected)" : "")
+                                                    @(l.Status == "Dispensed" || !l.IsRepeatValid() ? "(Dispensed)" : "") - @(l.LastDispensed.ToShortDateString())
+                                                </td>
+                                                <td>
+                                                    <div class="box-items-from-right">
+                                                        <a asp-controller="Patient" asp-action="Line"
+                                       asp-route-id="@l.PresciptionLineID" asp-route-slug="@(l.GetActualMed().Name)"
+                                       class="btn btn-primary">
+                                                            View
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <table class="table">
+                                    <thead><tr><th>No prescription line loaded</th></tr></thead>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                    <div class="prescription-header-img">
+                        <img src="~/icons/hospital.png"
+                 alt="practice image" title="practice" />
+                    </div>
+                </div>
+                <div class="prescription-footer">
+                </div>
+            </div>
+            <hr />
+        }
+    }
+}

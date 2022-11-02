@@ -12,8 +12,8 @@ namespace Prescribing_System.Areas.Doctor.Models
     {
         public int AcuteMedicationID { get; set; }
         public int PatientID { get; set; }
-        public int MedicationID { get; set; }
-        protected DoctorDbContext Data = new DoctorDbContext();
+        //public int MedicationID { get; set; }
+        //protected DoctorDbContext Data = new DoctorDbContext();
         public Medication GetMedications()
         {
             return Data.GetAllMeds().Find(x => x.MedicationID == MedicationID);

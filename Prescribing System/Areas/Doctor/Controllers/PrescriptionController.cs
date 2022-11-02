@@ -13,11 +13,23 @@ namespace Prescribing_System.Areas.Doctor.Controllers
     public class PrescriptionController : Controller
     {
         public DoctorDbContext DoctorDbContext = new DoctorDbContext();
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        public IActionResult Index(string sortBy = "none")
         {
-            var model = DoctorDbContext.GetAllPatientsWithPaging(pageNumber, pageSize);
+            var model = new PrescriptionViewModel(UserSingleton.GetLoggedUser().UserId);
             if (UserIsVerified("Doctor"))
             {
+                switch (sortBy)
+                {
+                    case "none":
+                        model.Prescriptions = model.Prescriptions.OrderBy(x => x.PrescrStatus)
+                            .ToList(); break;
+                    case "datenewest":
+                        model.Prescriptions = model.Prescriptions.OrderBy(x => x.PrescrStatus)
+                            .ThenByDescending(x => x.Date).ToList(); break;
+                    case "dateoldest":
+                        model.Prescriptions = model.Prescriptions.OrderBy(x => x.PrescrStatus)
+                            .ThenBy(x => x.Date).ToList(); break;
+                }
                 return View(model);
             }
             else
@@ -82,7 +94,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             if (ModelState.IsValid)
             {
                 DoctorId = UserSingleton.GetLoggedUser().UserId;
-                NowDate = DateTime.Today.ToString();
+                NowDate = DateTime.Now.ToString();
                 bool isAdded = DoctorDbContext.AddPrescription(DoctorId,id,NowDate);
                 if (isAdded)
                 {
@@ -110,16 +122,15 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         [HttpPost]
         public IActionResult AddPrescriptionLine(AddPrescriptionLineViewModel model,int id)
         {
-            var line = DoctorDbContext.GetPrescLineWithId(id);
+            var line = model.line;
             if (model.line.GetValidations().Count <= 0)
             {
                 if (ModelState.IsValid)
                 {
-                    var lines = new PrescriptionLine();
-                    lines = model.line;
-                    lines.SetAlerts(ValidateLine(lines));
+                    model.line = line;
+                    line.SetAlerts(ValidateLine(line));
                     
-                    var valid = !(lines.GetValidations().Any(x => x.Status == "Invalid"));
+                    var valid = !(line.GetValidations().Any(x => x.Status == "Invalid"));
                     if (valid)
                     {
                         model.line.RepeatLeftNo = model.line.RepeatNo;
@@ -139,37 +150,37 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                         TempData["Message"] = "There are warnings regarding this process, view the alerts section below";
                     }    
                 }
-                else
+            }
+            else
+            {
+                line.SetAlerts(Revalidate(line));
+                var valid = !(line.GetValidations().Any(x => x.Status == "Invalid"));
+                if (valid)
                 {
-                    line.SetAlerts(Revalidate(model.line));
-                    var valid = !(line.GetValidations().Any(x => x.Status == "Invalid"));
-                    if (valid)
+                    var alertsAdded = DoctorDbContext.AddAlerts(line.GetValidations());
+                    if (alertsAdded)
                     {
-                        var alertsAdded = DoctorDbContext.AddAlerts(line.GetValidations());
-                        if (alertsAdded)
+                        model.line.RepeatLeftNo = model.line.RepeatNo;
+                        bool isAdded = DoctorDbContext.AddPrescriptionLine(model);
+                        if (isAdded)
                         {
-                            model.line.RepeatLeftNo = model.line.RepeatNo;
-                            bool isAdded = DoctorDbContext.AddPrescriptionLine(model);
-                            if (isAdded)
-                            {
-                                TempData["Message"] = "Line Added Successfully";
-                                return RedirectToAction("AddPrescriptionLine");
-                            }
-                            else
-                            {
-                                TempData["Message"] = "Line Not Added Successfully";
-                            }
+                            TempData["Message"] = "Line Added Successfully";
+                            return RedirectToAction("AddPrescriptionLine");
                         }
                         else
                         {
-                            TempData["Message"] = "There are warnings regarding this process, view the alerts section below";
+                            TempData["Message"] = "Line Not Added Successfully";
                         }
+                    }
+                    else
+                    {
+                        TempData["Message"] = "There are warnings regarding this process, view the alerts section below";
                     }
                 }
             }
-            
             return View(model);
         }
+
         protected List<Alert> Revalidate(PrescriptionLine model)
         {
             var models = new List<Alert>();
@@ -187,42 +198,6 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         protected List<Alert> ValidateLine(PrescriptionLine model)
         {
             var models = new List<Alert>();
-            if (model.IsStatusValid())
-                models.Add(
-                    new Alert()
-                    {
-                        AlertType = "Status",
-                        Status = "Valid",
-                    });
-            else
-                models.Add(
-                    new Alert()
-                    {
-                        LineID = model.PresciptionLineID,
-                        AlertType = "Status",
-                        Message = "The status of this line does not allow dispensing",
-                        Status = "Invalid",
-                        StatusReason = "Invalid Status",
-                        UserID = model.GetPatient().PatientID,
-                        Extras = "You need to have a new prescription prescribed"
-                    });
-            if (model.IsRepeatValid())
-                models.Add(new Alert()
-                {
-                    AlertType = "Repeat Number",
-                    Status = "Valid",
-                });
-            else
-                models.Add(new Alert()
-                {
-                    LineID = model.PresciptionLineID,
-                    AlertType = "Repeat Number",
-                    Message = "Cant dispense on this repeat number",
-                    Status = "Invalid",
-                    StatusReason = "Invalid - Repeat Number",
-                    UserID = model.GetPatient().PatientID,
-                    Extras = "Repeats have been depleted, need to have the doctor prescribe more. :)",
-                });
             if (model.IsAllergyValid())
                 models.Add(new Alert()
                 {
@@ -275,27 +250,6 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                     UserID = model.GetPatient().PatientID,
                     Extras = model.ListInteractions()
                 });
-            if (model.IsDateValid())
-            {
-                models.Add(new Alert()
-                {
-                    AlertType = "Last Refill",
-                    Status = "Valid",
-                });
-            }
-            else
-            {
-                models.Add(new Alert()
-                {
-                    LineID = model.PresciptionLineID,
-                    AlertType = "Last Refill",
-                    Message = "20 days has not passed since your last refill",
-                    Status = "Valid",
-                    StatusReason = "Invalid - Last Refill",
-                    UserID = model.GetPatient().PatientID,
-                    Extras = "The patient is not allowed to refill before 20 days have passed",
-                });
-            }
             return models;
         }
     }

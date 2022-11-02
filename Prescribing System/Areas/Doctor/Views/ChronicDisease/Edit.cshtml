@@ -1,6 +1,8 @@
 ﻿@model ChronicDisease
 @{
     ViewData["Title"] = "Edit";
+    DoctorDbContext doctorDbContext = new DoctorDbContext();
+    ViewBag.Diseases = doctorDbContext.GetAllDiseases();
 }
 
 <h1>Edit</h1>

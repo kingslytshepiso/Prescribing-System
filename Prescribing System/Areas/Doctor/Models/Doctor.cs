@@ -26,5 +26,11 @@ namespace Prescribing_System.Areas.Doctor.Models
         [Required(ErrorMessage = "Please enter highest qualification")]
         public string HighestQual { get; set; }
         public int MedPracId { get; set; }
+        public int CityID { get; set; }
+        protected DoctorDbContext data = new DoctorDbContext();
+        public MedicalPractice GetMedicalPractice()
+        {
+            return data.GetMedicalPracticeWithId(MedPracId);
+        }
     }
 }
