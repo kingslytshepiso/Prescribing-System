@@ -257,7 +257,7 @@ else
                                     {
                                         <tr>
                                             <td>@countCM</td>
-                                            <td>@m.MedName</td>
+                                            <td>@m.GetMedications().Name</td>
                                             <td>@m.GetDosage().FormName</td>
                                             <td>@m.GetIngredient().Name</td>
                                             <td>@m.GetSchedules().ScheduleNo</td>
@@ -284,7 +284,7 @@ else
                                 <tr>
                                     <th>No:</th>
                                     <th>Name</th>
-                                    <th>Strength</th>
+                                    <th>Dosege</th>
                                     <th>Active Ingredient</th>
                                     <th>Schedule</th>
                                 </tr>
@@ -296,13 +296,13 @@ else
                                     @foreach (AcuteMedication a in Model.AcuteMedications)
                                     {
                                         <tr>
-                                            <td>@countCM</td>
-                                            @*<td>@a.GetMedications().Name</td>*@
-                                            <td>Null of now</td>
+                                            <td>@countV</td>
+                                            <td>@a.GetMedications().Name</td>
+                                            <td>@a.GetDosage().FormName</td>
                                             <td>@a.GetIngredient().Name</td>
-                                            <td></td>
+                                            <td>@a.GetSchedules().ScheduleNo</td>
                                         </tr>
-                                        countCM++;
+                                        countV++;
                                     }
 
                                 </tbody>

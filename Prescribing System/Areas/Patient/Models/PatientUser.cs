@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace Prescribing_System.Areas.Doctor.Models
+namespace Prescribing_System.Areas.Patient.Models
 {
-    public class Doctor
+    public class PatientUser
     {
-        public int DoctorId { get; set; }
-        [Required(ErrorMessage = "Please enter first name")]
+        public int PatientId { get; set; }
+        [Required(ErrorMessage = "Please enter first name.")]
         [StringLength(30)]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Please enter last name.")]
         [StringLength(30)]
         public string LastName { get; set; }
+        [Required(ErrorMessage = "Please enter ID number.")]
+        [Remote("CheckID", "Validation")]
+        public string IdNumber { get; set; }
         [Required(ErrorMessage = "Please enter email address.")]
         [Remote("CheckEmail", "Validation")]
         public string EmailAddress { get; set; }
@@ -21,16 +28,9 @@ namespace Prescribing_System.Areas.Doctor.Models
         public string AddressLine1 { get; set; }
         //Address line 2 is not required
         public string AddressLine2 { get; set; }
+        [Required()]
         public int SuburbID { get; set; }
+        public int SuburbId { get; internal set; }
         public int ProvinceID { get; set; }
-        [Required(ErrorMessage = "Please enter highest qualification")]
-        public string HighestQual { get; set; }
-        public int MedPracId { get; set; }
-        public int CityID { get; set; }
-        protected DoctorDbContext data = new DoctorDbContext();
-        public MedicalPractice GetMedicalPractice()
-        {
-            return data.GetMedicalPracticeWithId(MedPracId);
-        }
     }
 }

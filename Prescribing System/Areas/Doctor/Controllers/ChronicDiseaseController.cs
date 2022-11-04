@@ -48,15 +48,16 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             return View(model);
         }
         [HttpGet]
-        public IActionResult Edit(ChronicDisease model,int id)
+        public IActionResult Edit(int id, ChronicDisease model)
         {
             model = DoctorDbContext.GetAllChronicDiesase(id);
             ViewBag.Diseases = DoctorDbContext.GetAllDiseases();
-            return View(model);
+            return View(DoctorDbContext.GetAllChronicDiesase(id));
         }
         [HttpPost]
-        public IActionResult Edit(ChronicDisease model)
+        public IActionResult Edit(ChronicDisease model, int id)
         {
+            model.ChronicDiseaseID = id;
             if (ModelState.IsValid)
             {
                 bool result = DoctorDbContext.UpdatePatientChronicDisease(model);

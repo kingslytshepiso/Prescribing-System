@@ -49,8 +49,9 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Edit(AcuteDisease model)
+        public IActionResult Edit(AcuteDisease model, int id)
         {
+            model.AcuteDiseaseID = id;
             if (ModelState.IsValid)
             {
                 bool result = DoctorDbContext.UpdatePatientAcuteDisease(model);

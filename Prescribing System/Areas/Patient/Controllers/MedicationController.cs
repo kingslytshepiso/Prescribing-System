@@ -9,9 +9,8 @@ using Prescribing_System.Areas.Patient.Models;
 namespace Prescribing_System.Areas.Patient.Controllers
 {
     [Area("Patient")]
-    public class HomeController : Controller
+    public class MedicationController : Controller
     {
-        //CHECKS IF THE USER'S ROLE AGAINST THE ROLE IN THE CURRENT AREA
         public PatientDbcontext Data = new PatientDbcontext();
         public bool UserIsVerified(string role = "")
         {
@@ -22,21 +21,15 @@ namespace Prescribing_System.Areas.Patient.Controllers
             else
                 return false;
         }
-        public IActionResult Index()
+        public IActionResult Index(string keyword = "all", int pageNumber = 1,
+            int pageSize = 10)
         {
-            //GETS THE USER THAT'S STORED IN THE STATIC CLASS "UserSingleton"
-            IndexViewModel model = new IndexViewModel()
-            {
-                LoggedUser = UserSingleton.GetLoggedUser(),
-                User = Data.GetPatientWithId(UserSingleton.GetLoggedUser().UserId),
-                Patient = Data.GetPatientWithId(UserSingleton.GetLoggedUser().UserId),
-            };
-            if (UserIsVerified("Patient"))
+            ListMedViewModel model = Data.SearchMedWithPaging(keyword, pageNumber,
+                pageSize);
+            if (UserIsVerified("Pharmacist"))
                 return View(model);
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
-    
-    
 }

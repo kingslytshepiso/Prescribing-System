@@ -1,0 +1,62 @@
+﻿@model List<PrescriptionLine>
+@{
+    ViewData["Title"] = "Prescription lines";
+}
+
+<h4 class="text-center">Prescription Lines</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>No:</th>
+            <th>Medication Name</th>
+            <th>Repeat No</th>
+            <th>Repeat Left</th>
+            <th>Quantity</th>
+            <th>Instructions</th>
+            <th>Status</th>
+            <th> Name Of Pharmarcy </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            var count = 1;
+            foreach (PrescriptionLine line in Model)
+            {
+                <tr>
+                    <td>@count</td>
+                    <td>@line.GetMed().Name</td>
+                    <td>@line.RepeatNo</td>
+                    <td>@line.RepeatLeftNo</td>
+                    <td>@line.Quantity</td>
+                    <td>@line.Instruction</td>
+                   @* <td>@line.Name of Phamarcy</td>*@
+                    @if (@line.Status == "Prescribed" && line.RepeatNo > 0)
+                    {
+                        <td><span class="text-info">@line.Status</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="text-warning">Dispensed</span></td>
+                    }
+                    <td>@line.GetPharmacy().Name</td>
+                    @*<td colspan="1">
+            <a class="btn btn-primary" asp-controller="PrescriptionLine" asp-action="Edit"
+            asp-route-id="@line.LineID">
+            <span><img class="utility-icon" src="~/icons/edit.png"/></span>
+            </a>
+            </td>
+            <td colspan="1">
+            <form asp-controller="PrescriptionLine" asp-action="Delete" asp-route-id="@line.Line.LineID" method="post" class="form-crital">
+            <button class="btn btn-primary" type="submit">
+            <span><img class="utility-icon" src="~/icons/delete.png"/></span>
+            </button>
+            </form>
+            </td>*@
+
+                </tr>
+                count++;
+            }
+        }
+    </tbody>
+</table>

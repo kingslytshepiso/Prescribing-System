@@ -18,7 +18,7 @@ namespace Prescribing_System.Areas.Doctor.Models
         public string PracticeNo { get; set; }
         [Required(ErrorMessage = "Please enter address line")]
         public string AddressLine1 { get; set; }
-        public string Addressline2 { get; set; }
+        public string AddressLine2 { get; set; }
         public int SuburbId { get; set; }
     }
 }

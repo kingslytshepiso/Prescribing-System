@@ -87,9 +87,9 @@ namespace Prescribing_System.Areas.Doctor.Models
         {
             return Data.GetPatientWithId(GetPrescription().PatientID);
         }
-        //public Pharmacy GetPharmacy()
+        //public MedicalPractice GetMedPrac()
         //{
-        //    return Data.GetPharmacyWithId(PharmacyID);
+        //    return Data.GetPharmacyWithId(Med);
         //}
         public List<PatientDisease> GetPatientDiseases()
         {
@@ -223,7 +223,9 @@ namespace Prescribing_System.Areas.Doctor.Models
         }
         public bool IsAllergyValid()
         {
-            return !GetAllergies().Any(x => x.ActiveIngreID == GetMedIngre().ActiveIngredientID);
+            var allergies = GetAllergies();
+            var ingrdientId = GetMedIngre().ActiveIngredientID;
+            return !allergies.Any(x => x.ActiveIngreID == ingrdientId);
         }
         public bool IsDateValid()
         {

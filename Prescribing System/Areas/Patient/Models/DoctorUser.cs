@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-
-namespace Prescribing_System.Areas.Doctor.Models
+namespace Prescribing_System.Areas.Patient.Models
 {
-    public class Doctor
+    public class DoctorUser
     {
         public int DoctorId { get; set; }
         [Required(ErrorMessage = "Please enter first name")]
@@ -26,11 +29,7 @@ namespace Prescribing_System.Areas.Doctor.Models
         [Required(ErrorMessage = "Please enter highest qualification")]
         public string HighestQual { get; set; }
         public int MedPracId { get; set; }
-        public int CityID { get; set; }
-        protected DoctorDbContext data = new DoctorDbContext();
-        public MedicalPractice GetMedicalPractice()
-        {
-            return data.GetMedicalPracticeWithId(MedPracId);
-        }
+        public string getName() => FirstName + " " + LastName;
+
     }
 }
