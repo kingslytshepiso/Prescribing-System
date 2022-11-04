@@ -1,0 +1,131 @@
+﻿@model PatientsViewModel
+@{
+    ViewData["Title"] = "Patient Users";
+}
+<div class="box-columned box-spaced-between">
+    <div>
+        <a class="btn btn-primary" asp-controller="Patient" asp-action="Add">
+            Add
+        </a>
+    </div>
+    <div class="box-items-from-right">
+        <button type="button" class="btn btn-primary dropdown-toggle"
+                id="sortDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+            Sort by
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+            <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+               asp-route-sortBy="@(Model.Sort == "name_a"?"name_d":"name_a")">
+                Name
+            </a>
+            <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+               asp-route-sortBy="@(Model.Sort == "id_a"?"id_d":"id_d")>
+                ID Number
+            </a>
+            <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+               asp-route-sortBy="@(Model.Sort == "email_a"?"email_d":"email_a")">
+                Email Address
+            </a>
+            <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+               asp-route-sortBy="@(Model.Sort == "gender_a"?"gender_d":"gender_a")">
+                Gender
+            </a>
+        </div>
+    </div>
+</div>
+<div class="box-columned overflow-scroll">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>ID</th>
+                <th>Gender</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.OverallCount > 0)
+            {
+                var i = 1;
+                @foreach (var patient in Model.DataList)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>@(patient.LastName + " " + patient.FirstName)</td>
+                        <td>@patient.IdNumber</td>
+                        <td>@patient.Gender</td>
+                        <td>@patient.ContactNumber</td>
+                        <td>@patient.EmailAddress</td>
+                        <td>
+                            @{
+                                <span>@patient.AddressLine1</span>
+
+                                <br />
+                                <span>@patient.AddressLine2</span>
+
+                                <br />
+                                <span>@patient.SuburbName</span>
+
+                                <br />
+                            }
+                        </td>
+                        <td>@patient.Status</td>
+                        <td colspan="1" class="box-columned m-0">
+                            <a class="btn btn-primary m-1" asp-controller="Patient"
+                       asp-action="Edit" asp-route-id="@patient.PatientId">
+                                <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+                            </a>
+                            <form asp-controller="Patient" asp-action="Delete"
+                          asp-route-id="@patient.PatientId" method="post"
+                          class="form-critical">
+                                <button class="btn btn-primary m-1" type="submit">
+                                    <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>Empty</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    @if (Model.OverallCount > 0)
+    {
+        <nav aria-label="Page navigation example" class="box-columned box-spaced-between">
+            <div class="box-rowed box-centered">
+                <strong>Showing @Model.CurrentPage of @Model.OverallCount</strong>
+            </div>
+            <ul class="pagination">
+                <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
+                    <a class="page-link" asp-controller="Patient" asp-action="Index"
+                   asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-sortBy="@Model.Sort">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.OverallCount; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i?"active": "")">
+                        <a class="page-link" asp-controller="Patient" asp-action="Index"
+                   asp-route-pageNumber="@i" asp-route-sortBy="@Model.Sort">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
+                    <a class="page-link" asp-controller="Patient" asp-action="Index"
+                   asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-sortBy="@Model.Sort">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

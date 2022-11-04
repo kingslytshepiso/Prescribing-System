@@ -44,6 +44,7 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                 {
                     var returnModel = new PatientViewModel(model.IdNumber);
                     returnModel.Prescriptions = returnModel.Prescriptions.OrderBy(x => x.Status).ToList();
+                    returnModel.Prescriptions = returnModel.Prescriptions.FindAll(x => x.HasLines()).ToList();
                     if (returnModel.Patient == null)
                     {
                         ModelState.AddModelError("", "Patient not found");

@@ -840,7 +840,6 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                         {
                             ActiveIngreID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            Description = Convert.ToString(current["Description"].ToString())
                         });
                 }
             }
@@ -937,7 +936,6 @@ namespace Prescribing_System.Areas.Pharmacist.Models
                 {
                     ActiveIngreID = Convert.ToInt32(dt.Rows[0]["ActiveIngreID"].ToString()),
                     Name = Convert.ToString(dt.Rows[0]["Name"].ToString()),
-                    Description = Convert.ToString(dt.Rows[0]["Description"].ToString()),
                 };
             }
             else

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
 
 namespace Prescribing_System.Areas.Admin.Models.System_Users
 {
@@ -19,7 +20,7 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         [Required(ErrorMessage = "Please enter ID number.")]
         [Remote("CheckID", "Validation")]
         public string IdNumber { get; set; }
-        public char Gender { get; set; } = 'O';
+        public string Gender { get; set; } ="O";
         [Required(ErrorMessage = "Please enter email address.")]
         [Remote("CheckEmail", "Validation")]
         public string EmailAddress { get; set; }
@@ -32,5 +33,12 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         [Required()]
         public int SuburbID { get; set; }
         public int ProvinceID { get; set; }
+        public string Status { get; set; }
+    }
+    public class PatientUserGeneric : PatientUser
+    {
+        public string SuburbName { get; set; }
+        public string GenderName { get; set; }
+        public string StatusName { get; set; }
     }
 }

@@ -89,7 +89,7 @@
                 var slug = ViewContext.RouteData.Values["slug"];
             }
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                 @if (!(controller == "Home" || controller =="Analytic"))
                 {
                     <li class="breadcrumb-item">

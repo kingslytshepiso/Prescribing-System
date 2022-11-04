@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prescribing_System.Models;
 using Prescribing_System.Areas.Admin.Models;
+using Newtonsoft.Json;
+using Prescribing_System.Areas.Admin.Models.System_Objects;
 
 namespace Prescribing_System.Areas.Admin.Controllers
 {
@@ -30,6 +32,67 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
+        }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            ViewBag.Suburbs = Data.GetAllSuburbs();
+            ViewBag.Suburb_s = JsonConvert.SerializeObject(Data.GetAllSuburbs());
+            ViewBag.Cities = Data.GetAllCities();
+            ViewBag.City_s = JsonConvert.SerializeObject(Data.GetAllCities());
+            ViewBag.Provinces = Data.GetAllProvinces();
+            ViewBag.Prov_s = JsonConvert.SerializeObject(Data.GetAllProvinces());
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(MedicalPractice model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = Data.AddMedicalPractice(model);
+                if (result)
+                {
+                    TempData["Message"] = "Medical Practice added.";
+                    return RedirectToAction("Index", "Practice");
+                }
+                ModelState.AddModelError("", "Error adding. A similar record may exist.");
+            }
+            ViewBag.Suburbs = Data.GetAllSuburbs();
+            ViewBag.Suburb_s = JsonConvert.SerializeObject(Data.GetAllSuburbs());
+            ViewBag.Cities = Data.GetAllCities();
+            ViewBag.City_s = JsonConvert.SerializeObject(Data.GetAllCities());
+            ViewBag.Provinces = Data.GetAllProvinces();
+            ViewBag.Prov_s = JsonConvert.SerializeObject(Data.GetAllProvinces());
+            ModelState.AddModelError("", "Invalid values.");
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Suburbs = Data.GetAllSuburbs();
+            ViewBag.Suburb_s = JsonConvert.SerializeObject(Data.GetAllSuburbs());
+            ViewBag.Cities = Data.GetAllCities();
+            ViewBag.City_s = JsonConvert.SerializeObject(Data.GetAllCities());
+            ViewBag.Provinces = Data.GetAllProvinces();
+            ViewBag.Prov_s = JsonConvert.SerializeObject(Data.GetAllProvinces());
+            var model = Data.GetAllMedPracs().Find(x => x.MedPracId == id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Edit(MedicalPractice model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = Data.UpdateMedicalPractice(model);
+                if (result)
+                {
+                    TempData["Message"] = "Medical Practice updated successfully";
+                    return RedirectToAction("Index", "MedicalPractice");
+                }
+                ModelState.AddModelError("", "Error Updating");
+            }
+            ModelState.AddModelError("", "Invalid values");
+            return View(model);
         }
     }
 }

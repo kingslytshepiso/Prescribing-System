@@ -1,6 +1,6 @@
-﻿@model Pharmacy
+﻿@model MedicalPractice
 @{
-    ViewData["Title"] = "Edit pharmacy: " + Model.Name;
+    ViewData["Title"] = "Edit: " + Model.Name;
     <script>
         var srlProvs = "@(ViewBag.Prov_s)";
         var srlCities = "@ViewBag.City_s";
@@ -12,8 +12,8 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <form asp-controller="Pharmacy" asp-action="Edit" method="post">
-        <input type="hidden" asp-for="PharmacyId" value="@Model.PharmacyId" />
+    <form asp-controller="MedicalPractice" asp-action="Edit" method="post">
+        <input type="hidden" asp-for="MedPracId" value="@Model.MedPracId" />
         <div class="form-group row">
             <div class="col-8"><label>Name</label></div>
             <div class="col-12">
@@ -43,12 +43,12 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-8"><label>License Number</label></div>
+            <div class="col-8"><label>Practice Number</label></div>
             <div class="col-12">
-                <input asp-for="LicenseNo" class="form-control" />
+                <input asp-for="PracticeNo" class="form-control" />
             </div>
             <div class="col">
-                <span asp-validation-for="LicenseNo" class="text-danger"></span>
+                <span asp-validation-for="PracticeNo" class="text-danger"></span>
             </div>
 
         </div>
@@ -75,17 +75,17 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="form-group col">
-                <div class="col-8"><label>Suburb:</label></div>
-                <div class="col-12">
-                    <select id="pageSuburbElement" asp-for="SuburbId"
-                        asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
+            <div class="col-8"><label>Suburb:</label></div>
+            <div class="col-12">
+                <select id="pageSuburbElement" asp-for="SuburbId"
+                    asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
                                         "Name"))"
-                        class="form-control">
-                    </select>
-                </div>
+                    class="form-control">
+                </select>
             </div>
-            <div class="form-group col">
+        </div>
+        <div class="form-group row">
+            <div class="form-group col p-0">
                 <div class="col-8"><label>Address Line 1:</label></div>
                 <div class="col-12">
                     <input asp-for="AddressLine1" class="form-control" />
@@ -95,38 +95,30 @@
                       class="text-danger"></span>
                 </div>
             </div>
+            <div class="form-group col p-0">
+                <div class="col-8"><label>Address Line 2:</label></div>
+                <div class="col-12">
+                    <input asp-for="AddressLine2" class="form-control" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="AddressLine2"
+                      class="text-danger"></span>
+                </div>
+            </div>
         </div>
         <div class="form-group row">
-            <div class="form-group col">
-                <div class="col-8"><label>Pharmacist</label></div>
-                <div class="col-12">
-                    <select asp-for="PharmacistID"
-                        class="form-control">
-                        <option> </option>
-                    @foreach (PharmacistUser p in ViewBag.Pharmacists)
-                    {
-                        <option value="@p.PharmacistId">
-                            @(p.FirstName + " " + p.LastName)
-                        </option>
-                    }
+            <div class="col-8"><label>Status:</label></div>
+            <div class="col-12">
+                <select asp-for="Status" class="form-control">
+                    <option value="A">Active</option>
+                    <option value="I">Inactive</option>
                 </select>
             </div>
-            <div class="col">
-                <span asp-validation-for="PharmacistID" class="text-danger"></span>
-            </div>
         </div>
-        <div class="form-group col">
-            <div class="col-8"><label>Address Line 2:</label></div>
-            <div class="col-12">
-                <input asp-for="Addressline2" class="form-control" />
-            </div>
-            <div class="col">
-                <span asp-validation-for="Addressline2"
-                      class="text-danger"></span>
-            </div>
-        </div>
-    </div>
-    <script>
+        <script>
+            var srlProvs = "@(ViewBag.Prov_s)";
+        var srlCities = "@ViewBag.City_s";
+        var srlSuburbs = "@ViewBag.Suburb_s";
         var thisProvinces = document.getElementById('pageProvinceElement');
         var thisCities = document.getElementById('pageCityElement');
         var thisSuburbs = document.getElementById('pageSuburbElement');
@@ -134,19 +126,13 @@
             const allProvs = JSON.parse(srlProvs.replace(/&quot;/g, '"'));
             const allCities = JSON.parse(srlCities.replace(/&quot;/g, '"'));
             const allSuburbs = JSON.parse(srlSuburbs.replace(/&quot;/g, '"'));
-            var SelectedSuburb = allSuburbs.filter(item => item.SuburbID == @Model.SuburbId)
-            var nowCity = allCities.filter(item => item.CityID == SelectedSuburb[0].CityID);
-            var nowProvince = allProvs.filter(item => item.ProvID == nowCity[0].ProvID);
-            thisProvinces.value = nowProvince.ProvID;
             thisCities.innerHTML = "";
             for (var i = 0; i < allCities.length; i++) {
                 var obj = allCities[i];
-                let selectedProvince = nowProvince[0].ProvID;
-                thisProvinces.value = selectedProvince;
+                let selectedProvince = thisProvinces.options[thisProvinces.selectedIndex].value;
                 if (selectedProvince == obj["ProvID"]) {
                     let newOption = new Option(obj["Name"], obj["CityID"]);
                     thisCities.add(newOption, undefined);
-                    thisCities.value = nowCity[0].CityID;
                 }
             }
             thisSuburbs.innerHTML = "";
@@ -156,7 +142,6 @@
                 if (selectedCity == obj["CityID"]) {
                     let newOption = new Option(obj["Name"], obj["SuburbID"]);
                     thisSuburbs.add(newOption, undefined);
-                    thisSuburbs.value = SelectedSuburb[0].SuburbID;
                 }
             }
             if (thisProvinces) {
@@ -182,13 +167,11 @@
                 })
             }
             if (thisCities) {
-                console.log("prov defined");
                 thisCities.addEventListener("change", function () {
                     thisSuburbs.innerHTML = "";
                     for (var i = 0; i < allSuburbs.length; i++) {
                         var obj = allSuburbs[i];
                         let selectedCity = thisCities.options[thisCities.selectedIndex].value;
-                        console.log(selectedCity);
                         if (selectedCity == obj["CityID"]) {
                             let newOption = new Option(obj["Name"], obj["SuburbID"]);
                             thisSuburbs.add(newOption, undefined);

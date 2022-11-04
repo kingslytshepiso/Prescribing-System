@@ -1,0 +1,205 @@
+﻿@model Medication
+@{
+    ViewData["Title"] = "Edit Medication";
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-controller="Medication" asp-action="Edit" method="post">
+    <div class="form-group row">
+        <div class="form-group col p-0">
+            <input type="hidden" asp-for="MedicationID" value="@Model.MedicationID" />
+            <div class="col-8"><label>Name</label></div>
+            <div class="col-12">
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col p-0">
+            <div class="col-8"><label>Type</label></div>
+            <div class="col-12">
+                <select id="med_type" asp-for="TypeID" class="form-control">
+                    @foreach(MedicationType m in ViewBag.Types){
+                        if(m.TypeID == Model.TypeID){
+                            <option value="@m.TypeID" selected>@m.TypeDescription</option>
+                        }
+                        else{
+                            <option value="@m.TypeID">@m.TypeDescription</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="form-group col p-0">
+            <div class="col-8"><label>Ingredients</label></div>
+            <div class="col-12">
+                <select id="ingredientsCollection" class="form-control">
+                    <option>--Add--</option>
+                    @foreach(ActiveIngredient ing in ViewBag.ActiveIngredients){
+                        if(!(Model.Ingredients.Any(x => x.ActiveIngredientID == ing.ActiveIngreID))){
+                            <option value="@ing.ActiveIngreID">@ing.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group col p-0">
+            <div class="form-group row  h-5">
+                <div class="form-group col-5">
+                    <div class="col-8"><strong>Ingredient</strong></div>
+                    <hr />
+                    <div class="col-12">
+                        <ul id="selectedList" class="list-group list-unstyled">
+                            @foreach (var ing in Model.Ingredients)
+                            {
+                                <li class="list-item-evenly-sized overflow-hidden" name="selectedListItems"
+                                id="@(ing.ActiveIngredientID + "_ingredient_item")">
+                                    @ing.GetActiveIngredient().Name
+                                    <input type="hidden" name="IngredientIds" 
+                                        value="@ing.ActiveIngredientID" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group col-3">
+                    <div class="col-4"><strong>Strengths(.mg)</strong></div>
+                    <hr />
+                    <div class="col-4">
+                        <ul id="selectedStrengths" class="list-group list-unstyled">
+                            @foreach(var str in Model.Ingredients){
+                                <li class="list-item-evenly-sized">
+                                    <input name="selectedListValues" type="number" required
+                                        style="width: 5em" value="@str.ActiveStrength"/>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group col-3 box-items-from-right">
+                    <div class="col">
+                        <button id="itemsRemover" type="button" class="btn btn-info">clear list</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="form-group col p-0">
+            <div class="col-8"><label>Dosage form</label></div>
+            <div class="col-12">
+                <select asp-for="DosageID" class="form-control">
+                    @foreach (Dosage d in ViewBag.Dosages)
+                    {
+                        <option value="@d.DosageID">@d.FormName</option>
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <span asp-validation-for="DosageID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group col p-0">
+            <div class="col-8"><label>Schedule</label></div>
+            <div class="col-12">
+                <select asp-for="ScheduleID" class="form-control">
+                    @foreach (Schedule s in ViewBag.Schedules)
+                    {
+                        <option value="@s.ScheduleID">@s.ScheduleNo</option>
+                    }
+                </select>
+            </div>
+            <div class="col">
+                <span asp-validation-for="ScheduleID" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="button" onclick="history.back()" class="btn btn-secondary">Cancel</button>
+        </div>
+        <div class="col">
+            <div class="box-items-from-right">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    var allIngredients = @Html.Raw(Json.Serialize(ViewBag.ActiveIngredients));
+    var MedicationIngredients = @Html.Raw(Json.Serialize(Model.Ingredients));
+    var thisIngredients = document.getElementById('ingredientsCollection');
+    var list = document.getElementById('selectedList');
+    var strengthList = document.getElementById('selectedStrengths');
+    var ingredientList = document.getElementsByName('selectedListItems');
+    let length = document.getElementsByName('selectedListItems').length;
+    var clearBtn = document.getElementById('itemsRemover');
+    var ingredientInputElements = document.getElementsByName('selectedList');
+    var ingredientInputLength = document.getElementsByName('selectedList').length;
+    var medtype = document.getElementById('med_type');
+    clearBtn.addEventListener('click', function () {
+        list.innerHTML = "";
+        strengthList.innerHTML = "";
+        ingredientInputElements.forEach(element => { element.remove() });
+        thisIngredients.innerHTML = "";
+        thisIngredients.add(new Option("Select ingredient", ""), undefined);
+        for (var i = 0; i < allIngredients.length; i++) {
+            let item = allIngredients[i];
+            let newOption = new Option(item["name"], item["activeIngreID"]);
+            thisIngredients.add(newOption, undefined);
+        }
+    });
+    thisIngredients.add(new Option("Select ingredient", ""), undefined);
+    //for (let i = 0; i < allIngredients.length; i++) {
+    //    let item = allIngredients[i];
+    //    console.log(item);
+    //    let cout = 0;
+    //    for (cout = 0; cout < MedicationIngredients.length; cout++) {
+    //        let ingredientItem = MedicationIngredients[cout];
+    //        if (item["activeIngreID"] != ingredientItem["activeIngredientID"]) {
+    //            let newOption = new Option(item["name"], item["activeIngreID"]);
+    //            thisIngredients.add(newOption, undefined);
+    //        }
+    //    }
+    //}
+    
+    thisIngredients.addEventListener('change', function () {
+        let selectedIngredient = thisIngredients.options[thisIngredients.selectedIndex];
+        var ingredient = document.createElement('li');
+        ingredient.setAttribute('class', 'list-item-evenly-sized  overflow-hidden');
+        var strength = document.createElement('li');
+        strength.setAttribute('class', 'list-item-evenly-sized');
+        ingredient.setAttribute('name', 'selectedListItems');
+        ingredient.setAttribute('id', selectedIngredient.value + '_ingredient_item');
+        var ingredientInput = document.createElement('input');
+        ingredientInput.setAttribute('type', "hidden");
+        ingredientInput.setAttribute('name', 'ingredientIds');
+        ingredientInput.setAttribute('value', selectedIngredient.value);
+        var strengthInput = document.createElement('input');
+        strengthInput.setAttribute('name', 'selectedListValues');
+        strengthInput.setAttribute('type', 'number');
+        strengthInput.setAttribute('required', 'true');
+        strengthInput.style.width = '5em';
+        ingredient.appendChild(document.createTextNode(selectedIngredient.innerText));
+        ingredient.appendChild(ingredientInput);
+        strength.appendChild(strengthInput);
+        list.appendChild(ingredient);
+        strengthList.appendChild(strength);
+        thisIngredients.remove(thisIngredients.selectedIndex);
+    })
+    function removeFromList(id) {
+        let item = document.getElementById(id);
+        for (let counter = 1; counter < length; counter++) {
+            if (ingredientList[counter].id == id) {
+                list.removeChild(list.childNodes[counter])
+            }
+        }
+    }
+</script>
+

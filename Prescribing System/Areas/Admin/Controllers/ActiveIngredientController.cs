@@ -22,17 +22,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             else
                 return false;
         }
-        public IActionResult Index(int pageNumber = 1, int pageSize = 5, string sortBy = "none")
+        public IActionResult Index(int pageNumber = 1, int pageSize = 5, string sortBy = "none", string keyword = "")
         {
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllActIngreWithPaging(pageNumber, pageSize, sortBy);
-                switch (sortBy)
+                if (String.IsNullOrEmpty(keyword))
                 {
-                    case "none":break;
-                    case "name": model.DataList = model.DataList.OrderBy(x => x.Name).ToList(); break;
-                    case "description":model.DataList = model.DataList.OrderBy(x => x.Description).ToList(); break;
+                    switch (sortBy)
+                    {
+                        case "none": break;
+                        case "name": model.DataList = model.DataList.OrderBy(x => x.Name).ToList(); break;
+                    }
                 }
+                else
+                {
+                    model.DataList = 
+                        model.DataList.FindAll(x => x.Name.ToLower().IndexOf(keyword.ToLower()) >= 0 || 
+                        x.Description.ToLower().IndexOf(keyword.ToLower()) > 0).ToList();
+                }
+                ViewBag.Keyword = keyword;
                 return View(model);
 
             }

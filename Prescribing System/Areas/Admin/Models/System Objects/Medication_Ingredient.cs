@@ -7,6 +7,12 @@
         public int ActiveIngredientID { get; set; }
         public int ActiveStrength { get; set; }
         public string Description { get; set; }
+        public string State { get; set; }
+        protected AdminDbContext data = new AdminDbContext();
+        public ActiveIngredient GetActiveIngredient()
+        {
+            return data.GetActIngreWithId(this.ActiveIngredientID);
+        }
     }
     public class Med_IngreGeneric : Medication_Ingredient
     {

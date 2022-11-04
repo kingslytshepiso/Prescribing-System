@@ -1,6 +1,6 @@
 ﻿@model PatientViewModel
 @{
-    ViewData["Title"] = "Search Results";
+    ViewData["Title"] = Model.Patient.FirstName + " " + Model.Patient.LastName;
 }
 @if (Model.PatientExist() == false)
 {
@@ -49,7 +49,33 @@ else
     {
         <div class="box-columned box-spaced-between">
             <div class="">
-                
+                <button type="button" class="btn btn-primary dropdown-toggle"
+                id="filterDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+                    Filter by
+                </button>
+                <div class="dropdown-menu" aria-labelledby="filterDropdownBtn">
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index" 
+                        asp-route-sortBy="@ViewBag.CurrentSort" asp-route-filterBy="none">
+                            None
+                        </a>
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+                        asp-route-sortBy="@ViewBag.CurrentSort" asp-route-filterBy="all">
+                            All
+                        </a>
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+                        asp-route-sortBy="@ViewBag.CurrentSort" asp-route-filterBy="active">
+                            Active(Status)
+                        </a>
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+                        asp-route-sortBy="@ViewBag.CurrentSort" asp-route-filterBy="inactive">
+                            Inactive(Status)
+                        </a>
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+                        asp-route-sortBy="@ViewBag.CurrentSort" asp-route-filterBy="rejected">
+                            Rejected(Status)
+                        </a>
+                </div>
             </div>
             <div class="">
                 <button type="button" class="btn btn-primary dropdown-toggle"
@@ -57,23 +83,20 @@ else
                 aria-expanded="false">
                     Sort by
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
-                    <li class="dropdown-item">
-                        <a asp-controller="Patient" asp-action="Index" asp-route-sortBy="datenewest">
+                <div class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index" 
+                        asp-route-filterBy="@ViewBag.CurrentFilter" asp-route-sortBy="datenewest">
                             Date(Newest)
                         </a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a asp-controller="Patient" asp-action="Index" asp-route-sortBy="dateoldest">
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+                        asp-route-filterBy="@ViewBag.CurrentFilter" asp-route-sortBy="dateoldest">
                             Date(Oldest)
                         </a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a asp-controller="Patient" asp-action="Index" asp-route-sortBy="status">
+                        <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
+                        asp-route-filterBy="@ViewBag.CurrentFilter" asp-route-sortBy="status">
                             Status
                         </a>
-                    </li>
-                </ul>
+                </div>
             </div>
         </div>
         var doctor = new DoctorUser();

@@ -9,6 +9,7 @@ using Prescribing_System.Areas.Admin.Models.System_Users;
 
 namespace Prescribing_System.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ValidationController : Controller
     {
         protected AdminDbContext Data = new AdminDbContext();
@@ -16,7 +17,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
         {
             return View();
         }
-        public JsonResult CheckID([FromQuery(Name = "UserPatient.IdNumber")] string IdNumber)
+        public JsonResult CheckID([FromQuery(Name = "User.IdNumber")] string IdNumber)
         {
             bool IdTaken = Data.CheckID(IdNumber);
             if (IdTaken)

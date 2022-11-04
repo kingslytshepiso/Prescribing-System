@@ -25,7 +25,7 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
             else
                 return false;
         }
-        public IActionResult Index(string sortBy = "none")
+        public IActionResult Index(string sortBy = "none", string filterBy = "all")
         {
             //Testing
             var urlCheck = this.Url;
@@ -41,6 +41,22 @@ namespace Prescribing_System.Areas.Pharmacist.Controllers
                     case "dateoldest":model.Prescriptions = model.Prescriptions.OrderBy(x => x.Status)
                             .ThenBy(x => x.Date).ToList();break;
                 }
+                switch (filterBy)
+                {
+                    case "all": model.Prescriptions = model.Prescriptions
+                            .FindAll(x => x.HasLines()); break;
+                    case "active": model.Prescriptions = model.Prescriptions
+                            .FindAll(x => x.HasLines() && x.Status == "Active"); break;
+                    case "inactive":
+                        model.Prescriptions = model.Prescriptions
+                        .FindAll(x => x.HasLines() && x.Status == "Inactive"); break;
+                    case "rejected": model.Prescriptions = model.Prescriptions
+                            .FindAll(x => x.HasLines() && x.Status == "Rejected"); break;
+                    default:model.Prescriptions = model.Prescriptions
+                            .FindAll(x => x.HasLines() && x.HasLines()); break;
+                }
+                ViewBag.CurrentSort = sortBy;
+                ViewBag.CurrentFIlter = filterBy;
                 return View(model);
             }
             else

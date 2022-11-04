@@ -7,5 +7,6 @@ namespace Prescribing_System.Areas.Admin.Models
         public int OverallCount = 0;
         public int CurrentPage = 1;
         public string Sort = "none";
+        public string Filter = "none";
     }
 }

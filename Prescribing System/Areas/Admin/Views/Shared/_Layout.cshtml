@@ -18,7 +18,14 @@
                 </a>
                 <div class="navbar-nav navbar-expand mr-sm-5 ml-4">
                     <form asp-controller="@ViewContext.RouteData.Values["controller"]"
-                          asp-action="Search" method="get" class="box-columned pl-4 ml-4">
+                          asp-action="@{
+                                            if(ViewContext.RouteData.Values["controller"].ToString() == "Home"){
+                                                Html.Raw("Search");
+                                            }
+                                            else{
+                                                Html.Raw("Index");
+                                            }
+                                        }" method="get" class="box-columned pl-4 ml-4">
                         <div class="box-columned box-centered">
                             <input type="text" min="3" maxlength="20" name="keyword" placeholder="Search" />
                         </div>
@@ -42,25 +49,11 @@
                                 </div>
                                 <a class="dropdown-item"
                                    asp-controller="Home" asp-action="Index">Home</a>
+                                
                                 <a class="dropdown-item"
                                    asp-controller="User"
                                    asp-action="Index">
                                     Users
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-controller="ActiveIngredient"
-                                   asp-action="Index">
-                                    Active-Ingredients
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-controller="ConditionDiagnosis"
-                                   asp-action="Index">
-                                    Condition Diagnosis(ICD-10)
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-controller="ContraIndication"
-                                   asp-action="Index">
-                                    Contra-Indications
                                 </a>
                                 <a class="dropdown-item"
                                    asp-controller="Doctor"
@@ -68,19 +61,19 @@
                                     Doctors
                                 </a>
                                 <a class="dropdown-item"
+                                   asp-controller="Patient"
+                                   asp-action="Index">
+                                    Patients
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="Pharmacist"
+                                   asp-action="Index">
+                                    Pharmacists
+                                </a>
+                                <a class="dropdown-item"
                                    asp-controller="MedicalPractice"
                                    asp-action="Index">
                                     Medical Practices
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-controller="Medication"
-                                   asp-action="Index">
-                                    Medication
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-controller="MedicationInteraction"
-                                   asp-action="Index">
-                                    Medication Interactions
                                 </a>
                                 <a class="dropdown-item"
                                    asp-controller="Pharmacy"
@@ -88,9 +81,30 @@
                                     Pharmacies
                                 </a>
                                 <a class="dropdown-item"
-                                   asp-controller="Pharmacist"
+                                   asp-controller="Medication"
                                    asp-action="Index">
-                                    Pharmacists
+                                    Medication
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="ActiveIngredient"
+                                   asp-action="Index">
+                                    Active-Ingredients
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="ICD"
+                                   asp-action="Index">
+                                    ICD Codes
+                                </a>
+                                <a class="dropdown-item"
+                                   asp-controller="ContraIndication"
+                                   asp-action="Index">
+                                    Contra-Indications
+                                </a>
+                                
+                                <a class="dropdown-item"
+                                   asp-controller="MedicationInteraction"
+                                   asp-action="Index">
+                                    Medication Interactions
                                 </a>
                                 <a class="dropdown-item"
                                    asp-area="" asp-controller="Home"
@@ -118,13 +132,13 @@
                 var parameter = ViewContext.RouteData.Values["id"] ?? ViewContext.RouteData.Values["idNumber"];
             }
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                 @if (!(controller == "Home"))
                 {
                     <li class="breadcrumb-item">
                         <a asp-controller="@controller"
                            asp-action="Index">
-                            @(controller == "Home" ? "" : controller)
+                            @(controller == "Home" ? "" : controller + "s")
                         </a>
                     </li>
                     if (!(action == "Index"))
