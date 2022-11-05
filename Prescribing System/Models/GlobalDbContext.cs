@@ -191,7 +191,7 @@ namespace Prescribing_System.Models
             dbCmd.Parameters.AddWithValue("@EmailAddress", model.UserPatient.EmailAddress);
             dbCmd.Parameters.AddWithValue("@ContactNo", model.UserPatient.ContactNumber);
             dbCmd.Parameters.AddWithValue("@AddressLine1", model.UserPatient.AddressLine1);
-            dbCmd.Parameters.AddWithValue("@AddressLine2", model.UserPatient.AddressLine2);
+            dbCmd.Parameters.AddWithValue("@AddressLine2", model.UserPatient.AddressLine2??"");
             dbCmd.Parameters.AddWithValue("@SuburbID", model.UserPatient.SuburbID);
             //User table columns
             dbCmd.Parameters.AddWithValue("@Username", model.UserPatient.EmailAddress);

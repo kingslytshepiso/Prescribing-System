@@ -17,11 +17,12 @@ namespace Prescribing_System.Models
         [StringLength(30)]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Please enter ID number.")]
-        [Remote("CheckID", "Validation")]
+        //[Remote("CheckID", "Validation")]
         public string IdNumber { get; set; }
-        public char Gender { get; set; } = 'O';
+        [Required(ErrorMessage = "Please enter ID number.")]
+        public string Gender { get; set; } = "O";
         [Required(ErrorMessage = "Please enter email address.")]
-        [Remote("CheckEmail", "Validation")]
+        //[Remote("CheckEmail", "Validation")]
         public string EmailAddress { get; set; }
         [Required(ErrorMessage = "Please enter contact number.")]
         public string ContactNumber { get; set; }
