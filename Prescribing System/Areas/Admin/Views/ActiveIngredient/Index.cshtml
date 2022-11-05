@@ -24,11 +24,6 @@
                     Name
                 </a>
             </li>
-            <li class="dropdown-item">
-                <a asp-controller="ActiveIngredient" asp-action="Index" asp-route-sortBy="description">
-                    Description
-                </a>
-            </li>
         </ul>
     </div>
 </div>
@@ -37,7 +32,6 @@
         <tr>
             <th></th>
             <th>Name</th>
-            <th>Description</th>
             <th></th>
             <td></td>
         </tr>
@@ -51,7 +45,6 @@
             <tr>
                 <td>@c</td>
                 <td>@ingredient.Name</td>
-                <td>@ingredient.Description</td>
                 <td colspan="1">
                     <a class="btn btn-primary" asp-controller="ActiveIngredient"
                    asp-action="Edit" asp-route-id="@ingredient.ActiveIngreID">

@@ -365,6 +365,7 @@ body {
 .bg-grey {
     background: #e9ecef;
 }
+
 /*BOOTSTRAP MODIFIED CLASSES*/
 a{
     color: var(--secondary_color);
@@ -401,6 +402,9 @@ a{
     color: silver;
 }
 /*CUSTOM CLASSES CONTINUED*/
+.list-item-evenly-sized{
+    height: 2.5em;
+}
 .logout-item {
     color: red;
 }

@@ -24,62 +24,37 @@ namespace Prescribing_System.Areas.Admin.Controllers
                 return false;
         }
         //[Route("[area]/[controller]s/Page/{pageNumber?}")]
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        public IActionResult Index(int pageNumber = 1, int pageSize = 5, 
+            string sortBy = "none", string filterBy = "none")
         {
-            var model = Data.GetAllUsersWithPaging(pageNumber, pageSize);
             if (UserIsVerified("Admin"))
+            {
+                var model = Data.GetAllUsersWithPaging(pageNumber, pageSize, sortBy, filterBy);
+                switch (sortBy)
+                {
+                    case "none": model.DataList = model.DataList
+                            .OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList();break;
+                    case "fname": model.DataList = model.DataList
+                            .OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();break;
+                    case "lname": model.DataList = model.DataList
+                            .OrderBy(x => x.LastName).ToList(); break;
+                    case "role": model.DataList = model.DataList
+                            .OrderBy(x => x.Role).ThenBy(x => x.LastName).ToList();break;  
+                }
+                switch (filterBy)
+                {
+                    case "none": break;
+                    case "doctor": model.DataList = model.DataList
+                            .FindAll(x => x.Role == "Doctor");break;
+                    case "patient": model.DataList = model.DataList
+                            .FindAll(x => x.Role == "Patient");break;
+                    case "pharmacist": model.DataList = model.DataList
+                            .FindAll(x => x.Role == "Pharmacist");break;
+                }
                 return View(model);
+            }
             else
                 return RedirectToAction("Index", "Home", new { area = "" });
         }
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            var model = Data.GetUserWithId(id);
-            return View(model);
-        }
-        [HttpPost]
-        public IActionResult Edit(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = Data.UpdateUser(user);
-                return RedirectToAction("Edit","User", user.UserId);
-            }
-            ModelState.AddModelError("", "Invalid value");
-            return View(user);
-        }
-        [HttpGet]
-        public IActionResult Add(string type)
-        {
-            ViewBag.UserType = type;
-            var model = new object();
-            if (type == "Doctor")
-            {
-                model = new AddUserViewModel()
-                {
-                    SelectedUser = new DoctorUser(),
-                };
-                ViewBag.MedPracs = Data.GetAllMedPracs();
-                
-            }
-            if (type == "Pharmacist")
-            {
-                model = new AddUserViewModel()
-                {
-                    SelectedUser = new PharmacistUser(),
-                };
-                ViewBag.Pharmacies = Data.GetAllPharmacies();
-            }
-            if (type == "Patient")
-            {
-                model = new AddUserViewModel()
-                {
-                    SelectedUser = new PatientUser(),
-                };
-            }
-            return View(model);
-        }
-       
     }
 }

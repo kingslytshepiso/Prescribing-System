@@ -1,0 +1,182 @@
+﻿@model UserUpdateViewModel
+@{
+    ViewData["Title"] = "Update Profile";
+    <script>
+        var srlProvs = "@(ViewBag.Prov_s)";
+        var srlCities = "@ViewBag.City_s";
+        var srlSuburbs = "@ViewBag.Suburb_s";
+    </script>
+}
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form class="form-critical" asp-controller="Home" asp-action="UpdateProfile" method="post">
+        <input asp-for="User.DoctorId" type="hidden" value="@Model.User.DoctorId  />
+    <div class="form-group row">
+            <div class="col-12">
+                <div class="profile-icon-holder">
+                    <img id="profileImage" alt="profile" height="200" width="200" class="img-thumbnail" src="~/icons/user-icon.png" />
+                </div>
+                <div class="profile-input-holder">
+                    <label for="imageUpload" class="custom-file-input">
+                        Choose
+                    </label>
+                    <input id="imageUpload" type="file" placeholder="photo" accept="image/*" capture required />
+                </div>
+                <div class="profile-input-holder">
+                    <button id="imageRemover" type="button" onclick="removeImage()"><span><img width="10" height="10" src="~/icons/delete.png" /></span></button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col">
+                <div class="col-8"><label>First Name:</label></div>
+                <div class="col-12">
+                    <input asp-for="User.FirstName" class="form-control" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="User.FirstName"
+                      class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Last Name:</label></div>
+                <div class="col-12">
+                    <input asp-for="User.LastName" class="form-control" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="User.LastName"
+                      class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col">
+                <div class="col-8"><label>Email Address:</label></div>
+                <div class="col-12">
+                    <input asp-for="User.EmailAddress" class="form-control" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="User.EmailAddress"
+                      class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Contact Number:</label></div>
+                <div class="col-12">
+                    <input asp-for="User.ContactNumber" class="form-control"
+                       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="User.ContactNumber"
+                      class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col">
+                <div class="col-8"><label>Province:</label></div>
+                <div class="col-12">
+                    <select id="slctProvince" asp-for="User.ProvinceID"
+                        asp-items="@(new SelectList(ViewBag.Provinces, "ProvID",
+                                        "Name"))"
+                        class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>City:</label></div>
+                <div class="col-12">
+                    <select id="slctCities" asp-for="User.CityID"
+                        asp-items="@(new SelectList(ViewBag.Cities, "CityID",
+                                        "Name"))"
+                        class="form-control">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="form-group col">
+                <div class="col-8"><label>Suburb:</label></div>
+                <div class="col-12">
+                    <select id="slctSuburbs" asp-for="User.SuburbID"
+                        asp-items="@(new SelectList(ViewBag.Suburbs, "SuburbID",
+                                        "Name"))"
+                        class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Address Line:</label></div>
+                <div class="col-12">
+                    <textarea asp-for="User.AddressLine1" class="form-control"></textarea>
+                    <span class="text-secondary">Street address, P.O box, Company name, c/o</span>
+                </div>
+                <div class="col">
+                    <span asp-validation-for="User.AddressLine1"
+                      class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="form-group col">
+                <div class="col-8"><label>Password:</label></div>
+                <div class="col-12">
+                    <input asp-for="UserDetails.Password" class="form-control" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="UserDetails.Password"
+                      class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Confirm Password:</label></div>
+                <div class="col-12">
+                    <input asp-for="UserDetails.ConfPassword" class="form-control" />
+                </div>
+                <div class="col">
+                    <span asp-validation-for="UserDetails.ConfPassword"
+                      class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        @*<div class="form-group row">
+            <div class="form-group col">
+                <div class="col-8"><label>Medical Practice:</label></div>
+                <div class="col-12">
+                    <select asp-for="User.DoctorId"
+                        asp-items="@(new SelectList(ViewBag.MedPracs, "MedPracID",
+                                        "Name"))"
+                        class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col">
+                <div class="col-8"><label>Qualification:</label></div>
+                <div class="col-12">
+                    <select asp-for="User.HighestQual"
+                        class="form-control">
+                        <option value="Philosopher">PHD(Philosphy)</option>
+                        <option value="Master">Masters</option>
+                        <option value="Honours">Honorary</option>
+                        <option value="Bachelors">Bachelors degree</option>
+                        <option value="Diploma">Diploma</option>
+                    </select>
+                </div>
+            </div>
+        </div>*@
+        <input type="hidden" asp-for="UserDetails.Role" value="Doctor" />
+        <div class="form-group row">
+            <div class="col">
+                <button type="button" onclick="history.back()" class="btn">Cancel</button>
+            </div>
+            <div class="col">
+                <div class="box-items-from-right">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>

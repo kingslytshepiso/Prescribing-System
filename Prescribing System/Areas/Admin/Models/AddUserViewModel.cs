@@ -22,10 +22,15 @@ namespace Prescribing_System.Areas.Admin.Models
         public List<Province> GetProvinces() => gData.GetAllProvinces();
     }
 
-    public class AddPatientViewModel
+    public class PatientDataModel
     {
         public PatientUser User { get; set; }
         public User UserDetails { get; set; }
+        public PatientDataModel()
+        {
+            User = new PatientUser();
+            UserDetails = new User();
+        }
     }
     public class PharmacistDataModel
     {

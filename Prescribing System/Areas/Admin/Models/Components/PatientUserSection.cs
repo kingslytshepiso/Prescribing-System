@@ -10,11 +10,11 @@ namespace Prescribing_System.Areas.Admin.Models.Components
 {
     public class PatientUserSection : ViewComponent
     {
-        private AddPatientViewModel model { get; set; }
+        private PatientDataModel model { get; set; }
         public IViewComponentResult Invoke(AddUserViewModel userModel)
         {
             var modelSerialized = JsonConvert.SerializeObject(userModel);
-            model = JsonConvert.DeserializeObject<AddPatientViewModel>(modelSerialized);
+            model = JsonConvert.DeserializeObject<PatientDataModel>(modelSerialized);
             var userSerialized = JsonConvert.SerializeObject(userModel.SelectedUser);
             return View(model);
         }

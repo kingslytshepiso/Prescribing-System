@@ -12,5 +12,7 @@ namespace Prescribing_System.Areas.Pharmacist.Models
         public int PatientID { get; set; }
         public int DoctorID { get; set; }
         public string Status { get; set; }
+        protected PharmacistDbcontext data = new PharmacistDbcontext();
+        public bool HasLines() => data.GetPrescLinesWithPrescId(PrescriptionID).Count > 0;
     }
 }
