@@ -4,50 +4,118 @@
 
 }
 <div class="illus-group-col">
-    <div  class="illus-group-row">
-        <a asp-controller="Doctor" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-doctor illus-small">
-
-            </div>
-            <div class="illus-title illus-title-small">
+    <div class="illustration-block illustration-users illus-large">
+        <div class="illus-group-col">
+            <div class="illus-title illus-title-box">
                 <div>
-                    <h4>Doctor</h4>
+                    <h4>Users</h4>
+                </div>
+            </div>
+            <div class="illus-group-row illus-compressed">
+                <a asp-controller="Doctor" asp-action="Index" class="block-link">
+                    <div class="illustration-block illustration-doctor illus-small">
+                    </div>
+                    <div class="illus-title illus-title-small">
+                        <div>
+                            <h4>Doctor</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="illus-group-row illus-compressed">
+                <a asp-controller="Patient" asp-action="Index" class="block-link">
+                    <div class="illustration-block illustration-patient illus-small">
+                    </div>
+                    <div class="illus-title illus-title-small">
+                        <div>
+                            <h4>Patients</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="illus-group-row illus-compressed">
+                <a asp-controller="Pharmacist" asp-action="Index" class="block-link">
+                    <div class="illustration-block illustration-pharmacist illus-small">
+                    </div>
+                    <div class="illus-title illus-title-small">
+                        <div>
+                            <h4>Pharmacist</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="illus-group-col">
+    <div class="illus-group-row box-centered flex-row">
+        <a asp-controller="MedicalPractice" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-medpractice illus-medium">
+            </div>
+            <div class="illus-title illus-title-medium">
+                <div>
+                    <h4>Medical Practice</h4>
                 </div>
             </div>
         </a>
     </div>
-    <div class="illus-group-row">
+    <div class="illus-group-row box-centered flex-row">
         <a asp-controller="Pharmacy" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-pharmacy illus-small">
-
+            <div class="illustration-block illustration-pharmacy illus-medium">
             </div>
-            <div class="illus-title illus-title-small">
+            <div class="illus-title illus-title-medium">
                 <div>
                     <h4>Pharmacies</h4>
                 </div>
             </div>
         </a>
     </div>
-    <div class="illus-group-row">
-        <a asp-controller="Pharmacist" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-pharmacist illus-small">
+</div>
+<div class="illus-group-col">
+    <div  class="illus-group-row">
+        <a asp-controller="Medication" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-medication illus-small">
 
             </div>
-            <div class="illus-title illus-title-small">
+            <div class="illus-title illus-title-smaller">
                 <div>
-                    <h4>Pharmacists</h4>
+                    <h6>Medication</h6>
                 </div>
             </div>
         </a>
     </div>
     <div class="illus-group-row">
-        <a asp-controller="MedicalPractice" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-practice illus-small">
+        <a asp-controller="ActiveIngredient" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-ingredient illus-small">
 
             </div>
-            <div class="illus-title illus-title-small">
+            <div class="illus-title illus-title-smaller">
                 <div>
-                    <h4>ICD</h4>
+                    <h6>Active Ingredient</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="ContraIndication" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-contra illus-small">
+
+            </div>
+            <div class="illus-title illus-title-smaller">
+                <div>
+                    <h6>Contra Indication</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="illus-group-row">
+        <a asp-controller="MedicationInteraction" asp-action="Index" class="block-link">
+            <div class="illustration-block illustration-interactions illus-small">
+
+            </div>
+            <div class="illus-title illus-title-smaller">
+                <div>
+                    <h6>Medication Interaction</h6>
                 </div>
             </div>
         </a>

@@ -116,5 +116,25 @@ namespace Prescribing_System.Areas.Admin.Controllers
             ModelState.AddModelError("", "Invalid values");
             return View(model);
         }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeletePharmacist(id);
+                if (result)
+                {
+                    TempData["Message"] = "Pharmacist removed";
+                    return RedirectToAction("Index", "Pharmacist");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "Pharmacist");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
+        }
     }
 }

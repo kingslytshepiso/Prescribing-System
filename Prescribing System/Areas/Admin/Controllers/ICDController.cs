@@ -27,12 +27,15 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllICDCodesWithPaging(pageNumber, pageSize, sortBy);
-                switch (sortBy)
+                if (model.DataList.Count > 0)
                 {
-                    case "code_a": model.DataList = model.DataList.OrderBy(x => x.Code).ToList();break;
-                    case "code_d": model.DataList = model.DataList.OrderByDescending(x => x.Description).ToList();break;
-                    case "desc_a": model.DataList = model.DataList.OrderBy(x => x.Description).ToList();break;
-                    case "desc_d": model.DataList = model.DataList.OrderByDescending(x => x.Description).ToList();break;
+                    switch (sortBy)
+                    {
+                        case "code_a": model.DataList = model.DataList.OrderBy(x => x.Code).ToList(); break;
+                        case "code_d": model.DataList = model.DataList.OrderByDescending(x => x.Description).ToList(); break;
+                        case "desc_a": model.DataList = model.DataList.OrderBy(x => x.Description).ToList(); break;
+                        case "desc_d": model.DataList = model.DataList.OrderByDescending(x => x.Description).ToList(); break;
+                    }
                 }
                 return View(model);
             }
@@ -79,6 +82,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             ModelState.AddModelError("", "Invalid values.");
             return View();
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeleteICDCode(id);
+                if (result)
+                {
+                    TempData["Message"] = "ICD Code removed";
+                    return RedirectToAction("Index", "ICD");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "ICD");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

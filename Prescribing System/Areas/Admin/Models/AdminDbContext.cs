@@ -333,7 +333,7 @@ namespace Prescribing_System.Areas.Admin.Models
                             MedIngreID = Convert.ToInt32(current["MedIngreID"].ToString()),
                             MedicationID = Convert.ToInt32(current["MedicationID"].ToString()),
                             ActiveIngredientID = Convert.ToInt32(current["ActiveIngredientID"].ToString()),
-                            ActiveStrength = Convert.ToInt32(current["ActiveStrength"].ToString()),
+                            ActiveStrength = Convert.ToDouble(current["ActiveStrength"].ToString()),
                             State = "Old",
                         });
                 }
@@ -1837,6 +1837,136 @@ namespace Prescribing_System.Areas.Admin.Models
                     return true;
                 }
             }
+            return false;
+        }
+        public bool DeleteActiveIngredient(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteActiveIngredient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeletePharmacy(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeletePharmacy", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeletePharmacist(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeletePharmacist", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeletePatient(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeletePatient", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeleteInteraction(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteInteraction", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeleteMedication(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteMedication", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeleteMedPrac(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteMedPrac", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeleteICDCode(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteICDCode", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeleteDoctor(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteDoctor", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
+            return false;
+        }
+        public bool DeleteContraIndication(int id)
+        {
+            connection();
+            dbCmd = new SqlCommand("DeleteContraIndication", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            conn.Open();
+            int i = dbCmd.ExecuteNonQuery();
+            conn.Close();
+            if (i > 0)
+                return true;
             return false;
         }
         public bool CheckID(string id)

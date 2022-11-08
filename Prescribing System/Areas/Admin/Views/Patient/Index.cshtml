@@ -20,7 +20,7 @@
                 Name
             </a>
             <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
-               asp-route-sortBy="@(Model.Sort == "id_a"?"id_d":"id_d")>
+               asp-route-sortBy="@(Model.Sort == "id_a"?"id_d":"id_d")">
                 ID Number
             </a>
             <a class="dropdown-item" asp-controller="Patient" asp-action="Index"
@@ -34,7 +34,7 @@
         </div>
     </div>
 </div>
-<div class="box-columned overflow-scroll">
+<div class="box-columned overflow-auto">
     <table class="table">
         <thead>
             <tr>
@@ -45,7 +45,6 @@
                 <th>Contact</th>
                 <th>Email</th>
                 <th>Address</th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -75,8 +74,7 @@
                                 <br />
                             }
                         </td>
-                        <td>@patient.Status</td>
-                        <td colspan="1" class="box-columned m-0">
+                        <td colspan="1" class="box-columned m-0 justify-content-end">
                             <a class="btn btn-primary m-1" asp-controller="Patient"
                        asp-action="Edit" asp-route-id="@patient.PatientId">
                                 <span><img class="utility-icon" src="~/icons/edit.png" /></span>

@@ -126,5 +126,25 @@ namespace Prescribing_System.Areas.Admin.Controllers
             ModelState.AddModelError("", "Invalid information entered.");
             return View(model);
         }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeletePatient(id);
+                if (result)
+                {
+                    TempData["Message"] = "Patient removed";
+                    return RedirectToAction("Index", "Patient");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "Patient");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
+        }
     }
 }

@@ -42,7 +42,7 @@
         </ul>
     </div>
 </div>
-<div class="box-columned overflow-scroll">
+<div class="box-columned overflow-auto">
     <table class="table">
         <thead>
             <tr>
@@ -53,9 +53,7 @@
                 <th>Qualification</th>
                 <th>Address</th>
                 <th>Practice</th>
-                <th>Status</th>
-                <th></th>
-                <th></th>
+                <th>HCR No.</th>
                 <th></th>
             </tr>
         </thead>
@@ -77,18 +75,16 @@
                                 <span>@doctor.SuburbName</span>
                             }</td>
                         <td>@doctor.MedPracName</td>
-                        <td>@doctor.StatusName</td>
-                        <td colspan="1">
-                            <a class="btn btn-primary" asp-controller="Doctor"
+                        <td>@doctor.HCRNumber</td>
+                        <td colspan="1" class="box-columned m-0 justify-content-end">
+                            <a class="btn btn-primary m-1" asp-controller="Doctor"
                        asp-action="Edit" asp-route-id="@doctor.DoctorId">
                                 <span><img class="utility-icon" src="~/icons/edit.png" /></span>
                             </a>
-                        </td>
-                        <td colspan="1">
                             <form asp-controller="Doctor" asp-action="Delete"
                           asp-route-id="@doctor.DoctorId" method="post"
                           class="form-critical">
-                                <button class="btn btn-primary" type="submit">
+                                <button class="btn btn-primary m-1" type="submit">
                                     <span><img class="utility-icon" src="~/icons/delete.png" /></span>
                                 </button>
                             </form>

@@ -7,6 +7,7 @@ namespace Prescribing_System.Areas.Admin.Models.System_Objects
         public int ActiveIngredientID { get; set; } 
         public string Description { get; set; }
         public int DiseaseID { get; set; }
+        public string Status { get; set; }
         protected AdminDbContext Data = new AdminDbContext();
         public ActiveIngredient GetActiveIngredient()
         {

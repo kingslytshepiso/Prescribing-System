@@ -29,7 +29,7 @@
         </ul>
     </div>
 </div>
-<div class="box-columned overflow-scroll">
+<div class="box-columned">
     <table class="table">
         <thead>
             <tr>
@@ -54,7 +54,7 @@
                        asp-action="Edit" asp-route-id="@icd.Code">
                                 <span><img class="utility-icon" src="~/icons/edit.png" /></span>
                             </a>
-                            <form asp-controller="MedicationInteraction" asp-action="Delete"
+                            <form asp-controller="ICD" asp-action="Delete"
                           asp-route-id="@icd.Code" method="post"
                           class="form-critical">
                                 <button class="btn btn-primary m-1" type="submit">

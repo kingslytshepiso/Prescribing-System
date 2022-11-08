@@ -27,6 +27,7 @@ namespace Prescribing_System.Areas.Admin.Models.System_Objects
         public int SuburbId { get; set; }
         public string Image { get; set; }
         public int PharmacistID { get; set; }
+        public string Status { get; set; }
     }
     public class PharmacyGeneric : Pharmacy
     {

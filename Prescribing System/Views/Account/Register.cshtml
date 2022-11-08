@@ -12,8 +12,7 @@
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 }  
-<div class="b_h_centered">
-    <div class="b_boxed">
+    <div>
         <h2 class="text-center">Register</h2>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <form method="post" asp-action="Register">
@@ -174,11 +173,12 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="offset-8 col-8">
-                        <button type="submit" class="btn btn-primary">Register</button>
+                    <div class="box-columned justify-content-end box-items-from-right m-0">
+                        <div class="justify-content-end flex-grow-1 box-items-from-right">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-</div>

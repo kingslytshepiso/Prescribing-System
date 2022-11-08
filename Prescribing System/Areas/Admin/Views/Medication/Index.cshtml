@@ -28,7 +28,7 @@
         </ul>
     </div>
 </div>
-<div class="box-columned overflow-scroll">
+<div class="box-columned overflow-auto">
     <table class="table">
         <thead>
             <tr>
@@ -56,7 +56,7 @@
                             }</td>
                         <td>@med.FormName</td>
                         <td>@med.ScheduleNo</td>
-                        <td colspan="1" class="box-columned m-0">
+                        <td colspan="1" class="box-columned m-0 justify-content-end">
                             <a class="btn btn-primary m-1" asp-controller="Medication"
                        asp-action="Edit" asp-route-id="@med.MedicationID">
                                 <span><img class="utility-icon" src="~/icons/edit.png" /></span>

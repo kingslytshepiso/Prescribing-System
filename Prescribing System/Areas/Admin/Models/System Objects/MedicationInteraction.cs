@@ -3,15 +3,10 @@
     public class MedicationInteraction
     {
         public int InteractionID { get; set; }
-        //The medication item here is retrieved from the Medication_Interaction
-        //linking table, so that the active-ingredient that interacts is extracted
-        //from the medication item.
         public int FirstInteractor { get; set; }
         public int ScndInteractor { get; set; }
-        //Scrap the idea of having active-ingredient fields in this class
-        //public int ActiveIngredient1ID { get; set; }
-        //public int ActiveIngredient2ID { get; set; }
         public string EffectDescription { get; set; }
+        public string Status { get; set; }
         public int TypeID { get; set; }
         protected AdminDbContext Data = new AdminDbContext();
         

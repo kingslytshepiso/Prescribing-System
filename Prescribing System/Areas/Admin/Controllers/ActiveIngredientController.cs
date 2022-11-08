@@ -27,19 +27,22 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllActIngreWithPaging(pageNumber, pageSize, sortBy);
-                if (String.IsNullOrEmpty(keyword))
+                if (model.DataList.Count > 0)
                 {
-                    switch (sortBy)
+                    if (String.IsNullOrEmpty(keyword))
                     {
-                        case "none": break;
-                        case "name": model.DataList = model.DataList.OrderBy(x => x.Name).ToList(); break;
+                        switch (sortBy)
+                        {
+                            case "none": break;
+                            case "name": model.DataList = model.DataList.OrderBy(x => x.Name).ToList(); break;
+                        }
                     }
-                }
-                else
-                {
-                    model.DataList = 
-                        model.DataList.FindAll(x => x.Name.ToLower().IndexOf(keyword.ToLower()) >= 0 || 
-                        x.Description.ToLower().IndexOf(keyword.ToLower()) > 0).ToList();
+                    else
+                    {
+                        model.DataList =
+                            model.DataList.FindAll(x => x.Name.ToLower().IndexOf(keyword.ToLower()) >= 0 ||
+                            x.Description.ToLower().IndexOf(keyword.ToLower()) > 0).ToList();
+                    }
                 }
                 ViewBag.Keyword = keyword;
                 return View(model);
@@ -89,7 +92,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             ModelState.AddModelError("", "Invalid value");
             return View(model);
-
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeleteActiveIngredient(id);
+                if (result)
+                {
+                    TempData["Message"] = "Active Ingredient removed";
+                    return RedirectToAction("Index", "ActiveIngredient");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "ActiveIngredient");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

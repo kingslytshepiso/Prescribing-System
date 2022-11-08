@@ -5,7 +5,7 @@
         public int MedIngreID { get; set; }
         public int MedicationID { get; set; }
         public int ActiveIngredientID { get; set; }
-        public int ActiveStrength { get; set; }
+        public double ActiveStrength { get; set; }
         public string Description { get; set; }
         public string State { get; set; }
         protected AdminDbContext data = new AdminDbContext();

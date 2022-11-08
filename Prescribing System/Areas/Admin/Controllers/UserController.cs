@@ -30,26 +30,36 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllUsersWithPaging(pageNumber, pageSize, sortBy, filterBy);
-                switch (sortBy)
+                if (model.DataList.Count > 0)
                 {
-                    case "none": model.DataList = model.DataList
-                            .OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList();break;
-                    case "fname": model.DataList = model.DataList
-                            .OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList();break;
-                    case "lname": model.DataList = model.DataList
-                            .OrderBy(x => x.LastName).ToList(); break;
-                    case "role": model.DataList = model.DataList
-                            .OrderBy(x => x.Role).ThenBy(x => x.LastName).ToList();break;  
-                }
-                switch (filterBy)
-                {
-                    case "none": break;
-                    case "doctor": model.DataList = model.DataList
-                            .FindAll(x => x.Role == "Doctor");break;
-                    case "patient": model.DataList = model.DataList
-                            .FindAll(x => x.Role == "Patient");break;
-                    case "pharmacist": model.DataList = model.DataList
-                            .FindAll(x => x.Role == "Pharmacist");break;
+                    switch (sortBy)
+                    {
+                        case "none":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList(); break;
+                        case "fname":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.FirstName).ThenBy(x => x.LastName).ToList(); break;
+                        case "lname":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.LastName).ToList(); break;
+                        case "role":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.Role).ThenBy(x => x.LastName).ToList(); break;
+                    }
+                    switch (filterBy)
+                    {
+                        case "none": break;
+                        case "doctor":
+                            model.DataList = model.DataList
+                                .FindAll(x => x.Role == "Doctor"); break;
+                        case "patient":
+                            model.DataList = model.DataList
+                                .FindAll(x => x.Role == "Patient"); break;
+                        case "pharmacist":
+                            model.DataList = model.DataList
+                                .FindAll(x => x.Role == "Pharmacist"); break;
+                    }
                 }
                 return View(model);
             }

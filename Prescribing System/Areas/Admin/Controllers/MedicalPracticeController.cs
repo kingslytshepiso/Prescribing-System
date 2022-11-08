@@ -28,6 +28,28 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllMedPracsWithPaging(pageNumber, pageSize, sortBy);
+                if (model.DataList.Count > 0)
+                {
+                    switch (sortBy)
+                    {
+                        case "none": break;
+                        case "name":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.Name).ToList(); break;
+                        case "contact":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.ContactNo).ToList(); break;
+                        case "email":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.EmailAddress).ToList(); break;
+                        case "practiceno":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.PracticeNo).ToList(); break;
+                        case "suburb":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.SuburbName).ToList(); break;
+                    }
+                }
                 return View(model);
             }
             else
@@ -93,6 +115,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             ModelState.AddModelError("", "Invalid values");
             return View(model);
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeleteMedPrac(id);
+                if (result)
+                {
+                    TempData["Message"] = "Medical practice removed";
+                    return RedirectToAction("Index", "MedicalPractice");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "MedicalPractice");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

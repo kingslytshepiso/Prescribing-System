@@ -25,10 +25,12 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         public string AddressLine1 { get; set; }
         //Address line 2 is not required
         public string AddressLine2 { get; set; }
+        public int? RegistrationNo { get; set; }
         public string ProfileImg { get; set; }
         public int PharmacyId { get; set; }
         public int SuburbId { get; set; }
         public int ProvinceId { get; set; }
+        public string Status { get; set; }
     }
     public class PharmacistGeneric : PharmacistUser
     {

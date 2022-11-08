@@ -10,7 +10,7 @@
 </head>
 <body class="illustration illustration-light">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-light border-bottom box-shadow mb-3 sticky-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-light border-bottom box-shadow mb-3 fixed-top">
             <div class="container m-sm-0 m-md-auto">
                 <a class="navbar-brand" asp-area="" asp-controller="Home"
                    asp-action="Index">
@@ -106,11 +106,6 @@
                                    asp-action="Index">
                                     Medication Interactions
                                 </a>
-                                <a class="dropdown-item"
-                                   asp-area="" asp-controller="Home"
-                                   asp-action="About">
-                                    About
-                                </a>
                                 <form method="post" asp-action="Logout"
                                       asp-controller="Account"
                                       asp-area="">
@@ -124,7 +119,7 @@
             </div>
         </nav>
     </header>
-    <div class="container m-sm-0 m-md-auto">
+    <div class="container m-sm-0 m-md-auto" style="padding-top: 5.5rem; padding-bottom: 1rem;">
         <nav aria-label="breadcrumb">
             @{
                 var controller = ViewContext.RouteData.Values["controller"].ToString();
@@ -138,7 +133,42 @@
                     <li class="breadcrumb-item">
                         <a asp-controller="@controller"
                            asp-action="Index">
-                            @(controller == "Home" ? "" : controller + "s")
+                            @if (controller == "Pharmacy")
+                            {
+                                <span>@("Pharmacies")</span>
+                            }
+                            else if (controller == "ContraIndication")
+                            {
+                                <span>@("Contra Indications")</span>
+                            }
+                            else if (controller == "ActiveIngredient")
+                            {
+                                <span>@("Active Ingredients")</span>
+                            }
+                            else if (controller == "MedicalPractice")
+                            {
+                                <span>@("Medical Practices")</span>
+                            }
+                            else if (controller == "MedicationInteraction")
+                            {
+                                <span>@("Medication Interactions")</span>
+                            }
+                            else if (controller == "ICD")
+                            {
+                                <span>@("ICD Codes")</span>
+                            }
+                            else if (controller == "Medication")
+                            {
+                                <span>@("Medication")</span>
+                            }
+                            else if (controller == "Home")
+                            {
+                                <span>@("")</span>
+                            }
+                            else
+                            {
+                                <span>@(controller + "s")</span>
+                            }
                         </a>
                     </li>
                     if (!(action == "Index"))

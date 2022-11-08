@@ -24,6 +24,7 @@ namespace Prescribing_System.Areas.Admin.Models.System_Users
         public string AddressLine1 { get; set; }
         //Address line 2 is not required
         public string AddressLine2 { get; set; }
+        public int? HCRNumber { get; set; }
         public int SuburbID { get; set; }
         public int ProvinceID { get; set; }
         [Required(ErrorMessage ="Please enter highest qualification")]

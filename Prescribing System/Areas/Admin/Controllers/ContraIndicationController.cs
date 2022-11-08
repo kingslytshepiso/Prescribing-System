@@ -27,12 +27,15 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllContraIndicationsWithPaging(pageNumber, pageSize, sortBy);
-                switch (sortBy)
+                if (model.DataList.Count > 0)
                 {
-                    case "none": break;
-                    case "activeingredient": model.DataList = model.DataList.OrderBy(x => x.ActiveIngredientName).ToList(); break;
-                    case "disease": model.DataList = model.DataList.OrderBy(x => x.DiseaseName).ToList(); break;
-                    case "description": model.DataList = model.DataList.OrderBy(x => x.Description).ToList(); break;
+                    switch (sortBy)
+                    {
+                        case "none": break;
+                        case "activeingredient": model.DataList = model.DataList.OrderBy(x => x.ActiveIngredientName).ToList(); break;
+                        case "disease": model.DataList = model.DataList.OrderBy(x => x.DiseaseName).ToList(); break;
+                        case "description": model.DataList = model.DataList.OrderBy(x => x.Description).ToList(); break;
+                    }
                 }
                 return View(model);
             }
@@ -89,6 +92,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             ViewBag.Diseases = Data.GetAllDiseases();
             ModelState.AddModelError("", "Invalid values.");
             return View(model);
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeleteContraIndication(id);
+                if (result)
+                {
+                    TempData["Message"] = "Contra-Indication removed";
+                    return RedirectToAction("Index", "ContraIndication");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "ContraIndication");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

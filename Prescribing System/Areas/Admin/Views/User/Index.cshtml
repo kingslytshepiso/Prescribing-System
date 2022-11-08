@@ -1,7 +1,5 @@
 ﻿@model UserViewModel
-@{ 
-    ViewData["Title"] = "Users";
-}
+@{ ViewData["Title"] = "Users"; }
 <div class="box-columned box-spaced-between">
     <div>
         <button type="button" class="btn btn-primary dropdown-toggle"
@@ -70,73 +68,73 @@
         </div>
     </div>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>Email</th>
-            <td>Contact</td>
-            <td>Address</td>
-            <td>Role</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.DataList)
-        {
+<div class="box-columned overflow-auto">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@user.LastName</td>
-                <td>@user.FirstName</td>
-                <td>@user.Email</td>
-                <td>@user.ContactNo</td>
-                <td>@user.Role</td>
-                <td colspan="1">
-                    <a class="btn btn-primary" asp-controller="@user.Role"
-                   asp-action="Edit" asp-route-id="@user.UserId" target="_blank">
-                        <span><img class="utility-icon" src="~/icons/edit.png" /></span>
-                    </a>
-                </td>
-                <td colspan="1">
-                    <form asp-controller="@user.Role" asp-action="Delete"
-                      asp-route-id="@user.UserId" method="post">
-                        <button class="btn btn-primary" type="submit">
-                            <span><img class="utility-icon" src="~/icons/delete.png" /></span>
-                        </button>
-                    </form>
-                </td>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Email</th>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>Role</td>
+                <td></td>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.DataList)
+            {
+<tr>
+    <td>@user.LastName</td>
+    <td>@user.FirstName</td>
+    <td>@user.Email</td>
+    <td>@user.ContactNo</td>
+    <td>@user.Address</td>
+    <td>@user.Role</td>
+    <td colspan="1" class="box-columned m-0 justify-content-end">
+        <a class="btn btn-primary m-1" asp-controller="@user.Role"
+           asp-action="Edit" asp-route-id="@user.UserId" target="_blank">
+            <span><img class="utility-icon" src="~/icons/edit.png" /></span>
+        </a>
+        <form asp-controller="@user.Role" asp-action="Delete"
+              asp-route-id="@user.UserId" method="post">
+            <button class="btn btn-primary m-1" type="submit">
+                <span><img class="utility-icon" src="~/icons/delete.png" /></span>
+            </button>
+        </form>
+    </td>
+</tr>}
+        </tbody>
+    </table>
+</div>
 <div>
     @if (Model.OverallCount > 0)
     {
-        <nav aria-label="Page navigation example" class="box-columned box-spaced-between">
-            <div class="box-rowed box-centered">
-                <strong>Showing @Model.CurrentPage of @Model.OverallCount</strong>
-            </div>
-            <ul class="pagination">
-                <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
-                    <a class="page-link" asp-controller="User" asp-action="Index"
-                   asp-route-pageNumber="@(Model.CurrentPage - 1)" 
-                   asp-route-filterBy="@Model.Filter"
-                   asp-route-sortBy="@Model.Sort">Previous</a>
-                </li>
-                @for (int i = 1; i <= Model.OverallCount; i++)
-                {
-                    <li class="page-item @(Model.CurrentPage == i?"active": "")">
-                        <a class="page-link" asp-controller="User" asp-action="Index"
-                   asp-route-filterBy="@Model.Filter"
-                   asp-route-pageNumber="@i" asp-route-sortBy="@Model.Sort">@i</a>
-                    </li>
-                }
-                <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
-                    <a class="page-link" asp-controller="User" asp-action="Index"
-                   asp-route-filterBy="@Model.Filter"
-                   asp-route-sortBy="@Model.Sort"
-                   asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
-                </li>
-            </ul>
-        </nav>
-    }
+<nav aria-label="Page navigation example" class="box-columned box-spaced-between">
+    <div class="box-rowed box-centered">
+        <strong>Showing @Model.CurrentPage of @Model.OverallCount</strong>
+    </div>
+    <ul class="pagination">
+        <li class="page-item @(Model.CurrentPage == 1? "disabled": "")">
+            <a class="page-link" asp-controller="User" asp-action="Index"
+               asp-route-pageNumber="@(Model.CurrentPage - 1)"
+               asp-route-filterBy="@Model.Filter"
+               asp-route-sortBy="@Model.Sort">Previous</a>
+        </li>
+        @for (int i = 1; i <= Model.OverallCount; i++)
+        {
+<li class="page-item @(Model.CurrentPage == i?"active": "")">
+    <a class="page-link" asp-controller="User" asp-action="Index"
+       asp-route-filterBy="@Model.Filter"
+       asp-route-pageNumber="@i" asp-route-sortBy="@Model.Sort">@i</a>
+</li>
+}
+        <li class="page-item @(Model.CurrentPage == Model.OverallCount ? "disabled": "")">
+            <a class="page-link" asp-controller="User" asp-action="Index"
+               asp-route-filterBy="@Model.Filter"
+               asp-route-sortBy="@Model.Sort"
+               asp-route-pageNumber="@(Model.CurrentPage + 1)">Next</a>
+        </li>
+    </ul>
+</nav>}
 </div>

@@ -32,7 +32,7 @@
         </ul>
     </div>
 </div>
-<div class="box-columned overflow-scroll">
+<div class="box-columned overflow-auto">
     <table class="table">
         <thead>
             <tr>
@@ -40,7 +40,6 @@
                 <th>1st ingredient</th>
                 <th>2nd ingredient</th>
                 <th>Effect</th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -55,17 +54,15 @@
                         <td>@interaction.GetFirstInteractor().Name</td>
                         <td>@interaction.GetScndInteractor()</td>
                         <td>@interaction.EffectDescription</td>
-                        <td colspan="1">
-                            <a class="btn btn-primary" asp-controller="MedicationInteraction"
+                        <td colspan="1" class="box-columned m-0 justify-content-end">
+                            <a class="btn btn-primary m-1" asp-controller="MedicationInteraction"
                        asp-action="Edit" asp-route-id="@interaction.InteractionID">
                                 <span><img class="utility-icon" src="~/icons/edit.png" /></span>
                             </a>
-                        </td>
-                        <td colspan="1">
                             <form asp-controller="MedicationInteraction" asp-action="Delete"
                           asp-route-id="@interaction.InteractionID" method="post"
                           class="form-critical">
-                                <button class="btn btn-primary" type="submit">
+                                <button class="btn btn-primary m-1" type="submit">
                                     <span><img class="utility-icon" src="~/icons/delete.png" /></span>
                                 </button>
                             </form>

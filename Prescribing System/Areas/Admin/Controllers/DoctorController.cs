@@ -28,13 +28,16 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllDoctorsWithPaging(pageNumber, pageSize, sortBy);
-                switch (sortBy)
+                if (model.DataList.Count > 0)
                 {
-                    case "none": break;
-                    case "name": model.DataList = model.DataList.OrderBy(x => x.LastName).ToList(); break;
-                    case "suburb": model.DataList = model.DataList.OrderBy(x => x.SuburbName).ToList(); break;
-                    case "medprac": model.DataList = model.DataList.OrderBy(x => x.MedPracName).ToList(); break;
-                    case "status": model.DataList = model.DataList.OrderBy(x => x.StatusName).ToList(); break;
+                    switch (sortBy)
+                    {
+                        case "none": break;
+                        case "name": model.DataList = model.DataList.OrderBy(x => x.LastName).ToList(); break;
+                        case "suburb": model.DataList = model.DataList.OrderBy(x => x.SuburbName).ToList(); break;
+                        case "medprac": model.DataList = model.DataList.OrderBy(x => x.MedPracName).ToList(); break;
+                        case "status": model.DataList = model.DataList.OrderBy(x => x.StatusName).ToList(); break;
+                    }
                 }
                 return View(model);
             }
@@ -101,6 +104,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             ModelState.AddModelError("", "Invalid information entered.");
             return View(model);
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeleteDoctor(id);
+                if (result)
+                {
+                    TempData["Message"] = "Doctor user removed";
+                    return RedirectToAction("Index", "Doctor");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "Doctor");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

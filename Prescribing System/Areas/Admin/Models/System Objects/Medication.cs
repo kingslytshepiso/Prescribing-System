@@ -14,6 +14,7 @@ namespace Prescribing_System.Areas.Admin.Models.System_Objects
         public int DosageID { get; set; }
         public int ScheduleID { get; set; }
         public string TypeID { get; set; }
+        public string Status { get; set; }
         public List<Medication_Ingredient> Ingredients { get; set; }
         protected AdminDbContext data = new AdminDbContext();
         public List<Medication_Ingredient> GetIngredients()

@@ -141,11 +141,23 @@ body {
 .illus-title-small{
     width: 220px;
 }
+.illus-title-smaller {
+    width: 220px;
+}
 .illus-title-medium {
     width: 440px;
 }
 .illus-title-large{
     width: 100%;
+}
+.illus-title-box{
+    width: 15rem;
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
+}
+.illus-compressed{
+    width: auto;
 }
 .utility-icon{
     width: 10px;
@@ -161,18 +173,44 @@ body {
 }
 .illustration-light {
     background-image: url('../images/am-jd-OQYv1-YZkZQ-unsplash.jpg');
+    background-size: cover;
 }
 .illustration-pharmacy{
-    background-image: url('../images/melany-tuinfosalud-com-F6clvre8fGg-unsplash.jpg');
+    background-image: url('../images/pharmacy.jpg');
+    background-size: cover;
+}
+.illustration-pharmacist {
+    background-image: url('../images/pharmacist.jpg');
+    background-size: cover;
+}
+.illustration-patient {
+    background-image: url('../images/patient.jpg');
     background-size: cover;
 }
 .illustration-icd{
     background-image: url('../images/freestocks-nss2eRzQwgw-unsplash.jpg');
 }
-.illustration-medication{
-    background-image: url('../images/melany-tuinfosalud-com-F6clvre8fGg-unsplash.jpg')
+.illustration-medication {
+    background-image: url('../images/melany-tuinfosalud-com-F6clvre8fGg-unsplash.jpg');
+    background-size: cover;
+}
+.illustration-ingredient {
+    background-image: url('../images/activeingredients.jpg');
+    background-size: cover;
+}
+.illustration-contra {
+    background-image: url('../images/Contra indication.jpg');
+    background-size: cover;
+}
+.illustration-interactions {
+    background-image: url('../images/Interaction (2).jpg');
+    background-size: cover;
 }
 .illustration-history{
+}
+.illustration-medpractice {
+    background-image: url('../images/Medical_pract.jpg');
+    background-size: cover;
 }
 .illustration-default{
     background-image: url("../images/anirudh-DhEQCtxSHXI-unsplash.jpg") !important;

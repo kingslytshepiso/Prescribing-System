@@ -37,7 +37,7 @@
         </ul>
     </div>
 </div>
-<div class="box-columned overflow-scroll">
+<div class="box-columned overflow-auto">
     <table class="table">
         <thead>
             <tr>
@@ -47,7 +47,7 @@
                 <th>Email</th>
                 <th>Pharmacy</th>
                 <th>Address</th>
-                <th></th>
+                <th>Registration No.</th>
                 <th></th>
             </tr>
         </thead>
@@ -65,36 +65,34 @@
                         <td>@pharmacist.PharmacyName</td>
                         <td>
                             @{
-                                <span>@pharmacist.AddressLine1</span><br />
-                                <span>@pharmacist.AddressLine2</span><br />
-                                <span>@pharmacist.SuburbName</span><br />
-                            }
+                                                    <span>@pharmacist.AddressLine1</span><br />
+                                                                        <span>@pharmacist.AddressLine2</span><br />
+                                                                                            <span>@pharmacist.SuburbName</span><br /> }
                         </td>
-                        <td colspan="1">
-                            <a class="btn btn-primary" asp-controller="Pharmacist"
-                       asp-action="Edit" asp-route-id="@pharmacist.PharmacistId">
+                        <td>@pharmacist.RegistrationNo</td>
+                        <td colspan="1" class="box-columned m-0 justify-content-end">
+                            <a class="btn btn-primary m-1" asp-controller="Pharmacist"
+                               asp-action="Edit" asp-route-id="@pharmacist.PharmacistId">
                                 <span><img class="utility-icon" src="~/icons/edit.png" /></span>
                             </a>
-                        </td>
-                        <td colspan="1">
                             <form asp-controller="Pharmacist" asp-action="Delete"
-                          asp-route-id="@pharmacist.PharmacistId" method="post"
-                          class="form-critical">
-                                <button class="btn btn-primary" type="submit">
+                                  asp-route-id="@pharmacist.PharmacistId" method="post"
+                                  class="form-critical">
+                                <button class="btn btn-primary m-1" type="submit">
                                     <span><img class="utility-icon" src="~/icons/delete.png" /></span>
                                 </button>
                             </form>
                         </td>
-                    </tr>
+                    </tr>                    
                     i++;
-                }
-            }
-            else
-            {
+                 } 
+             }
+             else
+             {
                 <tr>
                     <td>Empty</td>
-                </tr>
-            }
+                </tr>            
+            }   
         </tbody>
     </table>
 </div>

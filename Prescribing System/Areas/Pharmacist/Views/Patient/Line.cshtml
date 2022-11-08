@@ -49,7 +49,7 @@
                                     <strong>Active Ingredient:<br /></strong>
                                     @foreach(var i in Model.GetActualMed().GetIngredients()){
                                         @(i.GetActiveIngredient().Name)
-                                        @(i.ActiveStrength + "(.mg)")
+                                        @(" " + i.ActiveStrength + " (.mg)")
                                     }
                                 </td>
                                 <td>@Model.Quantity</td>

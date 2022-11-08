@@ -7,6 +7,7 @@ using Prescribing_System.Models;
 using Prescribing_System.Areas.Admin.Models;
 using Prescribing_System.Areas.Admin.Models.System_Objects;
 using Newtonsoft.Json;
+using Microsoft.VisualStudio.Web.CodeGeneration;
 
 namespace Prescribing_System.Areas.Admin.Controllers
 {
@@ -29,19 +30,27 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllPharmaciesWithPaging(pageNumber, pageSize, sortBy);
-                switch (sortBy)
+                if (model.DataList.Count > 0)
                 {
-                    case "none":break;
-                    case "name": model.DataList = model.DataList
-                            .OrderBy(x => x.Name).ToList(); break;
-                    case "contact": model.DataList = model.DataList
-                            .OrderBy(x => x.ContactNo).ToList();break;
-                    case "email": model.DataList = model.DataList
-                            .OrderBy(x => x.EmailAddress).ToList(); break;
-                    case "license": model.DataList = model.DataList
-                            .OrderBy(x => x.LicenseNo).ToList(); break;
-                    case "suburb": model.DataList = model.DataList
-                            .OrderBy(x => x.SuburbName).ToList(); break;
+                    switch (sortBy)
+                    {
+                        case "none": break;
+                        case "name":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.Name).ToList(); break;
+                        case "contact":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.ContactNo).ToList(); break;
+                        case "email":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.EmailAddress).ToList(); break;
+                        case "license":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.LicenseNo).ToList(); break;
+                        case "suburb":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.SuburbName).ToList(); break;
+                    }
                 }
                 return View(model);
             }
@@ -111,6 +120,26 @@ namespace Prescribing_System.Areas.Admin.Controllers
             }
             ModelState.AddModelError("", "Invalid values");
             return View(model);
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (UserIsVerified("Admin"))
+            {
+                var result = Data.DeletePharmacy(id);
+                if (result)
+                {
+                    TempData["Message"] = "Pharmacy removed";
+                    return RedirectToAction("Index", "Pharmacy");
+                }
+                else
+                {
+                    TempData["Message"] = "Error removing";
+                    return RedirectToAction("Index", "Pharmacy");
+                }
+            }
+            else
+                return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

@@ -27,12 +27,14 @@
             </div>
         </nav>
     </header>
-    <div class="container container-after-nav">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div class="container m-sm-0 m-md-auto" style="padding-top: 5.5rem; padding-bottom: 1rem;">
+        <div class="b_boxed">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
     </div>
-    <footer class="border-top footer text-muted">
+    <footer class=" mt-5 border-top footer text-muted">
         <div class="container">
             &copy; 2022 - E-P - <a asp-area="" asp-controller="Home" asp-action="About">About</a>
         </div>
