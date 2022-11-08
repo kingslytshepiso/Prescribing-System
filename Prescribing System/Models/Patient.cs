@@ -23,8 +23,13 @@ namespace Prescribing_System.Models
         public string Gender { get; set; } = "O";
         [Required(ErrorMessage = "Please enter email address.")]
         //[Remote("CheckEmail", "Validation")]
+        [Display(Name = "Email Address")]
+        [DataType(DataType.EmailAddress)]
+        [RegularExpression(@"(@)(.+)$", ErrorMessage = "Not a Valid Contact Number")]
+
         public string EmailAddress { get; set; }
         [Required(ErrorMessage = "Please enter contact number.")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$", ErrorMessage = "Please enter numbers only")]
         public string ContactNumber { get; set; }
         [Required(ErrorMessage = "Please enter Address line 1")]
         public string AddressLine1 { get; set; }
