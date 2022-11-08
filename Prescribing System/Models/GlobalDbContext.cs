@@ -108,7 +108,6 @@ namespace Prescribing_System.Models
                         {
                             CityID = Convert.ToInt32(current["CityID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
                             ProvID = Convert.ToInt32(current["ProvID"].ToString())
                         });
                 }

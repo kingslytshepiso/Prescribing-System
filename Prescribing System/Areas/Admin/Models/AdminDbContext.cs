@@ -75,7 +75,6 @@ namespace Prescribing_System.Areas.Admin.Models
                         {
                             CityID = Convert.ToInt32(current["CityID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
                             ProvID = Convert.ToInt32(current["ProvID"].ToString())
                         });
                 }
@@ -463,7 +462,6 @@ namespace Prescribing_System.Areas.Admin.Models
                         {
                             ActiveIngreID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            Description = Convert.ToString(current["Description"].ToString()),
                         });
                 }
                 return ingredients;
@@ -509,7 +507,8 @@ namespace Prescribing_System.Areas.Admin.Models
                             MedPracName = Convert.ToString(current["MedPracName"].ToString()),
                             Status = Convert.ToString(current["Status"].ToString()),
                             StatusName = Convert.ToString(current["StatusName"].ToString()),
-                            ProfileImage = Convert.ToString(current["ProfileImage"].ToString())
+                            ProfileImage = Convert.ToString(current["ProfileImage"].ToString()),
+                            HCRNumber = Convert.ToString(current["HCRNumber"].ToString())
                         });
                 }
             }
@@ -742,6 +741,7 @@ namespace Prescribing_System.Areas.Admin.Models
                             SuburbId = Convert.ToInt32(current["SuburbID"].ToString()),
                             SuburbName = Convert.ToString(current["SuburbName"].ToString()),
                             PharmacyName = Convert.ToString(current["PharmacyName"].ToString()),
+                            RegistrationNo = Convert.ToString(current["RegistrationNo"].ToString()),
                         });
                 }
                 return model;
@@ -1018,7 +1018,6 @@ namespace Prescribing_System.Areas.Admin.Models
                         {
                             ActiveIngreID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            Description = Convert.ToString(current["Description"].ToString())
                         });
                 }
             }
@@ -1093,7 +1092,6 @@ namespace Prescribing_System.Areas.Admin.Models
                 {
                     ActiveIngreID = Convert.ToInt32(dt.Rows[0]["ActiveIngreID"].ToString()),
                     Name = Convert.ToString(dt.Rows[0]["Name"].ToString()),
-                    Description = Convert.ToString(dt.Rows[0]["Description"].ToString()),
                 };
             }
             else
@@ -1238,7 +1236,6 @@ namespace Prescribing_System.Areas.Admin.Models
             dbCmd.CommandType = CommandType.StoredProcedure;
             dbCmd.Parameters.AddWithValue("@ActiveIngreID", ingredient.ActiveIngreID);
             dbCmd.Parameters.AddWithValue("@Name", ingredient.Name);
-            dbCmd.Parameters.AddWithValue("@Description", ingredient.Description);
             conn.Open();
             int i = dbCmd.ExecuteNonQuery();
             conn.Close();
@@ -1254,7 +1251,6 @@ namespace Prescribing_System.Areas.Admin.Models
             dbCmd = new SqlCommand("AddActiveIngredient", conn);
             dbCmd.CommandType = CommandType.StoredProcedure;
             dbCmd.Parameters.AddWithValue("@Name", ingredient.Name);
-            dbCmd.Parameters.AddWithValue("@Description", ingredient.Description);
             conn.Open();
             int i = dbCmd.ExecuteNonQuery();
             conn.Close();

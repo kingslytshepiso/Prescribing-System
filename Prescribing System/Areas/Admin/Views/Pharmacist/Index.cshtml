@@ -46,7 +46,7 @@
                 <th>Contact</th>
                 <th>Email</th>
                 <th>Pharmacy</th>
-                <th>Address</th>
+          
                 <th>Registration No.</th>
                 <th></th>
             </tr>
@@ -63,12 +63,7 @@
                         <td>@pharmacist.ContactNumber</td>
                         <td>@pharmacist.EmailAddress</td>
                         <td>@pharmacist.PharmacyName</td>
-                        <td>
-                            @{
-                                                    <span>@pharmacist.AddressLine1</span><br />
-                                                                        <span>@pharmacist.AddressLine2</span><br />
-                                                                                            <span>@pharmacist.SuburbName</span><br /> }
-                        </td>
+                        
                         <td>@pharmacist.RegistrationNo</td>
                         <td colspan="1" class="box-columned m-0 justify-content-end">
                             <a class="btn btn-primary m-1" asp-controller="Pharmacist"

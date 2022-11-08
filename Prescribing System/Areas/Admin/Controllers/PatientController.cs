@@ -28,31 +28,38 @@ namespace Prescribing_System.Areas.Admin.Controllers
             if (UserIsVerified("Admin"))
             {
                 var model = Data.GetAllPatientsWithPaging(pageNumber, pageSize, sortBy);
-                switch (sortBy)
+                if (model.DataList.Count > 0)
                 {
-                    case "none": model.DataList = model.DataList
-                            .OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList();break;
-                    case "name_a": model.DataList = model.DataList
-                            .OrderBy(x => x.IdNumber).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
+                    switch (sortBy)
+                    {
+                        case "none":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList(); break;
+                        case "name_a":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.IdNumber).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
+                                .ToList(); break;
+                        case "name_d":
+                            model.DataList = model.DataList
+                            .OrderByDescending(x => x.IdNumber).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
                             .ToList(); break;
-                    case "name_d":
-                        model.DataList = model.DataList
-                        .OrderByDescending(x => x.IdNumber).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
-                        .ToList(); break;
-                    case "id_a": model.DataList = model.DataList
-                            .OrderBy(x => x.EmailAddress).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
+                        case "id_a":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.EmailAddress).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
+                                .ToList(); break;
+                        case "id_d":
+                            model.DataList = model.DataList
+                            .OrderByDescending(x => x.EmailAddress).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
                             .ToList(); break;
-                    case "id_d":
-                        model.DataList = model.DataList
-                        .OrderByDescending(x => x.EmailAddress).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
-                        .ToList(); break;
-                    case "gender_a": model.DataList = model.DataList
-                            .OrderBy(x => x.Gender).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
+                        case "gender_a":
+                            model.DataList = model.DataList
+                                .OrderBy(x => x.Gender).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
+                                .ToList(); break;
+                        case "gender_d":
+                            model.DataList = model.DataList
+                            .OrderByDescending(x => x.Gender).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
                             .ToList(); break;
-                    case "gender_d":
-                        model.DataList = model.DataList
-                        .OrderByDescending(x => x.Gender).ThenBy(x => x.LastName).ThenBy(x => x.FirstName)
-                        .ToList(); break;
+                    }
                 }
                 return View(model);
             }

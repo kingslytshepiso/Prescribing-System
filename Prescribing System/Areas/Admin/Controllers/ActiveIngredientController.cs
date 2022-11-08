@@ -40,8 +40,7 @@ namespace Prescribing_System.Areas.Admin.Controllers
                     else
                     {
                         model.DataList =
-                            model.DataList.FindAll(x => x.Name.ToLower().IndexOf(keyword.ToLower()) >= 0 ||
-                            x.Description.ToLower().IndexOf(keyword.ToLower()) > 0).ToList();
+                            model.DataList.FindAll(x => x.Name.ToLower().IndexOf(keyword.ToLower()) >= 0);
                     }
                 }
                 ViewBag.Keyword = keyword;

@@ -259,7 +259,6 @@ namespace Prescribing_System.Areas.Doctor.Models
                         {
                             CityID = Convert.ToInt32(current["CityID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            PostalCode = Convert.ToString(current["PostalCode"].ToString()),
                             ProvID = Convert.ToInt32(current["ProvID"].ToString())
                         });
                 }
@@ -980,7 +979,7 @@ namespace Prescribing_System.Areas.Doctor.Models
                         {
                             ActiveIngreID = Convert.ToInt32(current["ActiveIngreID"].ToString()),
                             Name = Convert.ToString(current["Name"].ToString()),
-                            Description = Convert.ToString(current["Description"].ToString()),
+                            
                         });
                 }
             }
@@ -1873,7 +1872,6 @@ namespace Prescribing_System.Areas.Doctor.Models
                             {
                                 ActiveIngreID = Convert.ToInt32(row["ActiveIngreID"].ToString()),
                                 Name = Convert.ToString(row["Name"].ToString()),
-                                Description = Convert.ToString(row["Description"].ToString()),
                             },
                             Patient = new Prescribing_System.Models.Patient()
                             {
@@ -2295,7 +2293,6 @@ namespace Prescribing_System.Areas.Doctor.Models
                 patient.AddressLine2 = Convert.ToString(dt.Rows[0]["AddressLine2"].ToString());
                 patient.SuburbID = Convert.ToInt32(dt.Rows[0]["SuburbID"].ToString());
                 patient.AddressLine2 = Convert.ToString(dt.Rows[0]["AddressLine2"].ToString());
-                patient.VisitedDoctor = Convert.ToString(dt.Rows[0]["VisitedDoctor"].ToString()); 
             }
             return patient;
         }
@@ -2710,7 +2707,6 @@ namespace Prescribing_System.Areas.Doctor.Models
                 {
                     ActiveIngreID = Convert.ToInt32(dt.Rows[0]["ActiveIngreID"].ToString()),
                     Name = Convert.ToString(dt.Rows[0]["Name"].ToString()),
-                    Description = Convert.ToString(dt.Rows[0]["Description"].ToString()),
                 };
             }
             else

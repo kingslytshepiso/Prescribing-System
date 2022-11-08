@@ -206,7 +206,13 @@ body {
     background-image: url('../images/Interaction (2).jpg');
     background-size: cover;
 }
+.illustration-prescription{
+    background-image: url('../images/prescription.webp');
+    background-size: cover;
+}
 .illustration-history{
+    background-image: url('../images/history.jpg');
+    background-size: cover;
 }
 .illustration-medpractice {
     background-image: url('../images/Medical_pract.jpg');

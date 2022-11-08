@@ -25,7 +25,6 @@ namespace Prescribing_System.Models
         //[Remote("CheckEmail", "Validation")]
         [Display(Name = "Email Address")]
         [DataType(DataType.EmailAddress)]
-        [RegularExpression(@"(@)(.+)$", ErrorMessage = "Not a Valid Contact Number")]
 
         public string EmailAddress { get; set; }
         [Required(ErrorMessage = "Please enter contact number.")]

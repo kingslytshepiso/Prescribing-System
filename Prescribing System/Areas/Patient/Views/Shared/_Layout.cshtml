@@ -1,7 +1,7 @@
 ﻿@{ 
     var user = UserSingleton.GetLoggedUser();
     var data = new PatientDbcontext();
-    var pharmacist = data.GetPatientWithId(user.UserId);
+    var patient = data.GetPatientWithId(user.UserId);
 
 }
 <!DOCTYPE html>
@@ -18,8 +18,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 sticky-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img width="55" height="40" src="~/images/logo.png.svg" />
+                <a class="navbar-brand" asp-area="" asp-controller="Home"
+                   asp-action="Index">
+                    <img width="70" height="50" class="global-logo" src="~/images/logo-pixelated.png" />
                 </a>
                 <div class="navbar-nav navbar-expand mr-sm-5 ml-4">
                     <form asp-controller="Home" asp-action="Search" method="get" class="box-columned pl-4 ml-4">
@@ -41,7 +42,7 @@
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-header">
-                                    @(pharmacist.LastName + " " + pharmacist.FirstName)
+                                    @(patient.LastName + " " + patient.FirstName)
                                 </a>
                                 <a class="dropdown-item"
                                    asp-controller="Home" asp-action="Index">
@@ -49,22 +50,16 @@
                                 </a>
                                 <a class="dropdown-item"
                                    asp-controller="Prescription" asp-action="Index">
-                                    Prescription
+                                    Prescriptions
                                 </a>
-                                <a class="dropdown-item"
-                                   asp-area="Prescription" asp-controller="Home"
-                                   asp-action="Profile">
-                                    Profile
+                                 <a class="dropdown-item"
+                                   asp-controller="MedicalRecord" asp-action="Index">
+                                    Medical Records
                                 </a>
                                 <a class="dropdown-item"
                                    asp-area="" asp-controller="Home"
                                    asp-action="About">
                                     About
-                                </a>
-                                <a class="dropdown-item"
-                                   asp-controller="Home"
-                                   asp-action="Privacy">
-                                    Privacy
                                 </a>
                                 <form method="post" asp-action="Logout"
                                       asp-controller="Account"

@@ -9,7 +9,6 @@ namespace Prescribing_System.Models
     {
         public int CityID { get; set; }
         public string Name { get; set; }
-        public string PostalCode { get; set; }
         public int ProvID { get; set; }
     }
 }
