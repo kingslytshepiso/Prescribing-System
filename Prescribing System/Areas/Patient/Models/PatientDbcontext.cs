@@ -50,6 +50,99 @@ namespace Prescribing_System.Areas.Patient.Models
             }
             return patient;
         }
+        public List<PatientDisease> GetPatientDiseasesByPatientId(int id)
+        {
+            List<PatientDisease> chronicDiseases = new List<PatientDisease>();
+            bool endOfLine = false;
+            int i = 0;
+            while (!endOfLine)
+            {
+                var p = GetPatientDiseaseByPatientId(id, i);
+                if (p == null)
+                {
+                    endOfLine = true;
+                }
+                else
+                {
+                    chronicDiseases.Add(p);
+                    i++;
+                }
+
+            }
+            return chronicDiseases;
+        }
+        public PatientDisease GetPatientDiseaseByPatientId(int id, int i = 0)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetChronicDiseaseByPatientId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            PatientDisease Disease = null;
+            if (dt.Rows.Count > 0)
+            {
+                if (i < dt.Rows.Count)
+                {
+                    Disease = new PatientDisease();
+                    Disease.PatientDiseaseID = Convert.ToInt32(dt.Rows[i]["PatientDiseaseID"].ToString());
+                    Disease.Date = Convert.ToDateTime(dt.Rows[i]["DiagnosisDate"].ToString());
+                    Disease.PatientID = Convert.ToInt32(dt.Rows[i]["PatientID"].ToString());
+                    Disease.DiseaseID = Convert.ToInt32(dt.Rows[i]["DiseaseID"].ToString());
+                }
+            }
+            return Disease;
+        }
+        public List<PatientMedication> GetChronicMedicationsByPatientId(int id)
+        {
+            List<PatientMedication> chronicMedications = new List<PatientMedication>();
+            bool endOfLine = false;
+            int i = 0;
+            while (!endOfLine)
+            {
+                var a = GetChronicMedicationByPatientId(id, i);
+                if (a == null)
+                {
+                    endOfLine = true;
+                }
+                else
+                {
+                    chronicMedications.Add(a);
+                    i++;
+                }
+
+            }
+            return chronicMedications;
+        }
+        public PatientMedication GetChronicMedicationByPatientId(int id, int i = 0)
+        {
+            connection();
+            dbCmd = new SqlCommand("GetChronicMedicationByPatientId", conn);
+            dbCmd.CommandType = CommandType.StoredProcedure;
+            dbCmd.Parameters.AddWithValue("@id", id);
+            dt = new DataTable();
+            dbAdapter = new SqlDataAdapter(dbCmd);
+            dbAdapter.Fill(dt);
+            conn.Close();
+            PatientMedication chronic = null;
+            if (dt.Rows.Count > 0)
+            {
+                if (i < dt.Rows.Count)
+                {
+                    chronic = new PatientMedication();
+                    chronic.ChronicMedID = Convert.ToInt32(dt.Rows[i]["PatientMedID"].ToString());
+                    chronic.PatientID = Convert.ToInt32(dt.Rows[i]["PatientID"].ToString());
+                    chronic.MedicationID = Convert.ToInt32(dt.Rows[i]["MedicationID"].ToString());
+                    chronic.MedIngreID = Convert.ToInt32(dt.Rows[i]["MedIngreID"].ToString());
+                    chronic.ActiveIngredientID = Convert.ToInt32(dt.Rows[i]["ActiveIngredientID"].ToString());
+                    chronic.DosageID = Convert.ToInt32(dt.Rows[i]["DosageID"].ToString());
+                    chronic.Date = Convert.ToString(dt.Rows[i]["Date"].ToString());
+                }
+            }
+            return chronic;
+        }
         public DoctorUser GetDoctorWithId(int id)
         {
             connection();

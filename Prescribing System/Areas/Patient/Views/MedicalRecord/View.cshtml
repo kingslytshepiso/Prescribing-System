@@ -1,0 +1,49 @@
+﻿@model MedicalHistoryViewModel
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Medication</h1>
+
+@if (!(Model.PatientMedications.Count > 0))
+{
+    <div>
+        <h4 class="text-info">
+            patient has not loaded health record yet.
+        </h4>
+    </div>
+}
+else
+{
+    var count = 1;
+    <table class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="text-center" colspan="3">Known Chronic Diseases</th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th>No:</th>
+                <th>Name</th>
+                <th>Diagnosis Date</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="min-size box-columned overflow-scroll">
+        <table class="table table-bordered m-0">
+            <tbody>
+                @foreach (PatientMedication c in Model.PatientMedications)
+                {
+
+                    <tr>
+                        <td>@count</td>
+                        <td>@c.GetMedications().Name</td>
+                        <td>@c.Date</td>
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    </div>
+}

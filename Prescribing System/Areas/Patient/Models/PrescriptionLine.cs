@@ -1,4 +1,5 @@
-﻿namespace Prescribing_System.Areas.Patient.Models
+﻿using System.ComponentModel.DataAnnotations;
+namespace Prescribing_System.Areas.Patient.Models
 {
     public class PrescriptionLine
     {
@@ -13,6 +14,8 @@
         public int MedicationID { get; set; }
         public int PharmacyID { get; set; }
         public string NameOfPharmarcy { get; set; }
+        [Required(ErrorMessage = "Please enter name of a Pharmarcy.")]
+        [StringLength(15)]
         protected PatientDbcontext Data = new PatientDbcontext();
         public Medication GetMed()
         {

@@ -19,15 +19,16 @@
         <form method="post" asp-action="Register">
             <div class="form-group row">
                 <div class="form-group col p-0">
-                    <div class="col-8"><label>ID Number:</label></div>
-                    <div class="col-12">
-                        <input asp-for="UserPatient.IdNumber" class="form-control" />
-                    </div>
-                    <div class="col">
-                        <span asp-validation-for="UserPatient.IdNumber"
-                              class="text-danger"></span>
-                    </div>
+                <div class="col-8"><label>ID Number</label></div>
+                <div class="col-12">
+                    <input class="form-control" type="text" asp-for="UserPatient.IdNumber" maxlength="13"
+                      
+                       required />
                 </div>
+                <div class="col">
+                    <span asp-validation-for="UserPatient.IdNumber" class="text-danger"></span>
+                </div>
+            </div>
             </div>
             <div class="form-group row ">
                 <div class="form-group col p-0">
