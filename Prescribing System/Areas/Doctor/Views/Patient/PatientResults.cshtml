@@ -1,27 +1,33 @@
 ﻿@model PatientViewModel
 @{
     ViewData["Title"] = "My Health Record";
+    ViewData["PatientName"] = Model.Patient.LastName + " " + Model.Patient.FirstName;
+    if (!(TempData["Message"] == null || TempData["Message"].ToString() == ""))
+    {
+        <script>
+            alert("@(TempData["Message"])");
+        </script>
+    }
 }
-
 <h1><strong>My Health Record</strong></h1>
 <div class="box-columned justify-content-between patient-header-box">
     <div class="box-columned">
         <table class="table table-boarderless mr-10">
-                <tbody>
-                    <tr>
-                        <td>ID:</td>
-                        <td class="underlined-text">@Model.Patient.IdNumber</td>
-                    </tr>
-                    <tr>
-                        <td>Name:</td>
-                        <td class="underlined-text">@Model.Patient.LastName @Model.Patient.FirstName</td>
-                    </tr>
-                    <tr>
-                        <td>Gender:</td>
-                        <td class="underlined-text">@Model.Patient.EmailAddress</td>
-                    </tr>
-                </tbody>
-            </table>
+            <tbody>
+                <tr>
+                    <td>ID:</td>
+                    <td class="underlined-text">@Model.Patient.IdNumber</td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td class="underlined-text">@Model.Patient.LastName @Model.Patient.FirstName</td>
+                </tr>
+                <tr>
+                    <td>Gender:</td>
+                    <td class="underlined-text">@Model.Patient.EmailAddress</td>
+                </tr>
+            </tbody>
+        </table>
         <table class="table table-borderless">
             <tbody>
                 <tr>
@@ -45,9 +51,23 @@
     </div>
 </div>
 <hr />
+<div class="form-group row m-1">
+    <div class="col">
+        <form method="get" asp-controller="ChronicDisease" asp-action="Add" asp-route-id="@Model.Patient.PatientId">
+            <button type="submit" class="btn btn-warning">Diagnose Patient</button>
+        </form>
+    </div>
+    <div class="col">
+        <div class="box-items-from-right">
+            <form method="post" asp-controller="Prescription" asp-action="AddPrescription" asp-route-id="@Model.Patient.PatientId">
+                <button type="submit" class="btn btn-success">Prescribe Medications</button>
+            </form>
+        </div>
+    </div>
+</div>
+<hr />
 @if (!(Model.ChronicDiseases.Count > 0))
 {
-    
     <div class="box-columned">
         <div>
             <h4 class="text-info">
@@ -79,240 +99,136 @@ else
     var countA = 1;
     var countCM = 1;
     var countV = 1;
-
-    @*   <div class="prescription-box">
-            <div class="box-columned justify-content-between prescription-header-details ">
-                <div class="line-content">
-                    <div class="prescription-line">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" colspan="3">Known Chronic Diseases</th>
-                                </tr>
-                            </thead>
-                            <thead>
-                                <tr>
-                                    <th>No:</th>
-                                    <th>Name</th>
-                                    <th>Diagnosis Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach (ChronicDisease c in Model.ChronicDiseases)
-                            {
-
-                                <tr>
-                                    <td>@count</td>
-                                    <td>@c.GetChronicDiseases().DiseaseName</td>
-                                    <td>@c.Date</td>
-                                </tr>
-                                count++;
-                            }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        count++;*@
-
-<div class="prescription-box">
-    <div class="box-columned">
-        <div class="box-columned justify-content-between prescription-header-details ">
-            <div class="line-content">
-                <div class="prescription-line">
-                        
-                        <table class="table table-bordered m-0">
-                        <thead>
-                            <tr>
-                                <th class="text-center" colspan="3">Known Chronic Diseases</th>
-                            </tr>
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th>No:</th>
-                                <th>Name</th>
-                                <th>Diagnosis Date</th>
-                            </tr>
-                        </thead>
-                        </table>
-                        <div class="min-size box-columned overflow-scroll">
-                            <table class="table table-bordered m-0">
-                            <tbody>
-                                @foreach (ChronicDisease c in Model.ChronicDiseases)
-                                {
-
-                                    <tr>
-                                        <td>@count</td>
-                                        <td>@c.GetChronicDiseases().DiseaseName</td>
-                                        <td>@c.Date</td>
-                                    </tr>
-                                    count++;
-                                }
-                            </tbody>
-                    </table>
-                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="box-columned justify-content-between prescription-header-details ">
-            <div class="line-content">
-                <div class="prescription-line">
-                        
-                        <table class="table table-bordered m-0">
-                        <thead>
-                            <tr>
-                                <th class="text-center" colspan="3">Known Acute Diseases</th>
-                            </tr>
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th>No:</th>
-                                <th>Name</th>
-                                <th>Diagnosis Date</th>
-                            </tr>
-                        </thead>
-                        </table>
-                        <div class="min-size box-columned overflow-scroll">
-                            <table class="table table-bordered m-0">
-                        <tbody>
-                            @foreach (AcuteDisease a in Model.AcuteDiseases)
-                            {
-
-                                    <tr>
-                                        <td>@countAcuteD</td>
-                                        <td>@a.GetAcuteDiseases().DiseaseName</td>
-                                        <td>@a.Date</td>
-                                    </tr>
-                                    countAcuteD++;
-                                }
-                            
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-            <div class="box-columned justify-content-between prescription-header-details ">
-                <div class="line-content">
-                    <div class="prescription-line">
-                        <div class="">
+    <div class="prescription-box box-rowed">
+        <h3 class="text-center">Patient Condition History and Allergies</h3>
+        <hr />
+        <div class="box-columned">
+            <div class="box-columned">
+                <div class="box-columned justify-content-between prescription-header-details ">
+                    <div class="line-content">
+                        <div class="prescription-line">
                             <table class="table table-bordered m-0">
                                 <thead>
                                     <tr>
-                                        <th class=" text-capitalize" colspan="3">Known Medical Allergies</th>
+                                        <th class="text-center" colspan="3">Chronic Diseases</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th>No:</th>
+                                        <th>Name</th>
+                                        <th>Diagnosis Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ChronicDiseases.Count > 0)
+                                    {
+                                        @foreach (ChronicDisease c in Model.ChronicDiseases)
+                                        {
+
+                                            <tr>
+                                                <td>@count</td>
+                                                <td>@c.GetChronicDiseases().DiseaseName</td>
+                                                <td>@Convert.ToDateTime(c.Date).ToShortDateString()</td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>No Patient chronic disease recorded</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-columned">
+                <div class="box-columned justify-content-between prescription-header-details ">
+                    <div class="line-content">
+                        <div class="prescription-line">
+                            <table class="table table-bordered m-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" colspan="3">Acute Diseases</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th>No:</th>
+                                        <th>Name</th>
+                                        <th>Diagnosis Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.AcuteDiseases.Count > 0)
+                                    {
+                                    @foreach (AcuteDisease a in Model.AcuteDiseases)
+                                    {
+                                        <tr>
+                                            <td>@countAcuteD</td>
+                                            <td>@a.GetAcuteDiseases().DiseaseName</td>
+                                            <td>@Convert.ToDateTime(a.Date).ToShortDateString()</td>
+                                        </tr>
+                                        countAcuteD++;
+                                    }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>No Patient acute diseases recorded</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-columned">
+                <div class="box-columned justify-content-between prescription-header-details ">
+                    <div class="line-content">
+                        <div class="prescription-line">
+                            <table class="table table-bordered m-0">
+                                <thead>
+                                    <tr>
+                                        <th class=" text-capitalize" colspan="3">Allergies</th>
                                     </tr>
                                     <tr>
                                         <th width="8">No:</th>
                                         <th>Name</th>
                                     </tr>
                                 </thead>
-                            </table>
-                            <div class="min-size box-columned overflow-scroll">
-
-                                <table class="table table-bordered m-0">
-
-
-                                    <tbody>
-                                        @foreach (Allergy a in Model.Allergies)
-                                        {
-                                            <tr>
-                                                <td width="10">@countA</td>
-                                                <td>@a.GetIngredient().Name</td>
-                                            </tr>
-                                            countA++;
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="box-columned">
-            <div class="box-columned justify-content-between prescription-header-details ">
-                <div class="line-content">
-                    <div class="prescription-line">
-                        <table class="table table-bordered m-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-center text-capitalize" colspan="6">Chronic Medications</th>
-                                </tr>
-                            </thead>
-                            <thead>
-                                <tr>
-                                    <th>No:</th>
-                                    <th>Name</th>
-                                    <th>Dosege</th>
-                                    <th>Active Ingredient</th>
-                                    <th>Schedule</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div class="min-size box-columned overflow-scroll">
-                            <table class="table table-bordered">
                                 <tbody>
-                                    @foreach (ChronicMedication m in Model.ChronicMedications)
+                                    @if (Model.Allergies.Count > 0)
+                                    {
+                                    @foreach (Allergy a in Model.Allergies)
                                     {
                                         <tr>
-                                            <td>@countCM</td>
-                                            <td>@m.GetMedications().Name</td>
-                                            <td>@m.GetDosage().FormName</td>
-                                            <td>@m.GetIngredient().Name</td>
-                                            <td>@m.GetSchedules().ScheduleNo</td>
-                                        </tr>
-                                        countCM++;
-                                    }
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="box-columned justify-content-between prescription-header-details ">
-                <div class="line-content">
-                    <div class="prescription-line">
-                        <table class="table table-bordered m-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-center text-capitalize" colspan="6">Acute Medications</th>
-                                </tr>
-                            </thead>
-                            <thead>
-                                <tr>
-                                    <th>No:</th>
-                                    <th>Name</th>
-                                    <th>Dosege</th>
-                                    <th>Active Ingredient</th>
-                                    <th>Schedule</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div class="min-size box-columned overflow-scroll">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    @foreach (AcuteMedication a in Model.AcuteMedications)
-                                    {
-                                        <tr>
-                                            <td>@countV</td>
-                                            <td>@a.GetMedications().Name</td>
-                                            <td>@a.GetDosage().FormName</td>
+                                            <td width="10">@countA</td>
                                             <td>@a.GetIngredient().Name</td>
-                                            <td>@a.GetSchedules().ScheduleNo</td>
                                         </tr>
-                                        countV++;
+                                        countA++;
                                     }
-
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>No Patient allergies recorded</td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
+    </div>
+    <div class="prescription-box">
         <div class="box-columned">
             <div class="box-columned justify-content-between prescription-header-details ">
                 <div class="line-content">
@@ -320,64 +236,88 @@ else
                         <table class="table table-bordered m-0">
                             <thead>
                                 <tr>
-                                    <th class="text-center" colspan="7">Doctor Visit</th>
+                                    <th class="text-center text-capitalize" colspan="6">Chronic Medication</th>
                                 </tr>
                             </thead>
                             <thead>
                                 <tr>
                                     <th>No:</th>
-                                    <th>Date</th>
-                                    <th>Description</th>
-                                    @*<th>Physican Pain</th>*@
-                                    <th>Symptoms</th>
-                                    <th>Durtion</th>
-                                    <th>Doctor</th>
+                                    <th>Name</th>
+                                    <th>Dosage</th>
+                                    <th>Active Ingredient</th>
+                                    <th>Schedule</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                @if (Model.ChronicMedications.Count > 0)
+                                {
+                                @foreach (ChronicMedication m in Model.ChronicMedications)
+                                {
+                                    <tr>
+                                        <td>@countCM</td>
+                                        <td>@m.GetMedications().Name</td>
+                                        <td>@m.GetDosage().FormName</td>
+                                        <td>@m.GetIngredient().Name</td>
+                                        <td>@m.GetSchedules().ScheduleNo</td>
+                                    </tr>
+                                    countCM++;
+                                }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>No Patient Chronic medication recorded</td>
+                                    </tr>
+                                }
+                            </tbody>
                         </table>
-                        <div class="min-size box-columned overflow-scroll">
-                            <table class="table table-bordered">
-                                @*<tbody>
-                                    @foreach (CurrentDoctorVisit c in Model.DoctorVisits)
-                                   {
-                                        <tr>
-                                            <td>@countV</td>
-                                            <td>@c.VisitDate</td>
-                                            <td>@c.ReasonOfVist</td>
-                                            <td>@c.Whathurts</td>
-                                            <td>@c.Symptoms</td>
-                                            <td>@c.SymptomDurtion</td>
-                                            <td>Dr @c.GetDoctors().FirstName @c.GetDoctors().LastName</td>
-                                        </tr>
-                                        countV++;
-                                    }
-                                    
-                                </tbody>*@
-                            </table>
-                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-columned justify-content-between prescription-header-details ">
+                <div class="line-content">
+                    <div class="prescription-line">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-capitalize" colspan="6">Acute Medication</th>
+                                </tr>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Name</th>
+                                    <th>Dosege</th>
+                                    <th>Active Ingredient</th>
+                                    <th>Schedule</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.AcuteMedications.Count > 0)
+                                {
+                                @foreach (AcuteMedication a in Model.AcuteMedications)
+                                {
+                                    <tr>
+                                        <td>@countV</td>
+                                        <td>@a.GetMedications().Name</td>
+                                        <td>@a.GetDosage().FormName</td>
+                                        <td>@a.GetIngredient().Name</td>
+                                        <td>@a.GetSchedules().ScheduleNo</td>
+                                    </tr>
+                                    countV++;
+                                }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>No patient Acute Medication recorded</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-
-    <div class="box-columned">
-        <div class="form-group row">
-            <form method="get" asp-controller="ChronicDisease" asp-action="Add" asp-route-id="@Model.Patient.PatientId">
-                <div class="col">
-                    <div class="offset-8 col-8">
-                        <button type="submit" class="btn btn-warning">Diagnosis Patient</button>
-                    </div>
-                </div>
-            </form>
-            <form method="post" asp-controller="Prescription" asp-action="AddPrescription" asp-route-id="@Model.Patient.PatientId">
-                <div class="col">
-                    <div class="offset-8 col-8">
-                        <button type="submit" class="btn-success">Prescribed Medications</button>
-                    </div>
-                </div>
-            </form>
     </div>
-    </div>
-<vr/>
- </div>
- }
+}

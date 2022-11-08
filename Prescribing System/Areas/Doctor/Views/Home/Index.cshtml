@@ -3,9 +3,6 @@
     ViewData["Title"] = "Home";
 
 }
-<h1>WELCOME</h1>
-<h4>@Model.LoggedUser.Username</h4>
-<h4>@Model.LoggedUser.Role</h4>
 <div class="illus-group-row">
     <div class="illustration-block illus-large box-rowed box-centered">
         <form asp-controller="Patient" asp-action="PatientResults" method="get">
@@ -27,50 +24,26 @@
 </div>
 <hr />
 <div class="illus-group-col">
-    <div  class="illus-group-row">
-        <a  asp-controller="Patient" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-doctor illus-small">
-
-            </div>
-            <div class="illus-title illus-title-small">
-                <div>
-                    <h4>Patients</h4>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="illus-group-row">
+    <div class="illus-group-row box-centered flex-row">
         <a asp-controller="Prescription" asp-action="Index" class="block-link">
-            <div class="illustration-block illustration-pharmacy illus-small">
+            <div class="illustration-block illustration-pharmacy illus-medium">
 
             </div>
-            <div class="illus-title illus-title-small">
+            <div class="illus-title illus-title-medium">
                 <div>
                     <h4>Prescriptions</h4>
                 </div>
             </div>
         </a>
     </div>
-    <div class="illus-group-row">
+    <div class="illus-group-row box-centered flex-row">
         <a asp-controller="Home" asp-action="Profile" class="block-link">
-            <div class="illustration-block illustration-pharmacist illus-small">
+            <div class="illustration-block illustration-pharmacist illus-medium">
 
             </div>
-            <div class="illus-title illus-title-small">
+            <div class="illus-title illus-title-medium">
                 <div>
                     <h4>Profile</h4>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="illus-group-row">
-        <a asp-action="Logout" asp-controller="Account" asp-area="" class="block-link">
-            <div class="illustration-block illustration-Logout illus-small">
-
-            </div>
-            <div class="illus-title illus-title-small">
-                <div>
-                    <h4>Logout</h4>
                 </div>
             </div>
         </a>

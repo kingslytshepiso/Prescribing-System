@@ -16,6 +16,9 @@ namespace Prescribing_System.Areas.Doctor.Models
         public int PrescriptionID { get; set; }
         public int MedicationID { get; set; }
         public int DosageID { get; set; }
+        public int PharmacyID { get; set; }
+
+        public Alert Alert { get; set; }
         private List<Alert> LineAlerts;
         public DateTime LastDispensed { get; set; }
         protected DoctorDbContext Data = new DoctorDbContext();

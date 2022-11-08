@@ -13,4 +13,9 @@
         public bool Ignored { get; set; }
         public string TempReason { get; set; }
     }
+    public class AlertGeneric : Alert
+    {
+        public PrescriptionLine Line { get; set; }
+        public PharmacistUser Pharmacist { get; set; }
+    }
 }

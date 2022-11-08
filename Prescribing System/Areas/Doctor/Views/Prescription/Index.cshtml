@@ -81,31 +81,64 @@ else
     else
     {
         <div class="box-columned box-spaced-between">
-            <div class="">
-            </div>
-            <div class="">
-                <button type="button" class="btn btn-primary dropdown-toggle"
-                id="sortDropdownBtn" data-toggle="dropdown"
-                aria-expanded="false">
-                    Sort by
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
-                    <li class="dropdown-item">
-                        <a asp-controller="Prescription" asp-action="Index" asp-route-sortBy="datenewest">
+            <form asp-controller="Prescription" asp-action="Index">
+                <div class="box-columned">
+                    <div class="box-rowed box-centered p-0">
+                        <input type="text" name="keyword">
+                    </div>
+                    <div class="col p-0">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="box-items-from-right">
+                <div class="box-items-from-right m-1">
+                    <button type="button" class="btn btn-primary dropdown-toggle"
+                    id="filterDropdownBtn" data-toggle="dropdown"
+                    aria-expanded="false">
+                        Filter by
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="filterDropdownBtn">
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-filterBy="none">
+                            -none-
+                        </a>
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-filterBy="active">
+                            Active
+                        </a>
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-filterBy="inactive">
+                            Inactive
+                        </a>
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-filterBy="rejected">
+                            Rejected
+                        </a>
+                    </div>
+                </div>
+                <div class="box-items-from-right m-1">
+                    <button type="button" class="btn btn-primary dropdown-toggle"
+                    id="sortDropdownBtn" data-toggle="dropdown"
+                    aria-expanded="false">
+                        Sort by
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-sortBy="newest">
                             Date(Newest)
                         </a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a asp-controller="Prescription" asp-action="Index" asp-route-sortBy="dateoldest">
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-sortBy="oldest">
                             Date(Oldest)
                         </a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a asp-controller="Prescription" asp-action="Index" asp-route-sortBy="status">
+                        <a class="dropdown-item" asp-controller="Prescription" asp-action="Index"
+                   asp-route-sortBy="status">
                             Status
                         </a>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </div>
         var patient = new PatientUseD();
@@ -120,102 +153,43 @@ else
             var inactive = p.PrescrStatus == "Inactive";
             <div class="prescription-box @(inactive?"bg-grey": "") @(rejected ? "bg-danger" : "")">
                 <div class="box-columned justify-content-between prescription-header-details ">
+                    
                     <div class="prescription-header-details">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Prescription</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td>Date:</td>
-                                    <td>@p.Date.ToShortDateString()</td>
-                                </tr>
-                                <tr>
-                                    <td>Patient:</td>
-                                    <td>@(patient.LastName + " " + patient.FirstName)</td>
-                                </tr>
-                                <tr>
-                                    <td>Prescription Lines:</td>
-                                    <td>@lines.Count</td>
-                                </tr>
-                                <tr>
-                                    <td>Status:</td>
-                                    <td>@p.PrescrStatus</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <a asp-controller="PrescriptionLine" asp-action="Index"
-                                   asp-route-id="@p.PrescriptionID"
-                                   class="btn btn-primary">
-                                                View
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="prescription-lines-container">
-                        @if (lines.Count > 0)
-                        {
-                            <div class="">
-                                <table class="table">
-                                    <thead>
-                                        <tr><th>Prescription Lines</th></tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div class="lines-content @(lines.Count > 3 ? "overflow-scroll" : "") ">
-                                <table class="table">
-                                    <tbody>
-                                        @{
-                                            var i = 1;
-                                        }
-                                        @foreach (var l in lines)
-                                        {
-                                            <tr class="border-bottom line-view-item
-                                                    @(l.Status == "Rejected"?"bg-danger":"")
-                                                    @(l.Status == "Dispensed" || !l.IsRepeatValid()? "bg-info": "")">
-                                                <td>
-                                                    @i. Line for @l.GetActualMed().Name@(l.Status == "Rejected" ? "(Rejected)" : "")
-                                                    @(l.Status == "Dispensed" || !l.IsRepeatValid() ? "(Dispensed)" : "") - @(l.LastDispensed.ToShortDateString())
-                                                </td>
-                                                <td>
-                                                    <div class="box-items-from-right">
-                                                        <a asp-controller="Patient" asp-action="Line"
-                                       asp-route-id="@l.PresciptionLineID" asp-route-slug="@(l.GetActualMed().Name)"
-                                       class="btn btn-primary">
-                                                            View
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            i++;
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else
-                        {
-                            <div>
-                                <table class="table">
-                                    <thead><tr><th>No prescription line loaded</th></tr></thead>
-                                </table>
-                            </div>
-                        }
+                        <p>Date: @p.Date.ToShortDateString()</p>
+                        <p>Doctor: @(patient.LastName + " " + patient.FirstName)</p>
+                        <p>No of Lines: @lines.Count</p>
+                        <p>Status: @p.PrescrStatus</p>
                     </div>
                     <div class="prescription-header-img">
                         <img src="~/icons/hospital.png"
                  alt="practice image" title="practice" />
                     </div>
+                </div>
+                <div class="prescription-body">
+                    @{
+                         lines = Model.GetPrescriptionLines(p.PrescriptionID);
+                    }
+                    @if (!(lines.Count > 0))
+                    {
+                        <div>
+                            <h4 class="text-info">
+                                Prescription line is empty
+                            </h4>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group row">
+                            <div class="col">
+                                <button type="button" onclick="history.back()" class="btn">Cancel</button>
+                            </div>
+                            <div class="col">
+                                <div class="box-items-from-right">
+                                    <a asp-controller="PrescriptionLine" asp-action="Index" asp-route-id="@p.PrescriptionID" class="btn btn-primary">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="prescription-footer">
                 </div>

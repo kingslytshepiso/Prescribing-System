@@ -25,10 +25,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>*@
-<h3>Prescribe medication for</h3>
-<div class="b_h_centered box-rowed">
+<h3>Prescribe medication for @Model.line.GetPatient().FirstName @Model.line.GetPatient().LastName</h3>
+@*<div class="b_h_centered box-rowed">*@
 
-    <div class="b_boxed">
+    @*<div class="b_boxed">*@
         <h4 class="text-center">Add Line</h4>
         @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
         <form id="submit-form" class="@(invalids.Count > 0 ? "form-critical": "")" asp-controller="Prescription" asp-action="AddPrescriptionLine" method="post">
@@ -154,15 +154,15 @@
                     </div>
                 </div>
         </form>
-    </div>
+   @* </div>*@
     <div></div>
-    <div class="b_boxed">
+   @* <div class="b_boxed">*@
         <div class="prescription-body">
             <div class="line-content">
                 <div class="prescription-line">
                     <h4 class="text-center">Prescription Lines</h4>
-                    <div class="min-size box-columned overflow-scroll">
-                        <table class="table table-bordered">
+
+                    <table class="table">
                             <thead>
                                 <tr>
                                     <th>No:</th>
@@ -177,43 +177,46 @@
                                     <th>Delete</th>
                                 </tr>
                             </thead>
+                           
+    
+                            
                             <tbody>
-                                @if (Model.DataList.Count > 0)
+                                @if (Model.Lines.Count > 0)
                                 {
                                     var count = 1;
-                                    @foreach (GenericPrescriptionLine line in Model.DataList)
+                                    @foreach (PrescriptionLine line in Model.Lines)
                                     {
                                         <tr>
 
                                             <td>@count</td>
-                                            <td>@line.Line.GetMeds().Name</td>
-                                            @*<td>@line.Line.GetDosage().FormName</td>*@
-                                            <td>@line.Line.RepeatNo</td>
-                                            <td>@line.Line.RepeatLeftNo</td>
-                                            <td>@line.Line.Quantity</td>
-                                            <td>@line.Line.Instruction</td>
-                                            @if (@line.Line.Status == "Prescribed")
+                                            <td>@line.GetMeds().Name</td>
+                                            <td>@line.GetDosage().FormName</td>
+                                            <td>@line.RepeatNo</td>
+                                            <td>@line.RepeatLeftNo</td>
+                                            <td>@line.Quantity</td>
+                                            <td>@line.Instruction</td>
+                                            @if (@line.Status == "Prescribed")
                                             {
-                                                <td><span class="label label-info">@line.Line.Status</span></td>
+                                                <td><span class="label label-info">@line.Status</span></td>
                                             }
-                                            else if (@line.Line.Status == "Dispense")
+                                            else if (@line.Status == "Dispense")
                                             {
-                                                <td><span class="label label-warning">@line.Line.Status</span></td>
+                                                <td><span class="label label-warning">@line.Status</span></td>
                                             }
-                                            else if (line.Line.Status == "Rejected")
+                                            else if (line.Status == "Rejected")
                                             {
-                                                <td><span class="label label-danger">@line.Line.Status</span></td>
+                                                <td><span class="label label-danger">@line.Status</span></td>
                                             }
 
 
                                             <td colspan="1">
                                                 <a class="btn btn-primary" asp-controller="PrescriptionLine" asp-action="Edit"
-                                           asp-route-id="@line.Line.PresciptionLineID">
+                                           asp-route-id="@line.PresciptionLineID">
                                                     <span><img class="utility-icon" src="~/icons/edit.png" /></span>
                                                 </a>
                                             </td>
                                             <td colspan="1">
-                                                <form asp-controller="PrescriptionLine" asp-action="Delete" asp-route-id="@line.Line.PresciptionLineID" method="post" class="form-crital">
+                                                <form asp-controller="PrescriptionLine" asp-action="Delete" asp-route-id="@line.PresciptionLineID" method="post" class="form-crital">
                                                     <button class="btn btn-primary" type="submit">
                                                         <span><img class="utility-icon" src="~/icons/delete.png" /></span>
                                                     </button>
@@ -224,12 +227,17 @@
                                         count++;
                                     }
                                 }
+                                else{
+                                    <tr>
+                                        <td>No Lines</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
-                    </div>
+            
                 </div>
             </div>
             
         </div>
-    </div>
-</div>
+   @* </div>
+</div>*@

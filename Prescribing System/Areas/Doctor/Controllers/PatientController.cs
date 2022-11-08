@@ -156,6 +156,10 @@ namespace Prescribing_System.Areas.Doctor.Controllers
             {
                 var model = new PatientViewModel(idNumber,id);
                 PatientModel.SetPatient(DoctorDbContext.GetPatientWithId(model.Patient.PatientId));
+                if(model.Patient.VisitedDoctor == "Y")
+                {
+                    ViewData["Message"] = "This is the patient's first visit. Firstly add their medical history";
+                }
                 return View(model);
             }
             else

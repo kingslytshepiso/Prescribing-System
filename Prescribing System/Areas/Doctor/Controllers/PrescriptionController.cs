@@ -13,7 +13,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
     public class PrescriptionController : Controller
     {
         public DoctorDbContext DoctorDbContext = new DoctorDbContext();
-        public IActionResult Index(string sortBy = "none")
+        public IActionResult Index(string sortBy = "none", string filter = "none", string keyword = "none")
         {
             var model = new PrescriptionViewModel(UserSingleton.GetLoggedUser().UserId);
             if (UserIsVerified("Doctor"))
@@ -108,16 +108,18 @@ namespace Prescribing_System.Areas.Doctor.Controllers
         public IActionResult AddPrescriptionLine(AddPrescriptionLineViewModel line)
         {
             int id = DoctorDbContext.GetPrescriptionTop().PrescriptionID;
-            var model = new AddPrescriptionLineViewModel()
+            line = new AddPrescriptionLineViewModel()
             {
-                DataList = DoctorDbContext
-                .GetPrescLinesByDoctorIdPatienId(id),
+                Lines = DoctorDbContext
+                .GetPrescriptionLinesById(id),
                 line = new PrescriptionLine(),
 
             };
+            //line = DoctorDbContext.GetAddPrescriptionLines(id);
+            //line = DoctorDbContext.GetAddPrescriptionLines(id);
             //PrescriptionID = PrescriptionModel.GetPrescription().PrescriptionID;
             ViewBag.Medications = DoctorDbContext.GetAllMeds();
-            return View(model);
+            return View(line);
         }
         [HttpPost]
         public IActionResult AddPrescriptionLine(AddPrescriptionLineViewModel model,int id)
@@ -157,7 +159,9 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 var valid = !(line.GetValidations().Any(x => x.Status == "Invalid"));
                 if (valid)
                 {
-                    var alertsAdded = DoctorDbContext.AddAlerts(line.GetValidations());
+                    int PrescID = DoctorDbContext.GetPrescriptionLineTop().PresciptionLineID;
+                    //PrescID = line.Alert.LineID;
+                    var alertsAdded = DoctorDbContext.AddAlerts(line.GetValidations(),PrescID);
                     if (alertsAdded)
                     {
                         model.line.RepeatLeftNo = model.line.RepeatNo;

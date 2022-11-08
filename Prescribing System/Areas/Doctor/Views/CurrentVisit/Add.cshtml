@@ -9,12 +9,13 @@
 	</script>
 }
 <h1>Current Visit</h1>
-<div class="b_h_centered box-rowed">
-	<div class="b_boxed">
+<div class="">
+	<div class="">
 		<span class="btn btn-primary">6. Current Visit</span>
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-		<form class="form-critical" method="post" asp-controller="CurrentVisit" asp-action="Add">
-			<div class="form-group col">
+		<form class="form-critical" method="post" asp-controller="CurrentVisit" asp-action="Add"
+		asp-route-id="@Model.PatientID">
+			<div class="form-group col p-0">
 				<div class="col-8"><label>What brings you in today? *</label></div>
 				<div class="col-12">
 					<input type="text" asp-for="ReasonOfVist" class="form-control"  />
@@ -51,32 +52,22 @@
 				</div>
 				<input type="hidden" asp-for="PatientID" value="@Model"/>
 				<input type="hidden" asp-for="DoctorID" value="@Model"/>
-				<div class="col">
-					<div class="offset-8 col-8">
-						<button type="submit" class="btn btn-primary">Submit</button>
+				<div class="form-group row p-0 m-2">
+					<div class="col">
+						<a asp-controller="Allergy" asp-action="Add" class="btn btn-primary"
+						asp-route-id="@Model.PatientID">
+							Previous
+						</a>
+					</div>
+					<div class="col">
+						<div class="box-items-from-right">
+								<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</form>
-		<p>(*) Mandatory</p>
 	</div>
-	<div class="b_boxed">
-		<div class="form-group row">
-			<form method="get" asp-controller="Allergy" asp-action="Add" asp-route-id="@Model">
-				<div class="col">
-					<div class="offset-8 col-8">
-						<button type="submit" class="btn btn-primary">Previous</button>
-					</div>
-				</div>
-			</form>
-			<form method="get" asp-controller="Prescription" asp-action="AddPrescription" asp-route-id="@Model">
-				<div class="col">
-					<div class="offset-8 col-8">
-						<button type="submit" class="btn btn-primary">Done</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-	</div>
+	
+</div>
 

@@ -31,6 +31,7 @@ namespace Prescribing_System.Areas.Doctor.Models
             Allergies = DbData.GetAllergiesByPatientId(Patient.PatientId);
             ChronicMedications = DbData.GetChronicMedicationsByPatientId(Patient.PatientId);
             AcuteMedications = DbData.GetAcuteMedicationsByPatientId(Patient.PatientId);
+            DoctorVisits = new List<CurrentDoctorVisit>();
             //DoctorVisits = DbData.GetCurrentDoctorVisitsByPatientId(Patient.PatientId);
         }
         public class PatientMedicationModel

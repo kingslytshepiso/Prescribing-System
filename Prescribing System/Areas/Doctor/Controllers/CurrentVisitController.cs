@@ -21,7 +21,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 id = PatientModel.GetPatient().PatientID;
                 model.PatientID = id;
             }
-            return View();
+            return View(model);
         }
         [HttpPost]
         public IActionResult Add(CurrentDoctorVisit model, int id, int doctorID)
@@ -40,7 +40,7 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                 if (isAdded)
                 {
                     TempData["Message"] = "Current Visit Added Successfully";
-                    return RedirectToAction("Prescrition", "AddPrescription");
+                    return RedirectToAction("Prescription", "AddPrescription");
                 }
             }
             ModelState.AddModelError("", "error");

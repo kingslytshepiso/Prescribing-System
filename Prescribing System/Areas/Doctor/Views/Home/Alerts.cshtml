@@ -1,0 +1,40 @@
+﻿@model List<Prescription>
+@{
+    ViewData["Title"] = "Alerts";
+}
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>prescriptions</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var p in Model)
+            {
+                <tr>
+                    <td>
+                        @p.PrescriptionDate
+                        @p.PrescrStatus
+                    </td>
+                    <td>
+                        @foreach(PrescriptionLine l in ViewBag.Lines){
+                            <span>@l.GetActualMed().Name</span>
+                            <span>@l.Status</span><br />
+                        }
+                    </td>
+                    <td class="box-columned m-0 justify-content-end">
+                        <a class="btn btn-primary m-1" asp-controller="Prescription" asp-action="Edit"
+                       asp-route-id="@p.PrescriptionID">
+                            Modify
+                        </a>
+                        <a class="btn btn-danger m-1" asp-controller="Prescription" asp-action="Delete"
+                       asp-route-id="@p.PrescriptionID">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

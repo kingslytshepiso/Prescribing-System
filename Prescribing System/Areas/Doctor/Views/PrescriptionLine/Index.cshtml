@@ -8,7 +8,7 @@
         window.alert("@TempData["Message"]");
     </script>
 }
-<div class="b_boxed">
+<div class="">
     <div class="prescription-body">
         <div class="line-content">
             <div class="prescription-line">
@@ -46,15 +46,15 @@
                                         <td>@line.Line.Instruction</td>
                                         @if (@line.Line.Status == "Prescribed")
                                         {
-                                            <td><span class="label label-info">@line.Line.Status</span></td>
+                                            <td><span class="text-info">@line.Line.Status</span></td>
                                         }
                                         else if (@line.Line.Status == "Dispense")
                                         {
-                                            <td><span class="label label-warning">@line.Line.Status</span></td>
+                                            <td><span class="text-warning">@line.Line.Status</span></td>
                                         }
                                         else if (line.Line.Status == "Rejected")
                                         {
-                                            <td><span class="label label-danger">@line.Line.Status</span></td>
+                                            <td><span class="text-danger">@line.Line.Status</span></td>
                                         }
 
 

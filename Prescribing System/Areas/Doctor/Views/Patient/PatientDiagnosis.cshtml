@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "PatientDiagnosis";
 }
-@if (TempData["Message"] != null)
+@if (!(TempData["Message"] == null || TempData["Message"].ToString() == ""))
 {
     <script>
         window.alert("@TempData["Message"]");

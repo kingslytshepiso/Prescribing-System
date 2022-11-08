@@ -53,5 +53,25 @@ namespace Prescribing_System.Areas.Doctor.Controllers
                     returnUrl = this.Url
                 });
         }
+        public IActionResult Alerts()
+        {
+            var model = Data.GetAllPrescriptions();
+            var lines = Data.GetAllPrescriptionLines();
+            var tempLines = new List<PrescriptionLine>();
+            model = model.FindAll(x => x.DoctorID == UserSingleton.GetLoggedUser().UserId)
+                .FindAll(x => x.PrescrStatus == "Rejected");
+            foreach (Prescription p in model)
+            {
+                foreach(PrescriptionLine l in lines)
+                {
+                    if(p.PrescriptionID == l.PrescriptionID)
+                    {
+                        tempLines.Add(l);
+                    }
+                }
+            }
+            ViewBag.Lines = tempLines;
+            return View(model);
+        }
     }
 }
